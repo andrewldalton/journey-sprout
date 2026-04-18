@@ -60,14 +60,17 @@ export function Hero() {
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4 fade-rise" data-delay="4">
-            <a href="#waitlist" className="btn-primary">
-              Join the waitlist
+            <a href="/create" className="btn-primary">
+              Make a book
               <svg viewBox="0 0 20 20" className="w-4 h-4" fill="none" aria-hidden="true">
                 <path d="M4 10 L 16 10 M 11 5 L 16 10 L 11 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
             <a href="#sample" className="btn-ghost">
-              See a sample book
+              See a sample
+            </a>
+            <a href="#waitlist" className="font-body text-sm text-ink-muted prose-link">
+              or join the waitlist
             </a>
           </div>
 
