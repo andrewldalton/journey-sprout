@@ -267,8 +267,17 @@ Render a single children's picture-book page illustration starring [1] and [2].
 SCENE BRIEF:
 ${params.brief}
 
-IDENTITY LOCK (ABSOLUTE):
-- [1] is the real-life reference photo of the hero child. The painted child on this page MUST be the exact same child: same face shape, same eye shape and color, same nose, same mouth, same skin tone, same hair (length, color, texture — or NO hair if the photo shows a bald baby). Do NOT add hair the photo doesn't show. Do NOT age the child up or down. Do NOT blend features with any other child. Render the child in the painted watercolor style shown in the style reference, but the identity is locked to the photo.
+HERO IDENTITY LOCK (READ BEFORE PAINTING — THIS IS THE MOST IMPORTANT RULE):
+[1] is the real-life reference photo of the hero child. Study this photo like a portrait painter studies a sitter. Before you paint anything, commit to these exact features and DO NOT vary them across pages:
+
+  • HAIR: match the photo's hair EXACTLY — same length (buzzed / short / shoulder / long), same color (fair / blonde / light-brown / medium-brown / dark-brown / black / red — whichever the photo shows), same texture (fine straight / wavy / curly / coily), same hairline. If the photo shows a bald or near-bald baby, paint them bald with only the faintest suggestion of fuzz. If the photo shows short hair, do NOT grow it out into waves or curls. If the photo shows long hair, do NOT trim it short. Hair is the single most drifted feature across pages — freeze it.
+  • EYES: same eye shape, same iris color, same eye spacing, same brow shape as the photo.
+  • FACE: same face shape (round / oval / heart / square), same cheek fullness, same jawline, same nose shape, same mouth shape, same skin tone.
+  • AGE: same apparent age. Do not render an older or younger child.
+
+Render the child in painted watercolor style (see the style reference), but treat the photo as a binding likeness contract — the painted kid must be instantly recognizable as this exact real child to their own parent.
+
+OTHER LOCKS:
 - [2] is the companion animal reference. Match species, colors, proportions, silhouette, and distinguishing marks exactly.
 - Setting/style references lock environment and painted style. Do NOT reinvent recurring landmarks or props. Camera angle, time of day, and weather may change per the brief, but setting geometry and identifying props are locked.
 
@@ -352,8 +361,16 @@ Render a children's picture-book COVER illustration in warm watercolor style for
 COVER SCENE:
 ${params.coverBrief || fallbackBrief}
 
-IDENTITY LOCK:
-- [1] is the real-life reference photo of ${params.heroName}. The painted child on the cover MUST be the exact same child: same face shape, eye shape and color, nose, mouth, skin tone, hair (length, color, texture, or NO hair if bald). Render in watercolor style per the style refs, but the identity is locked to this photo.
+HERO IDENTITY LOCK (READ BEFORE PAINTING):
+[1] is the real-life reference photo of ${params.heroName}. Study it like a portrait painter studies a sitter. The painted child on the cover MUST be instantly recognizable as this exact real child to their own parent.
+  • HAIR: match the photo's hair EXACTLY — same length, color, texture, hairline. If bald or near-bald, paint bald. If short, keep short. If long, keep long. Do NOT invent hair the photo doesn't show, do NOT grow or trim it.
+  • EYES: same shape, iris color, spacing, brow shape.
+  • FACE: same face shape, cheek fullness, jawline, nose, mouth, skin tone.
+  • AGE: same apparent age.
+
+Render in watercolor style per the style refs, but identity is a binding contract to this photo.
+
+OTHER LOCKS:
 - Match the companion's colors, proportions, and silhouette exactly.
 - The environment and recurring props must match the setting reference(s).
 
