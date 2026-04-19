@@ -101,19 +101,12 @@ export const COMPANIONS: Companion[] = [
 
 export const STORIES: Story[] = [
   {
-    slug: "03-seed-took-time",
-    title: "Our Big Zoo Day",
-    theme: "Adventure is fun, and friendship is everywhere.",
-    pitch:
-      "A whole bright day at the zoo — a glitter-sneezing giraffe, a ballerina flamingo, a slow-motion sloth, and a shimmer-striped zebra to meet along the way.",
-    mood: { bg: "#ffd98a", fg: "#c14a3b" },
-  },
-  {
     slug: "01-night-stars",
     title: "Moonbound",
     theme: "Adventure is fun, and the universe is full of wonder.",
     pitch:
       "A tiny silver rocket, a jar of stardust, and a whole warm cosmos of new friends — a polite meteor, a glowing moon sheep, a joke-collecting robot, and a six-handed baby alien all waiting to say hi.",
+    coverSrc: "/samples/01-night-stars-cover.png",
     mood: { bg: "#2a1f4a", fg: "#ffd98a" },
   },
   {
@@ -122,7 +115,17 @@ export const STORIES: Story[] = [
     theme: "Adventure is fun, and the deep is full of friends.",
     pitch:
       "A glowing pearl, a bubble shield, and a sunlit reef full of curious creatures — a smiling sea turtle, a striped little fish, a shy octopus, all drifting together through a whole new underwater world.",
+    coverSrc: "/samples/02-long-way-home-cover.png",
     mood: { bg: "#b5e1df", fg: "#1f4f6b" },
+  },
+  {
+    slug: "03-seed-took-time",
+    title: "Our Big Zoo Day",
+    theme: "Adventure is fun, and friendship is everywhere.",
+    pitch:
+      "A whole bright day at the zoo — a glitter-sneezing giraffe, a ballerina flamingo, a slow-motion sloth, and a shimmer-striped zebra to meet along the way.",
+    coverSrc: "/samples/03-seed-took-time-cover.png",
+    mood: { bg: "#ffd98a", fg: "#c14a3b" },
   },
   {
     slug: "04-wish-already-had",
@@ -130,6 +133,7 @@ export const STORIES: Story[] = [
     theme: "Adventure is fun, and the jungle is alive with hellos.",
     pitch:
       "Under a mossy arch and into a hidden clearing — a humming frog, a castanet toucan, a glitter-trail butterfly, and a slow-smiling sloth waiting around a sparkly pool.",
+    coverSrc: "/samples/04-wish-already-had-cover.png",
     mood: { bg: "#a8d49c", fg: "#2a4a1f" },
   },
 ];

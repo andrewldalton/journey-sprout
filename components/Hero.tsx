@@ -93,8 +93,8 @@ export function Hero() {
             }}
           >
             <Image
-              src="/samples/seed-p01.png"
-              alt="A sample interior page from a journeysprout book"
+              src="/samples/moonbound-bubble.png"
+              alt="A sample interior page from a journeysprout book — Beckett and Sprig drifting in bubble helmets through the warm cosmos"
               width={800}
               height={800}
               className="w-full h-full object-cover"
@@ -113,8 +113,8 @@ export function Hero() {
             }}
           >
             <Image
-              src="/samples/seed-p10.png"
-              alt="A sample ending page from a journeysprout book"
+              src="/samples/moonbound-stars.png"
+              alt="A sample ending page from a journeysprout book — Beckett arms wide in full-hearted cosmic awe"
               width={800}
               height={800}
               className="w-full h-full object-cover"
@@ -134,8 +134,8 @@ export function Hero() {
             }}
           >
             <Image
-              src="/samples/seed-cover.png"
-              alt="Sample journeysprout cover titled The Seed That Took Its Time"
+              src="/samples/moonbound-cover.png"
+              alt="Sample journeysprout cover titled Moonbound"
               width={800}
               height={800}
               className="w-full h-full object-cover"

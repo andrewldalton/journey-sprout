@@ -80,8 +80,8 @@ export function SamplePreview() {
             }}
           >
             <Image
-              src="/samples/seed-p01.png"
-              alt="Opening page of The Seed That Took Its Time — a little girl kneeling in a garden"
+              src="/samples/moonbound-bubble.png"
+              alt="Sample page from Moonbound — Beckett and Sprig float weightless inside shimmering bubble helmets in the warm cosmos"
               width={1024}
               height={1024}
               className="w-full h-full object-cover"
@@ -99,8 +99,8 @@ export function SamplePreview() {
             }}
           >
             <Image
-              src="/samples/seed-p10.png"
-              alt="Final page of The Seed That Took Its Time — the seed grown into a tall sprout"
+              src="/samples/moonbound-stars.png"
+              alt="Sample page from Moonbound — Beckett arms wide in full-hearted cosmic awe"
               width={1024}
               height={1024}
               className="w-full h-full object-cover"
@@ -118,8 +118,8 @@ export function SamplePreview() {
             }}
           >
             <Image
-              src="/samples/seed-cover.png"
-              alt="Sample journeysprout cover titled The Seed That Took Its Time"
+              src="/samples/moonbound-cover.png"
+              alt="Sample journeysprout cover titled Moonbound"
               width={1024}
               height={1024}
               className="w-full h-full object-cover"
