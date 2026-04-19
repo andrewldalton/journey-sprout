@@ -2,8 +2,15 @@
  * Image-generation provider router.
  *
  * Picks between FLUX.1 Kontext (via Fal.ai), Vertex AI Imagen 3 Customization,
- * and Gemini 2.5 Flash Image based on env flag IMAGE_PROVIDER
- * ("flux" | "vertex" | "gemini").
+ * and Gemini 2.5 Flash Image.
+ *
+ * Per-kind override (takes precedence): IMAGE_PROVIDER_SHEET,
+ * IMAGE_PROVIDER_PAGE, IMAGE_PROVIDER_COVER — each "flux" | "vertex" | "gemini".
+ * Why: Gemini 2.5 Flash Image is stronger on photo→painted face match for
+ * the sheet step (soft attention, no hard text/image cap), while FLUX
+ * Kontext Multi is stronger on multi-ref composition lock for pages + cover.
+ *
+ * Global override (fallback): IMAGE_PROVIDER.
  *
  * Default picking:
  *   1. FAL_KEY present → "flux"
@@ -54,7 +61,15 @@ export type GenMeta = {
   orderId?: string | null;
 };
 
-function pick(): Provider {
+function pickFor(kind: CostKind): Provider {
+  const perKind = (
+    kind === "sheet"
+      ? process.env.IMAGE_PROVIDER_SHEET
+      : kind === "page"
+        ? process.env.IMAGE_PROVIDER_PAGE
+        : process.env.IMAGE_PROVIDER_COVER
+  )?.toLowerCase();
+  if (perKind === "flux" || perKind === "vertex" || perKind === "gemini") return perKind;
   const forced = process.env.IMAGE_PROVIDER?.toLowerCase();
   if (forced === "flux" || forced === "vertex" || forced === "gemini") return forced;
   if (process.env.FAL_KEY) return "flux";
@@ -150,10 +165,10 @@ type PageArgs = Parameters<typeof gemini.generatePage>[0];
 type CoverArgs = Parameters<typeof gemini.generateCover>[0];
 
 export const generateCharacterSheet = (params: SheetArgs, meta?: GenMeta) =>
-  withFallback("sheet", pick(), meta, (m) => m.generateCharacterSheet(params));
+  withFallback("sheet", pickFor("sheet"), meta, (m) => m.generateCharacterSheet(params));
 
 export const generatePage = (params: PageArgs, meta?: GenMeta) =>
-  withFallback("page", pick(), meta, (m) => m.generatePage(params));
+  withFallback("page", pickFor("page"), meta, (m) => m.generatePage(params));
 
 export const generateCover = (params: CoverArgs, meta?: GenMeta) =>
-  withFallback("cover", pick(), meta, (m) => m.generateCover(params));
+  withFallback("cover", pickFor("cover"), meta, (m) => m.generateCover(params));

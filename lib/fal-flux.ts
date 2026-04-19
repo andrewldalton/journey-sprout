@@ -143,21 +143,22 @@ export async function generateCharacterSheet(params: {
   photo: ImgRef;
   heroAge?: number | null;
 }): Promise<Buffer> {
+  // Lean prompt on purpose: FLUX Kontext's single-ref endpoint matches the
+  // photo much better when text is minimal. Every "LOCK" paragraph we added
+  // to the old version drowned the image reference. The sheet step is a
+  // photo→painted portrait — we want FLUX to focus on the face, not parse
+  // instructions.
   const age = params.heroAge ?? 3;
   const prompt = `
 Produce a CHARACTER REFERENCE SHEET for a children's picture book starring this child.
 
-CRITICAL IDENTITY: Preserve the exact facial likeness of the child in the reference — face shape, eye color + shape + spacing, eyebrow color + shape, nose shape, mouth + lip fullness, cheek fullness, chin shape, skin tone (with any freckles/dimples/birthmarks), and hair (length, color, texture, hairline) must match exactly. Do NOT generic-ify. Readers must instantly recognize this real child.
+Preserve the exact facial likeness of the child in the reference — face, eyes, nose, mouth, cheeks, chin, skin tone, and hair (length, color, texture, hairline) must match. Readers must instantly recognize this real child. About ${age} years old — ${proportionsForAge(age)}.
 
-AGE: The child is about ${age} years old. Render at ${proportionsForAge(age)}. Do NOT paint them older or younger than their actual age.
+Paint the child in the same outfit they are wearing in the reference photo (same top, bottom, shoes, colors).
 
-Style: modern vibrant watercolor illustration with digital polish — rich saturated colors, confident playful shapes, soft painterly edges, contemporary bestseller picture-book energy. Bright and joyful, not muted or vintage. No harsh black outlines.
+Modern vibrant watercolor with digital polish — rich saturated colors, soft painterly edges, no harsh black outlines.
 
-Outfit: paint the child in the SAME outfit they are wearing in the reference photo. Match the top, bottom, and shoes exactly — same colors, same style, same cut. Do NOT substitute generic "warm earth tones" or default children's-book clothing. If the photo shows a red striped t-shirt and denim shorts, paint a red striped t-shirt and denim shorts. This outfit becomes the character's canonical outfit for every page.
-
-Composition: SINGLE neutral soft-cream background. Full-body T-pose hero stance, centered, facing camera, calm friendly expression, eyes open, small smile. No props, no companion, no scenery. Full body visible head to toe with a little margin.
-
-No text, no letters, no numbers, no borders, no frames, no watermarks.
+Single neutral soft-cream background. Full-body T-pose, centered, facing camera, calm friendly expression, small smile. No props, no companion, no scenery. No text, no borders.
 `.trim();
 
   return runSingle({ prompt, imageRef: params.photo, aspectRatio: "3:4" });
