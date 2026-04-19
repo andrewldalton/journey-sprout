@@ -112,12 +112,13 @@ export async function generateCharacterSheet(params: {
 
 export async function generatePage(params: {
   heroSheet: ImgRef;
+  heroPhoto?: ImgRef;
   companionSheet: ImgRef;
   settingSheets: ImgRef[];
   brief: string;
   textPosition: "top" | "bottom";
 }): Promise<Buffer> {
-  const { heroSheet, companionSheet, settingSheets, brief, textPosition } =
+  const { heroSheet, heroPhoto, companionSheet, settingSheets, brief, textPosition } =
     params;
   const settingLockBlock = settingSheets.length
     ? `
@@ -141,9 +142,10 @@ Render a single children's picture-book page illustration following this brief e
 ${brief}
 
 IDENTITY LOCK (ABSOLUTE — DO NOT DEVIATE):
-- The FIRST attached image is the HERO CHARACTER SHEET. This is the child. You are illustrating THIS EXACT CHILD, not a similar child. Match every facial feature precisely: eye shape, eye color, eye spacing, nose shape, mouth, cheek shape, jawline, hair color, hair texture, hair length, skin tone. Do NOT average, generic-ify, or reinterpret the face. Same face, every time.
-- The outfit on the hero sheet (clothing, shoes) is also locked — do not redesign clothes.
-- The SECOND attached image is the COMPANION SHEET. Match the companion's species, colors, proportions, silhouette, and distinguishing marks exactly.
+- The FIRST attached image is the HERO CHARACTER SHEET — the painted watercolor reference for this child in this story's style.
+- The SECOND attached image is the REAL PHOTO of the same child. Use it to double-check facial likeness: eye shape, eye color, eye spacing, nose shape, mouth, cheek shape, jawline, hair color, hair texture, hair length, skin tone. The painted hero on every page must read as this exact real child, not a similar child.
+- Render in the watercolor style of the HERO SHEET. Do NOT photo-realistically copy the photo — use it only as a facial likeness anchor. Outfit and body stay on-model per the sheet.
+- The THIRD attached image is the COMPANION SHEET. Match the companion's species, colors, proportions, silhouette, and distinguishing marks exactly.
 - If the brief below describes hero or companion features differently than the sheets, the sheets WIN. The brief is for scene and action only.
 
 ${settingLockBlock}
@@ -155,11 +157,15 @@ ${textZone}
 - Full-bleed illustration outside the reserved calm zone, rich warm watercolor palette.
 `.trim();
 
-  return generateImage([heroSheet, companionSheet, ...settingSheets], prompt);
+  const refs: ImgRef[] = [heroSheet];
+  if (heroPhoto) refs.push(heroPhoto);
+  refs.push(companionSheet, ...settingSheets);
+  return generateImage(refs, prompt);
 }
 
 export async function generateCover(params: {
   heroSheet: ImgRef;
+  heroPhoto?: ImgRef;
   companionSheet: ImgRef;
   settingSheets: ImgRef[];
   coverBrief: string;
@@ -167,7 +173,7 @@ export async function generateCover(params: {
   heroName: string;
   companionName: string;
 }): Promise<Buffer> {
-  const { heroSheet, companionSheet, settingSheets, coverBrief, storyTitle, heroName, companionName } =
+  const { heroSheet, heroPhoto, companionSheet, settingSheets, coverBrief, storyTitle, heroName, companionName } =
     params;
 
   const fallbackBrief = `${heroName} and ${companionName} stand together at the heart of the story's anchor setting in a welcoming inviting pose, warm open expression on ${heroName}'s face, ${companionName} close beside as friend, pose that makes a child want to open the book.`;
@@ -179,8 +185,9 @@ COVER SCENE:
 ${coverBrief || fallbackBrief}
 
 IDENTITY LOCKS:
-- The child (hero) must match the attached hero character sheet exactly. Do NOT redesign the face.
-- The companion must match the attached companion sheet exactly. Same colors, same proportions, same silhouette.
+- The FIRST attached image is the hero CHARACTER SHEET — the painted watercolor reference.
+- The SECOND attached image is the REAL PHOTO of the same child. Use it to anchor facial likeness (eyes, nose, mouth, hair, skin tone). Render in the sheet's watercolor style, not photo-realistically.
+- The THIRD attached image is the COMPANION SHEET — match colors, proportions, silhouette exactly.
 
 ${
   settingSheets.length
@@ -197,5 +204,8 @@ COMPOSITION CONSTRAINTS (CRITICAL):
 - Rich warm watercolor palette, painterly, inviting.
 `.trim();
 
-  return generateImage([heroSheet, companionSheet, ...settingSheets], prompt);
+  const refs: ImgRef[] = [heroSheet];
+  if (heroPhoto) refs.push(heroPhoto);
+  refs.push(companionSheet, ...settingSheets);
+  return generateImage(refs, prompt);
 }

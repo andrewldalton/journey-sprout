@@ -89,10 +89,14 @@ export async function runPageStep(
   const { companion, settingSheetFiles, companionSheetFile } =
     await loadStoryForOrder(ctx);
 
-  const sheetBytes = await fetchBytes(sheetUrl);
+  const [sheetBytes, photoBytes] = await Promise.all([
+    fetchBytes(sheetUrl),
+    fetchBytes(ctx.photoUrl),
+  ]);
 
   const raw = await generatePage({
     heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
+    heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
     companionSheet: { type: "file", path: companionSheetFile },
     settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
     brief: page.brief,
@@ -124,10 +128,14 @@ export async function runCoverStep(
   const { manuscript, companion, settingSheetFiles, companionSheetFile } =
     await loadStoryForOrder(ctx);
 
-  const sheetBytes = await fetchBytes(sheetUrl);
+  const [sheetBytes, photoBytes] = await Promise.all([
+    fetchBytes(sheetUrl),
+    fetchBytes(ctx.photoUrl),
+  ]);
 
   const raw = await generateCover({
     heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
+    heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
     companionSheet: { type: "file", path: companionSheetFile },
     settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
     coverBrief: manuscript.coverBrief ?? "",
