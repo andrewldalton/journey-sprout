@@ -132,20 +132,90 @@ export async function generateCharacterSheet(params: {
  * Returns ~2 short sentences of plain text. Token-cheap.
  */
 const DESCRIBE_PROMPT = `
-You are a forensic sketch artist. Look at the attached CHARACTER REFERENCE SHEET of a painted child. Write a concrete, dense description so a second illustrator could recreate this EXACT child on any page of a book without seeing the sheet again.
+You are a forensic sketch artist. Look at the attached CHARACTER REFERENCE SHEET of a painted child. Write a concrete description so a second illustrator could recreate this EXACT child — identity AND outfit — on any page of a book without seeing the sheet again.
 
-Cover every one of these fields — no skipping:
-- HAIR: length (buzzed / pixie / short / chin-length / shoulder / long), color (be specific: platinum-blonde / honey-blonde / strawberry / auburn / medium-brown / chestnut / dark-brown / black / red), texture (pin-straight / wavy / loose-curl / tight-curl / ringlet / coily), part/hairline (middle part / side part / forehead / bangs)
-- EYES: color (specific hex-range: pale-blue / ice-blue / sky-blue / gray-blue / hazel / amber / light-brown / chestnut / dark-brown), shape (round / almond / upturned / downturned), spacing (close-set / normal / wide-set), eyebrow color + shape (thin / medium / thick, arched / straight)
-- NOSE: shape (button / small-round / narrow / broad / upturned)
-- MOUTH & LIPS: lip fullness (thin / medium / full), mouth width, any gap between teeth if visible
-- CHEEKS & CHIN: cheek fullness (pudgy / full / slim), chin shape (round / pointed / square)
-- SKIN TONE: specific (porcelain-fair / warm-fair / peach / olive / light-brown / medium-brown / deep-brown). Mention any freckles, dimples, birthmarks visible.
-- BUILD: approximate apparent age + height ratio (e.g. "about 3 years old, roughly 3 heads tall, rounded belly")
-- OUTFIT: top (exact color + style — e.g. "mustard yellow short-sleeve crew tee"), bottom (exact color + style — e.g. "olive green slim jogger pants, cuffed at the ankle"), shoes (exact color + style — e.g. "brown leather lace-up sneakers with white soles"), accessories if any
+Return a SINGLE JSON object, nothing else (no prose, no markdown fences, no commentary). Use this exact shape. Each value must be a concrete dense phrase, never empty.
 
-Be concrete. No metaphor. No fluff. Start with "The child has" and write as one flowing paragraph of ~100-130 words.
+{
+  "hair": "length + color + texture + hairline — e.g. 'shoulder-length platinum-blonde tight ringlet curls with a soft middle part, no bangs'",
+  "eyes": "color + shape + spacing + brow color/shape — e.g. 'large round gray-blue eyes, normal spacing, thin medium-arched light-blonde eyebrows'",
+  "face": "face shape + cheek fullness + chin + notable features (dimples / freckles / birthmarks) — e.g. 'round toddler face with full pudgy cheeks, a soft rounded chin, tiny dimples'",
+  "nose": "nose shape — e.g. 'small button nose, slightly upturned'",
+  "mouth": "lip fullness + mouth width + any gap — e.g. 'medium-full rosy lips in a small closed smile'",
+  "skin": "specific skin tone — e.g. 'warm-fair with a peach undertone'",
+  "build": "apparent age + height ratio — e.g. 'about 3 years old, roughly 3 heads tall, rounded belly, sturdy legs'",
+  "outfit": "top + bottom + shoes + accessories in specific colors/styles — e.g. 'mustard yellow short-sleeve crew tee, olive green slim jogger pants cuffed at the ankle, brown leather lace-up sneakers with white soles, no accessories'"
+}
+
+Rules:
+- Return ONLY the JSON object. No markdown fences. No preamble.
+- Every value must be concrete + dense. No metaphor, no fluff, no "cute" or "adorable" filler.
+- Colors must be specific (mustard yellow, not just "yellow"; platinum-blonde, not just "blonde").
+- If you cannot see a feature clearly, make your best guess from the sheet — never leave a field blank.
 `.trim();
+
+export type HeroFeatures = {
+  hair: string;
+  eyes: string;
+  face: string;
+  nose: string;
+  mouth: string;
+  skin: string;
+  build: string;
+  outfit: string;
+};
+
+/**
+ * Flatten a HeroFeatures JSON blob back to the ~100-word paragraph form
+ * used in older code paths. New prompts should prefer the structured
+ * fields directly so they can be promoted to dedicated lines.
+ */
+export function heroFeaturesToString(f: HeroFeatures | null | undefined): string {
+  if (!f) return "";
+  return [
+    `The child has ${f.hair}.`,
+    `${capitalize(f.eyes)}.`,
+    `${capitalize(f.face)}.`,
+    `${capitalize(f.nose)}.`,
+    `${capitalize(f.mouth)}.`,
+    `Skin: ${f.skin}.`,
+    `Build: ${f.build}.`,
+    `Outfit: ${f.outfit}.`,
+  ].join(" ");
+}
+
+function capitalize(s: string): string {
+  return s.length ? s[0].toUpperCase() + s.slice(1) : s;
+}
+
+export function parseHeroFeatures(raw: string | null | undefined): HeroFeatures | null {
+  if (!raw) return null;
+  // Tolerate markdown fences in case Gemini adds them.
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  try {
+    const o = JSON.parse(cleaned);
+    if (
+      typeof o.hair === "string" &&
+      typeof o.outfit === "string" &&
+      typeof o.face === "string"
+    ) {
+      return {
+        hair: o.hair ?? "",
+        eyes: o.eyes ?? "",
+        face: o.face ?? "",
+        nose: o.nose ?? "",
+        mouth: o.mouth ?? "",
+        skin: o.skin ?? "",
+        build: o.build ?? "",
+        outfit: o.outfit ?? "",
+      };
+    }
+  } catch {
+    // Not JSON — likely legacy paragraph. Caller falls back to treating
+    // the raw string as the full features blob.
+  }
+  return null;
+}
 
 export async function describeHero(sheet: Buffer): Promise<string> {
   const parts: unknown[] = [
@@ -202,7 +272,21 @@ ${brief}
 
 IDENTITY LOCK (THE SHEET IS THE CONTRACT):
 The FIRST TWO attached images are the hero's APPROVED CHARACTER SHEET (included twice to double-weight it) — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline; SAME outfit (top, bottom, shoes); SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. If the sheet shows tight ringlet curls, do NOT render looser waves. If the sheet shows short hair, do NOT grow it out.
-${heroFeatures ? `\nTHE CHILD'S EXACT FEATURES: ${heroFeatures}\n` : ""}
+${(() => {
+  const parsed = parseHeroFeatures(heroFeatures);
+  if (parsed) {
+    return `\nTHE CHILD'S EXACT FEATURES (weight these heavily — face + eyes + size + outfit are the most load-bearing):
+- FACE: ${parsed.face}
+- EYES: ${parsed.eyes}
+- HAIR: ${parsed.hair}
+- NOSE: ${parsed.nose}
+- MOUTH: ${parsed.mouth}
+- SKIN: ${parsed.skin}
+- BUILD/SIZE: ${parsed.build}
+- OUTFIT (same every page): ${parsed.outfit}\n`;
+  }
+  return heroFeatures ? `\nTHE CHILD'S EXACT FEATURES: ${heroFeatures}\n` : "";
+})()}
 AGE LOCK: The child is ${heroAge ?? 3} years old, rendered at ${proportionsForAge(heroAge)}. Paint them at this age on every page. Do NOT age them up (no older-kid proportions) or down (no baby proportions).
 COLOR LOCK: The hero's hair color, skin tone, and clothing colors are fixed by the sheet. They do NOT change with scene lighting. You may render soft cast shadows and gentle rim-light from the scene's light source, but you must NEVER repaint the hero's actual hair color, skin tone, or clothing colors to harmonize with golden-hour / twilight / jungle-green / etc. scene palettes. Yellow stays yellow. Blonde stays blonde.
 - The NEXT attached image is the COMPANION SHEET. Match the companion's species, colors, proportions, silhouette, and distinguishing marks exactly.
@@ -247,7 +331,21 @@ ${coverBrief || fallbackBrief}
 
 IDENTITY LOCK (THE SHEET IS THE CONTRACT):
 The FIRST TWO attached images are ${heroName}'s APPROVED CHARACTER SHEET (included twice to double-weight it). The child on the cover MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline; SAME outfit; SAME apparent age. Treat the sheet as a portrait contract.
-${heroFeatures ? `\n${heroName.toUpperCase()}'S EXACT FEATURES: ${heroFeatures}\n` : ""}
+${(() => {
+  const parsed = parseHeroFeatures(heroFeatures);
+  if (parsed) {
+    return `\n${heroName.toUpperCase()}'S EXACT FEATURES (weight heavily — face, eyes, size, outfit are most load-bearing):
+- FACE: ${parsed.face}
+- EYES: ${parsed.eyes}
+- HAIR: ${parsed.hair}
+- NOSE: ${parsed.nose}
+- MOUTH: ${parsed.mouth}
+- SKIN: ${parsed.skin}
+- BUILD/SIZE: ${parsed.build}
+- OUTFIT (same as every page): ${parsed.outfit}\n`;
+  }
+  return heroFeatures ? `\n${heroName.toUpperCase()}'S EXACT FEATURES: ${heroFeatures}\n` : "";
+})()}
 AGE LOCK: ${heroName} is ${heroAge ?? 3} years old — render at ${proportionsForAge(heroAge)}.
 COLOR LOCK: ${heroName}'s hair color, skin tone, and clothing colors do NOT change with cover lighting. Soft shadows and rim-light OK; never repaint ${heroName}'s actual colors to match the scene palette.
 - The NEXT attached image is the COMPANION SHEET — match colors, proportions, silhouette exactly.

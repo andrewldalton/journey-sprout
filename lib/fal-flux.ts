@@ -19,6 +19,7 @@
 import { fal } from "@fal-ai/client";
 import fs from "node:fs";
 import path from "node:path";
+import { parseHeroFeatures, heroFeaturesToString } from "./gemini";
 
 const MODEL_SINGLE = "fal-ai/flux-pro/kontext";
 const MODEL_MULTI = "fal-ai/flux-pro/kontext/multi";
@@ -192,14 +193,44 @@ export async function generatePage(params: {
       ? "Keep all characters, faces, hands, and key action in the UPPER ~75% of the frame. Reserve the BOTTOM ~22% as a calm, gently-washed area. No faces or critical detail in the bottom band."
       : "Keep all characters, faces, hands, and key action in the LOWER ~75% of the frame. Reserve the TOP ~22% as a calm, gently-washed area. No faces or critical detail in the top band.";
 
-  const featuresLine = params.heroFeatures
-    ? `\nTHE CHILD'S EXACT FEATURES (the painted version must match these precisely): ${params.heroFeatures}\n`
+  // Parse the structured JSON features (new path) or fall back to the
+  // legacy free-form paragraph (older orders stored the raw ~100-word blob).
+  const parsed = parseHeroFeatures(params.heroFeatures);
+  const featuresBlock = parsed
+    ? `
+THE CHILD'S EXACT FEATURES (painted version MUST match these — these are the most load-bearing identity anchors, weight them heavily):
+- FACE: ${parsed.face}
+- EYES: ${parsed.eyes}
+- HAIR: ${parsed.hair}
+- NOSE: ${parsed.nose}
+- MOUTH: ${parsed.mouth}
+- SKIN: ${parsed.skin}
+- BUILD/SIZE: ${parsed.build}
+- OUTFIT (MUST be identical every page — same top, same pants, same shoes): ${parsed.outfit}
+`.trim()
+    : params.heroFeatures
+      ? `THE CHILD'S EXACT FEATURES (match precisely): ${params.heroFeatures}`
+      : "";
+  const featuresLine = featuresBlock ? `\n${featuresBlock}\n` : "";
+  void heroFeaturesToString; // keep import live across both paths
+
+  // Highest-priority identity pull — face, eyes, size/age, outfit — stated
+  // BEFORE the scene brief so the model locks identity first and then fits
+  // the scene around it. Repeated in the full features block below.
+  const topFeatureLines = parsed
+    ? `TOP-PRIORITY IDENTITY ANCHORS (MOST LOAD-BEARING — DO NOT DEVIATE):
+- FACE: ${parsed.face}
+- EYES: ${parsed.eyes}
+- SIZE/BUILD: ${parsed.build}
+- OUTFIT (same every page): ${parsed.outfit}
+
+`
     : "";
 
   const prompt = `
 Render a single children's picture-book page illustration.
 
-SCENE BRIEF:
+${topFeatureLines}SCENE BRIEF:
 ${params.brief}
 
 HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
@@ -266,7 +297,21 @@ The first two reference images are ${params.heroName}'s APPROVED CHARACTER SHEET
 - SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline. If the sheet shows tight curls, keep tight curls.
 - SAME outfit — same top, same bottoms, same shoes.
 - SAME apparent age.
-${params.heroFeatures ? `\n${params.heroName.toUpperCase()}'S EXACT FEATURES: ${params.heroFeatures}\n` : ""}
+${(() => {
+  const parsed = parseHeroFeatures(params.heroFeatures);
+  if (parsed) {
+    return `\n${params.heroName.toUpperCase()}'S EXACT FEATURES (MUST match — weight these heavily):
+- FACE: ${parsed.face}
+- EYES: ${parsed.eyes}
+- HAIR: ${parsed.hair}
+- NOSE: ${parsed.nose}
+- MOUTH: ${parsed.mouth}
+- SKIN: ${parsed.skin}
+- BUILD/SIZE: ${parsed.build}
+- OUTFIT (identical to every page — same top, same pants, same shoes): ${parsed.outfit}\n`;
+  }
+  return params.heroFeatures ? `\n${params.heroName.toUpperCase()}'S EXACT FEATURES: ${params.heroFeatures}\n` : "";
+})()}
 Do NOT reinterpret, modernize, or "improve" the child. Paint THIS child, in THIS outfit, on the cover.
 
 AGE LOCK: ${params.heroName} is ${params.heroAge ?? 3} years old, rendered at ${proportionsForAge(params.heroAge)}. Render at that age on the cover.
