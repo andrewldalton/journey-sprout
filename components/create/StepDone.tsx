@@ -12,7 +12,7 @@ type Props = {
 
 const SHARE_URL = "https://journeysprout.com";
 const SHARE_TEXT =
-  "I just made a watercolor storybook with my kid as the hero. Look at this.";
+  "I just made an AI-illustrated watercolor storybook starring my kid. You have to see their face.";
 
 export function StepDone({ orderId, email, heroName }: Props) {
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -114,9 +114,10 @@ export function StepDone({ orderId, email, heroName }: Props) {
           className="font-body text-lg md:text-xl text-ink-soft mt-7 leading-relaxed fade-rise"
           data-delay="3"
         >
-          We&rsquo;re painting the pages now. When it&rsquo;s done &mdash;
-          usually within ten minutes &mdash; we&rsquo;ll send the PDF to{" "}
-          <span className="font-semibold text-ink">{email}</span>.
+          Our AI illustrator is painting the pages now. When it&rsquo;s done
+          &mdash; usually within ten minutes &mdash; we&rsquo;ll send the PDF
+          to <span className="font-semibold text-ink">{email}</span>. Get
+          ready for a big smile.
         </p>
 
         <p

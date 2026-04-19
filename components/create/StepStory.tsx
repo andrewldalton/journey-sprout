@@ -23,7 +23,7 @@ export function StepStory({ selectedSlug, onSelect, onNext, onBack }: Props) {
           Pick a tale.
         </h2>
         <p className="font-body text-lg text-ink-soft mt-4 max-w-xl leading-relaxed">
-          Each is a hand-written 10-page watercolor picture book, ending with a feeling worth keeping.
+          Each is a hand-written 10-page story, painted in watercolor by our AI illustrator, ending with a feeling worth keeping.
         </p>
       </div>
 

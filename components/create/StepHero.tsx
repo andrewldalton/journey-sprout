@@ -62,8 +62,9 @@ export function StepHero({
         className="font-body text-lg text-ink-soft mt-5 leading-relaxed fade-rise"
         data-delay="3"
       >
-        We&rsquo;ll paint a watercolor portrait next — you&rsquo;ll approve it
-        before we make the full book. Use whatever your little one answers to.
+        Next, our AI illustrator will paint a watercolor portrait from your
+        photo — you&rsquo;ll approve it before we make the full book. Use
+        whatever your little one answers to.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-10">
@@ -224,8 +225,8 @@ export function StepHero({
         data-delay="5"
       >
         <Sprout color="#7FA075" className="w-5 h-5" />
-        You&rsquo;ll see the painted version of your little one in about
-        fifteen seconds. Approve it, pick a story, and we make the book.
+        Our AI illustrator finishes the portrait in about fifteen seconds.
+        Approve it, pick a story, and we make the whole book.
       </p>
     </section>
   );

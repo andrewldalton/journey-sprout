@@ -98,8 +98,9 @@ export function StepUpload({ initialDataUrl, onNext, onBack }: Props) {
         </h1>
 
         <p className="font-body text-lg text-ink-soft mt-5 max-w-xl leading-relaxed fade-rise" data-delay="3">
-          Drop a clear, head-and-shoulders photo of your little one. We&rsquo;ll
-          turn them into the hero of their own storybook.
+          Drop a clear, head-and-shoulders photo of your little one. Our AI
+          illustrator paints from this photo — you&rsquo;ll see the watercolor
+          portrait and approve it before we make the full book.
         </p>
 
         <div className="mt-10 fade-rise" data-delay="4">
@@ -225,8 +226,8 @@ export function StepUpload({ initialDataUrl, onNext, onBack }: Props) {
 
         <p className="mt-5 text-xs text-ink-muted flex items-start gap-2 max-w-xl">
           <Sprout color="#7FA075" className="w-4 h-4 mt-0.5 flex-shrink-0" />
-          Your photo is used only to paint the hero in your book, and is
-          automatically deleted from our servers after 30 days.
+          Your photo is used only as reference for the AI to paint your
+          hero, and is automatically deleted from our servers after 30 days.
         </p>
       </div>
     </section>

@@ -46,7 +46,7 @@ export function Companions() {
             className="font-body text-lg text-ink-soft mt-6 leading-relaxed fade-rise"
             data-delay="3"
           >
-            Eight painted animal companions, each with their own temperament. Whichever one you choose joins your child on every page of the story.
+            Eight watercolor animal companions, each with their own temperament. Whichever one you choose, our AI illustrator paints them right next to your kid on every page.
           </p>
         </div>
 

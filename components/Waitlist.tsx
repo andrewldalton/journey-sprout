@@ -84,9 +84,10 @@ export function Waitlist() {
         {!isSuccess ? (
           <>
             <p className="font-body text-lg text-ink-soft mt-7 leading-relaxed fade-rise" data-delay="3">
-              We&apos;re opening journeysprout to a small group first. Leave
-              your email and we&apos;ll write to you the day we open — no
-              newsletter, no noise, just the one letter.
+              We&apos;re opening journeysprout — AI-illustrated watercolor
+              books made to make babies smile — to a small group first. Leave
+              your email and we&apos;ll write the day we open. No newsletter,
+              no noise, just the one letter.
             </p>
 
             <form

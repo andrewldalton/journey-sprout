@@ -47,15 +47,15 @@ const STATUS_COPY: Record<Status, { title: string; sub: string }> = {
   },
   generating_sheet: {
     title: "Painting the hero.",
-    sub: "Turning your photo into a watercolor character.",
+    sub: "Our AI illustrator is turning your photo into a watercolor character.",
   },
   awaiting_sheet_review: {
     title: "Here's your little one.",
-    sub: "Does this look like them? We'll only make the book once you say yes.",
+    sub: "Our AI painted them from your photo. If this looks like them, we'll make the book.",
   },
   rendering_pages: {
     title: "Painting the pages.",
-    sub: "Hand-painting ten illustrations, one at a time.",
+    sub: "Our AI illustrator is painting ten watercolor scenes, one at a time.",
   },
   finalizing: {
     title: "Binding the book.",
@@ -316,9 +316,10 @@ export default function BookStatusPage({
             )}
 
             <p className="mt-6 text-xs text-ink-muted font-body max-w-md mx-auto">
-              Once you approve, we paint the full ten-page book — roughly three
-              minutes. Your book will look like this version of {order.heroName},
-              across lots of scenes and poses.
+              Once you approve, our AI illustrator paints the full ten-page
+              book — roughly three minutes. Every page will feature this
+              watercolor version of {order.heroName}, across lots of different
+              scenes and poses.
             </p>
           </div>
         )}

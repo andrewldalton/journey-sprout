@@ -43,9 +43,9 @@ export function StepCompanion({
           className="font-body text-lg text-ink-soft mt-5 max-w-xl leading-relaxed fade-rise"
           data-delay="3"
         >
-          Every journeysprout story stars your child and one small painted
-          friend. Their color threads through the book&rsquo;s title and
-          typography.
+          Every journeysprout story stars your child and one small watercolor
+          friend, painted together by our AI illustrator on every page.
+          Their color threads through the book&rsquo;s title and typography.
         </p>
       </header>
 

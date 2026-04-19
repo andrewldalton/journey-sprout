@@ -52,17 +52,23 @@ export function SamplePreview() {
           </h2>
 
           <p className="font-body text-lg text-ink-soft mt-7 max-w-lg leading-relaxed fade-rise" data-delay="3">
-            Every journeysprout book is written by hand, painted in watercolor,
-            and starred by your child. No templates, no name-swap. The little
-            one on the page looks like yours — because it is yours.
+            Every journeysprout book is written by hand, then painted in
+            watercolor by our AI illustrator — starring your child. No
+            templates, no name-swap. The little one on the page looks like
+            yours, because they&rsquo;re painted from your photo.
+          </p>
+
+          <p className="font-body text-base text-ink-soft mt-5 max-w-lg leading-relaxed fade-rise" data-delay="3">
+            That&rsquo;s the whole point: a real picture book that makes your
+            baby light up when they see themselves in it.
           </p>
 
           <p className="font-body text-sm text-ink-muted mt-8 max-w-md leading-relaxed flex items-start gap-3 fade-rise" data-delay="4">
             <Sprout color="#7FA075" className="w-5 h-5 mt-0.5 flex-shrink-0" />
             <span>
-              This one was made for a little girl named{" "}
+              This one was painted for a little girl named{" "}
               <span className="text-ink-soft font-semibold">Beckett</span>.
-              Yours will be made just for your little one.
+              Yours will be painted just for your little one.
             </span>
           </p>
         </div>

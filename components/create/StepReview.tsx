@@ -104,8 +104,8 @@ export function StepReview({
           className="font-body text-lg text-ink-soft mt-5 max-w-xl leading-relaxed fade-rise"
           data-delay="3"
         >
-          Here&rsquo;s what we&rsquo;ll paint. If anything looks off, step
-          back and change it &mdash; nothing&rsquo;s sent yet.
+          Here&rsquo;s what our AI illustrator will paint. If anything looks
+          off, step back and change it &mdash; nothing&rsquo;s sent yet.
         </p>
       </header>
 

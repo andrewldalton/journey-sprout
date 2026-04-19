@@ -54,9 +54,16 @@ export function Hero() {
           </h1>
 
           <p className="font-body text-lg md:text-xl text-ink-soft mt-7 max-w-xl leading-relaxed fade-rise" data-delay="3">
-            Upload a photo. Pick a tale. We&rsquo;ll hand-paint a watercolor picture
-            book where your little one is the hero — a keepsake that looks
-            exactly like them, delivered in minutes.
+            Upload a photo. Pick a tale. Our AI illustrator paints a warm
+            watercolor picture book starring your little one — the kind of
+            book that makes babies giggle when they spot themselves on the
+            page. Delivered in minutes.
+          </p>
+
+          <p className="font-body text-sm text-ink-muted mt-4 max-w-xl leading-relaxed fade-rise" data-delay="3">
+            Every book is AI-illustrated, made to feel hand-painted and built
+            for wiggly little readers. You approve the painted version of
+            your kid before we make the whole book.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4 fade-rise" data-delay="4">

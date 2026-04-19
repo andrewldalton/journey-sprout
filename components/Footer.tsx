@@ -14,7 +14,7 @@ export function Footer() {
         </div>
 
         <p className="font-body text-base md:text-lg text-ink-muted mt-5 max-w-md leading-relaxed">
-          Made with warm paint and care, in Omaha.
+          AI-illustrated watercolor books for tiny humans. Made with care, in Omaha.
         </p>
 
         <nav

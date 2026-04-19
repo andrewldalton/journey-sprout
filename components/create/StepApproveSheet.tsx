@@ -154,10 +154,10 @@ export function StepApproveSheet({ orderId, heroName, onApproved, onBack }: Prop
         data-delay="3"
       >
         {inReview
-          ? `Does this look like your little one? We'll only make the book once you say yes.`
+          ? `Our AI illustrator painted ${heroName} from your photo. If this looks like your little one, we'll paint the whole book. If not, we'll try again.`
           : regenerating
-            ? `Mixing a new batch of paint. This takes about fifteen seconds.`
-            : `We're turning your photo into a watercolor portrait. About fifteen seconds.`}
+            ? `Our AI is mixing a new batch of paint. About fifteen seconds.`
+            : `Our AI illustrator is painting ${heroName} from your photo in warm watercolor. About fifteen seconds.`}
       </p>
 
       <div className="mt-10 flex justify-center fade-rise" data-delay="4">
@@ -255,8 +255,8 @@ export function StepApproveSheet({ orderId, heroName, onApproved, onBack }: Prop
         data-delay="6"
       >
         <Sprout color="#7FA075" className="w-5 h-5" />
-        Your book will look like this painted version of {heroName}, across
-        lots of scenes and poses.
+        This AI-painted portrait is the one we&rsquo;ll use across every page
+        of the book — {heroName} in lots of different scenes and poses.
       </p>
     </section>
   );

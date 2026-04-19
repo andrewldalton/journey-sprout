@@ -11,8 +11,8 @@ type Step = {
 const STEPS: Step[] = [
   {
     numeral: "01",
-    title: "Send a photo",
-    body: "A clear head-and-shoulders shot of your little one. We turn them into a watercolor hero that looks just like them.",
+    title: "Send a photo, meet the painted version",
+    body: "A clear head-and-shoulders shot is all we need. Our AI illustrator turns it into a warm watercolor portrait — and you approve it before we make anything else. If it doesn't look like your little one, we repaint.",
     accent: (
       <SunDrawing
         color="#CA8A04"
@@ -25,7 +25,7 @@ const STEPS: Step[] = [
   {
     numeral: "02",
     title: "Pick a tale + a friend",
-    body: "Four hand-written stories. Eight painted animal companions. Choose the mix that fits your kid.",
+    body: "Four hand-written stories. Eight painted animal companions. You choose the mix — the AI paints your kid into every page alongside their new friend.",
     accent: (
       <LeafSpray
         color="#7FA075"
@@ -37,8 +37,8 @@ const STEPS: Step[] = [
   },
   {
     numeral: "03",
-    title: "Receive your book",
-    body: "Your personalized PDF picture book arrives in about ten minutes. Print it, read it, keep it forever.",
+    title: "Watch them smile when they see it",
+    body: "Your personalized PDF arrives in about ten minutes — ten watercolor pages plus a cover, made to make your baby giggle when they spot themselves. Print it, read it, keep it forever.",
     accent: (
       <Sprout
         color="#7FA075"
@@ -95,8 +95,9 @@ export function HowItWorks() {
             happens.
           </h2>
           <p className="font-body text-lg text-ink-soft mt-6 leading-relaxed max-w-xl fade-rise" data-delay="3">
-            Three small steps. No studio visit, no six-week wait. Just your kid,
-            painted into a story they&rsquo;ll ask you to read again tomorrow.
+            Three small steps. No studio visit, no six-week wait. Our AI
+            illustrator paints your kid into a story they&rsquo;ll ask you to
+            read again tomorrow.
           </p>
         </div>
 

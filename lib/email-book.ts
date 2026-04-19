@@ -33,7 +33,7 @@ export async function sendBookReadyEmail(params: {
   const resend = new Resend(apiKey);
   const from = process.env.RESEND_FROM ?? "journeysprout <onboarding@resend.dev>";
   const subject = `${heroName}'s journeysprout book is ready`;
-  const preheader = `A hand-painted picture book, made just for ${heroName}.`;
+  const preheader = `An AI-illustrated watercolor picture book, painted just for ${heroName}.`;
 
   // Download the PDF so Resend can attach it (Resend accepts base64 content OR a URL — we use base64 for reliability).
   const pdfBuffer = await fetchBytes(pdfUrl);
@@ -68,8 +68,9 @@ export async function sendBookReadyEmail(params: {
             <span style="display:inline-block;width:6px;height:6px;border-radius:3px;background:#c9672a;vertical-align:middle;"></span>
           </div>
           <p style="margin:0 0 16px 0;font-family:Georgia,serif;font-size:17px;line-height:1.55;">Hi there,</p>
-          <p style="margin:0 0 16px 0;font-family:Georgia,serif;font-size:17px;line-height:1.55;"><strong>${escapeHtml(heroName)}'s</strong> picture book is ready. <em>${escapeHtml(title)}</em> — painted by hand, ten pages plus a cover, with <strong>${escapeHtml(companionName)}</strong> at ${escapeHtml(heroName)}'s side on every page.</p>
-          <p style="margin:0 0 16px 0;font-family:Georgia,serif;font-size:17px;line-height:1.55;">The PDF is attached. Read it aloud on a tablet tonight, or print a copy on letter-size paper — it's yours to keep forever.</p>
+          <p style="margin:0 0 16px 0;font-family:Georgia,serif;font-size:17px;line-height:1.55;"><strong>${escapeHtml(heroName)}'s</strong> picture book is ready. <em>${escapeHtml(title)}</em> — ten watercolor pages plus a cover, illustrated by our AI from your photo, with <strong>${escapeHtml(companionName)}</strong> painted at ${escapeHtml(heroName)}'s side on every page.</p>
+          <p style="margin:0 0 16px 0;font-family:Georgia,serif;font-size:17px;line-height:1.55;">Here&rsquo;s the best part: open it on a tablet tonight and watch ${escapeHtml(heroName)}&rsquo;s face when they spot themselves in a real picture book. That&rsquo;s the whole reason we made this.</p>
+          <p style="margin:0 0 16px 0;font-family:Georgia,serif;font-size:17px;line-height:1.55;">The PDF is attached. Read it aloud tonight, or print a copy on letter-size paper — it&rsquo;s yours to keep forever.</p>
         </td></tr>
         <tr><td style="padding:8px 40px 24px 40px;">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f7edd0;border:1px solid #d9c9a7;border-radius:14px;">
@@ -86,7 +87,7 @@ export async function sendBookReadyEmail(params: {
         <tr><td style="padding:0 40px 24px 40px;">
           <h2 style="margin:0 0 10px 0;font-family:Georgia,serif;font-style:italic;font-weight:700;color:#2d1b0f;font-size:20px;line-height:1.2;">A few things you can do with it</h2>
           <ul style="margin:0 0 8px 0;padding:0 0 0 20px;font-family:Georgia,serif;font-size:16px;line-height:1.55;">
-            <li style="margin-bottom:8px;">Read it tonight. Every journeysprout story is tuned for a bedtime cadence.</li>
+            <li style="margin-bottom:8px;">Read it tonight. Every journeysprout story is tuned for a bedtime cadence — and for that giggle when they realize it&rsquo;s them on the page.</li>
             <li style="margin-bottom:8px;">Print and staple a keepsake copy — letter-size, folded in half, works beautifully.</li>
             <li style="margin-bottom:8px;">Want a proper hardcover? We're rolling out print-on-demand soon. Hit reply if you'd like one.</li>
           </ul>
@@ -96,7 +97,7 @@ export async function sendBookReadyEmail(params: {
           <p style="margin:0;font-family:Georgia,serif;font-style:italic;font-size:20px;line-height:1.2;">journeysprout</p>
         </td></tr>
         <tr><td style="padding:20px 40px 28px 40px;border-top:1px solid #d9c9a7;">
-          <p style="margin:0 0 6px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#6e4a22;line-height:1.55;"><strong style="color:#2d1b0f;">journeysprout</strong> &middot; Personalized watercolor picture books, made one at a time.</p>
+          <p style="margin:0 0 6px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#6e4a22;line-height:1.55;"><strong style="color:#2d1b0f;">journeysprout</strong> &middot; AI-illustrated watercolor picture books, painted one at a time for one small reader.</p>
           <p style="margin:0 0 6px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#6e4a22;line-height:1.55;">Omaha, Nebraska &middot; <a href="${SITE_URL}" style="color:#6e4a22;text-decoration:underline;">${SITE_URL.replace(/^https?:\/\//, "")}</a> &middot; <a href="mailto:hello@journeysprout.com" style="color:#6e4a22;text-decoration:underline;">hello@journeysprout.com</a></p>
           <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:11px;color:#9a7a44;line-height:1.55;">You're receiving this because you ordered a book at journeysprout. Reply to this email to opt out anytime.</p>
         </td></tr>
@@ -112,9 +113,11 @@ export async function sendBookReadyEmail(params: {
 
 Hi there,
 
-${heroName}'s picture book is ready. "${title}" — painted by hand, ten pages plus a cover, with ${companionName} at ${heroName}'s side on every page.
+${heroName}'s picture book is ready. "${title}" — ten watercolor pages plus a cover, illustrated by our AI from your photo, with ${companionName} painted at ${heroName}'s side on every page.
 
-The PDF is attached to this email. Read it aloud on a tablet tonight, or print a copy on letter-size paper — it's yours to keep forever.
+Open it on a tablet tonight and watch ${heroName}'s face when they spot themselves in a real picture book. That's the whole reason we made this.
+
+The PDF is attached to this email. Read it aloud tonight, or print a copy on letter-size paper — it's yours to keep forever.
 
 Your book
   Title: ${title}
@@ -126,7 +129,7 @@ Your book
 Made with warm paint,
 journeysprout
 —
-journeysprout · Personalized watercolor picture books, made one at a time.
+journeysprout · AI-illustrated watercolor picture books, painted one at a time for one small reader.
 Omaha, Nebraska · ${SITE_URL} · hello@journeysprout.com
 Reply to this email to opt out anytime.
 `;
@@ -168,7 +171,7 @@ export async function sendSheetReadyEmail(params: {
   const from = process.env.RESEND_FROM ?? "journeysprout <onboarding@resend.dev>";
   const subject = `${heroName}'s portrait is ready — take a look`;
   const reviewUrl = `${SITE_URL}/book/${orderId}`;
-  const preheader = `We painted ${heroName}. If it looks right, we'll make the book.`;
+  const preheader = `Our AI painted ${heroName} in watercolor. If it looks right, we'll make the book.`;
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -186,7 +189,7 @@ export async function sendSheetReadyEmail(params: {
           ${escapeHtml(heroName)}'s portrait is ready.
         </h1>
         <p style="margin:14px 0 22px 0;font-family:Georgia,serif;font-size:15px;line-height:1.55;color:#4a3220;">
-          We've painted ${escapeHtml(heroName)} in watercolor. Come say hello — if it looks like your little one, we'll make the book.
+          Our AI illustrator painted ${escapeHtml(heroName)} in watercolor from your photo. Come say hello — if it looks like your little one, we'll paint the full book. If not, we'll try again.
         </p>
       </td></tr>
       <tr><td align="center" style="padding:4px 36px 20px 36px;">
@@ -199,7 +202,7 @@ export async function sendSheetReadyEmail(params: {
       </td></tr>
       <tr><td style="padding:12px 36px 26px 36px;border-top:1px solid #d9c9a7;text-align:center;">
         <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:11px;color:#9a7a44;line-height:1.55;">
-          <strong style="color:#2d1b0f;">journeysprout</strong> · hand-painted picture books
+          <strong style="color:#2d1b0f;">journeysprout</strong> · AI-illustrated watercolor picture books
         </p>
       </td></tr>
     </table>

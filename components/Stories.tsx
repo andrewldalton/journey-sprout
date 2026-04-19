@@ -47,7 +47,7 @@ export function Stories() {
             className="font-body text-lg text-ink-soft mt-6 leading-relaxed fade-rise"
             data-delay="3"
           >
-            Every journeysprout book is written by hand and painted in watercolor — starring your child and a companion of your choice. Four stories, each with its own quirky friends to meet along the way.
+            Every journeysprout book is written by hand, then painted in watercolor by our AI illustrator — starring your child and a companion of your choice. Four stories, each with its own quirky friends to meet along the way.
           </p>
         </div>
 
