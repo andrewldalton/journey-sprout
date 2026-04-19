@@ -60,7 +60,7 @@ export const generateSheet = inngest.createFunction(
   {
     id: "generate-sheet",
     retries: 1,
-    concurrency: { limit: 8 }, // cheaper step, higher parallelism
+    concurrency: { limit: 4 }, // sheet step — stay under free-plan cap (5)
     triggers: [
       { event: "journeysprout/order.created" },
       { event: "journeysprout/sheet.regenerate" },
