@@ -80,20 +80,38 @@ async function runAndLog<T>(
   provider: Provider,
   kind: CostKind,
   meta: GenMeta | undefined,
-  run: (m: ImageProvider) => Promise<T>
+  run: (m: ImageProvider) => Promise<T>,
+  fallbackFrom: Provider | null = null
 ): Promise<T> {
   const startedAt = Date.now();
-  const result = await run(mod(provider));
-  const durationMs = Date.now() - startedAt;
-  // Fire-and-forget — logCostEvent swallows its own errors.
-  void logCostEvent({
-    orderId: meta?.orderId ?? null,
-    kind,
-    provider,
-    model: MODEL_ID[provider][kind],
-    durationMs,
-  });
-  return result;
+  try {
+    const result = await run(mod(provider));
+    const durationMs = Date.now() - startedAt;
+    // Fire-and-forget — logCostEvent swallows its own errors.
+    void logCostEvent({
+      orderId: meta?.orderId ?? null,
+      kind,
+      provider,
+      model: MODEL_ID[provider][kind],
+      durationMs,
+      status: "success",
+      fallbackFrom,
+    });
+    return result;
+  } catch (err) {
+    const durationMs = Date.now() - startedAt;
+    void logCostEvent({
+      orderId: meta?.orderId ?? null,
+      kind,
+      provider,
+      model: MODEL_ID[provider][kind],
+      durationMs,
+      status: "failed",
+      errorMessage: (err as Error).message,
+      fallbackFrom,
+    });
+    throw err;
+  }
 }
 
 async function withFallback<T>(
@@ -104,7 +122,7 @@ async function withFallback<T>(
 ): Promise<T> {
   const tried: Provider[] = [primary];
   try {
-    return await runAndLog(primary, kind, meta, run);
+    return await runAndLog(primary, kind, meta, run, null);
   } catch (err) {
     console.warn(
       `[image-gen] ${kind} failed on ${primary}:`,
@@ -115,7 +133,7 @@ async function withFallback<T>(
       tried.push(secondary);
       try {
         console.warn(`[image-gen] ${kind} falling back to ${secondary}`);
-        return await runAndLog(secondary, kind, meta, run);
+        return await runAndLog(secondary, kind, meta, run, primary);
       } catch (err2) {
         console.warn(
           `[image-gen] ${kind} also failed on ${secondary}:`,

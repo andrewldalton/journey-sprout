@@ -1,9 +1,10 @@
 /**
  * Per-order image-generation cost tracking.
  *
- * Every successful image-gen provider call writes one row to `cost_events`.
+ * Every provider call (success or failure) writes one row to `cost_events`.
  * Cost is computed in JS from a static price table — no billing API scrape.
- * `/admin/costs` reads the aggregates.
+ * Failed calls record cost_usd = 0 because providers don't bill failed
+ * requests. `/admin/costs` reads the aggregates.
  */
 import postgres from "postgres";
 
@@ -20,6 +21,9 @@ export type CostEvent = {
   model: string;
   durationMs: number;
   costUsd: number;
+  status: "success" | "failed";
+  errorMessage: string | null;
+  fallbackFrom: CostProvider | null;
   createdAt: Date;
 };
 
@@ -69,12 +73,21 @@ async function ensureSchema(sql: Sql): Promise<void> {
   `;
   await sql`CREATE INDEX IF NOT EXISTS cost_events_order_idx ON cost_events (order_id)`;
   await sql`CREATE INDEX IF NOT EXISTS cost_events_created_idx ON cost_events (created_at DESC)`;
+  // Additive migrations for existing deployments — idempotent.
+  await sql`ALTER TABLE cost_events ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'success'`;
+  await sql`ALTER TABLE cost_events ADD COLUMN IF NOT EXISTS error_message TEXT`;
+  await sql`ALTER TABLE cost_events ADD COLUMN IF NOT EXISTS fallback_from TEXT`;
+  await sql`CREATE INDEX IF NOT EXISTS cost_events_status_idx ON cost_events (status)`;
   schemaReady = true;
 }
 
 /**
- * Log one successful provider call. Best-effort: swallows DB errors so a
- * logging failure never takes down a book render.
+ * Log one provider call (success or failure). Best-effort: swallows DB
+ * errors so a logging failure never takes down a book render.
+ *
+ * When `status === "failed"`, `cost_usd` is forced to 0 — providers don't
+ * bill failed requests, and keeping failed rows at $0 means they don't
+ * inflate totals or per-book averages.
  */
 export async function logCostEvent(args: {
   orderId?: string | null;
@@ -82,21 +95,32 @@ export async function logCostEvent(args: {
   provider: CostProvider;
   model: string;
   durationMs: number;
+  status: "success" | "failed";
+  errorMessage?: string | null;
+  fallbackFrom?: CostProvider | null;
 }): Promise<void> {
   const sql = getSql();
   if (!sql) return;
   try {
     await ensureSchema(sql);
-    const costUsd = priceFor(args.provider, args.kind);
+    const costUsd = args.status === "failed" ? 0 : priceFor(args.provider, args.kind);
+    const truncatedError =
+      args.errorMessage != null ? args.errorMessage.slice(0, 500) : null;
     await sql`
-      INSERT INTO cost_events (order_id, kind, provider, model, duration_ms, cost_usd)
+      INSERT INTO cost_events (
+        order_id, kind, provider, model, duration_ms, cost_usd,
+        status, error_message, fallback_from
+      )
       VALUES (
         ${args.orderId ?? null},
         ${args.kind},
         ${args.provider},
         ${args.model},
         ${args.durationMs},
-        ${costUsd}
+        ${costUsd},
+        ${args.status},
+        ${truncatedError},
+        ${args.fallbackFrom ?? null}
       )
     `;
   } catch (err) {
@@ -121,6 +145,7 @@ export type CostSummary = {
     calls: number;
     usd: number;
     avgDurationMs: number;
+    failureRate: number;
   }>;
   recentOrders: Array<{
     orderId: string;
@@ -128,6 +153,8 @@ export type CostSummary = {
     status: string | null;
     calls: number;
     usd: number;
+    failedCalls: number;
+    fallbackCalls: number;
     firstAt: Date;
     lastAt: Date;
   }>;
@@ -137,6 +164,13 @@ export type CostSummary = {
     calls: number;
     usd: number;
     vsAvg: number; // ratio to per-book avg
+  }>;
+  recentFailures: Array<{
+    orderId: string | null;
+    kind: CostKind;
+    provider: CostProvider;
+    errorMessage: string | null;
+    createdAt: Date;
   }>;
 };
 
@@ -155,6 +189,7 @@ export async function getCostSummary(): Promise<CostSummary | null> {
     perBookRow,
     providerRows,
     recentRows,
+    failureRows,
   ] = await Promise.all([
     sql<TotalRow[]>`SELECT COUNT(*)::text AS calls, COALESCE(SUM(cost_usd), 0)::text AS usd FROM cost_events`,
     sql<TotalRow[]>`SELECT COUNT(*)::text AS calls, COALESCE(SUM(cost_usd), 0)::text AS usd FROM cost_events WHERE created_at > now() - interval '30 days'`,
@@ -172,12 +207,19 @@ export async function getCostSummary(): Promise<CostSummary | null> {
         GROUP BY order_id
       ) b
     `,
-    sql<{ provider: CostProvider; calls: string; usd: string; avg_duration_ms: string }[]>`
+    sql<{
+      provider: CostProvider;
+      calls: string;
+      usd: string;
+      avg_duration_ms: string;
+      failed: string;
+    }[]>`
       SELECT
         provider,
         COUNT(*)::text AS calls,
         COALESCE(SUM(cost_usd), 0)::text AS usd,
-        COALESCE(AVG(duration_ms), 0)::text AS avg_duration_ms
+        COALESCE(AVG(duration_ms), 0)::text AS avg_duration_ms,
+        COUNT(*) FILTER (WHERE status = 'failed')::text AS failed
       FROM cost_events
       GROUP BY provider
       ORDER BY SUM(cost_usd) DESC NULLS LAST
@@ -188,6 +230,8 @@ export async function getCostSummary(): Promise<CostSummary | null> {
       status: string | null;
       calls: string;
       usd: string;
+      failed_calls: string;
+      fallback_calls: string;
       first_at: Date;
       last_at: Date;
     }[]>`
@@ -197,6 +241,8 @@ export async function getCostSummary(): Promise<CostSummary | null> {
         o.status,
         COUNT(*)::text AS calls,
         COALESCE(SUM(c.cost_usd), 0)::text AS usd,
+        COUNT(*) FILTER (WHERE c.status = 'failed')::text AS failed_calls,
+        COUNT(*) FILTER (WHERE c.fallback_from IS NOT NULL)::text AS fallback_calls,
         MIN(c.created_at) AS first_at,
         MAX(c.created_at) AS last_at
       FROM cost_events c
@@ -205,6 +251,19 @@ export async function getCostSummary(): Promise<CostSummary | null> {
       GROUP BY c.order_id, o.hero_name, o.status
       ORDER BY MAX(c.created_at) DESC
       LIMIT 25
+    `,
+    sql<{
+      order_id: string | null;
+      kind: CostKind;
+      provider: CostProvider;
+      error_message: string | null;
+      created_at: Date;
+    }[]>`
+      SELECT order_id, kind, provider, error_message, created_at
+      FROM cost_events
+      WHERE status = 'failed'
+      ORDER BY created_at DESC
+      LIMIT 20
     `,
   ]);
 
@@ -238,22 +297,36 @@ export async function getCostSummary(): Promise<CostSummary | null> {
       avgCalls: parseFloat(perBookRow[0]?.avg_calls ?? "0"),
       bookCount: parseInt(perBookRow[0]?.book_count ?? "0", 10),
     },
-    providerSplit: providerRows.map((r) => ({
-      provider: r.provider,
-      calls: parseInt(r.calls, 10),
-      usd: parseFloat(r.usd),
-      avgDurationMs: parseFloat(r.avg_duration_ms),
-    })),
+    providerSplit: providerRows.map((r) => {
+      const calls = parseInt(r.calls, 10);
+      const failed = parseInt(r.failed, 10);
+      return {
+        provider: r.provider,
+        calls,
+        usd: parseFloat(r.usd),
+        avgDurationMs: parseFloat(r.avg_duration_ms),
+        failureRate: calls > 0 ? failed / calls : 0,
+      };
+    }),
     recentOrders: recentRows.map((r) => ({
       orderId: r.order_id,
       heroName: r.hero_name,
       status: r.status,
       calls: parseInt(r.calls, 10),
       usd: parseFloat(r.usd),
+      failedCalls: parseInt(r.failed_calls, 10),
+      fallbackCalls: parseInt(r.fallback_calls, 10),
       firstAt: r.first_at,
       lastAt: r.last_at,
     })),
     outliers,
+    recentFailures: failureRows.map((r) => ({
+      orderId: r.order_id,
+      kind: r.kind,
+      provider: r.provider,
+      errorMessage: r.error_message,
+      createdAt: r.created_at,
+    })),
   };
 }
 
@@ -269,9 +342,13 @@ export async function getOrderCostBreakdown(orderId: string): Promise<CostEvent[
     model: string;
     duration_ms: number;
     cost_usd: string;
+    status: "success" | "failed";
+    error_message: string | null;
+    fallback_from: CostProvider | null;
     created_at: Date;
   }[]>`
-    SELECT id::text, order_id, kind, provider, model, duration_ms, cost_usd::text, created_at
+    SELECT id::text, order_id, kind, provider, model, duration_ms, cost_usd::text,
+           status, error_message, fallback_from, created_at
     FROM cost_events
     WHERE order_id = ${orderId}
     ORDER BY created_at ASC
@@ -284,6 +361,9 @@ export async function getOrderCostBreakdown(orderId: string): Promise<CostEvent[
     model: r.model,
     durationMs: r.duration_ms,
     costUsd: parseFloat(r.cost_usd),
+    status: r.status,
+    errorMessage: r.error_message,
+    fallbackFrom: r.fallback_from,
     createdAt: r.created_at,
   }));
 }

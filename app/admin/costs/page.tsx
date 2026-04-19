@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
@@ -102,6 +103,7 @@ export default async function CostsPage({
       <ProviderSplitTable summary={summary} />
       <RecentOrdersTable summary={summary} token={params.token ?? ""} />
       <OutliersTable summary={summary} token={params.token ?? ""} />
+      <RecentFailuresTable summary={summary} token={params.token ?? ""} />
 
       {orderBreakdown && (
         <OrderDrillIn
@@ -178,6 +180,7 @@ function ProviderSplitTable({ summary }: { summary: CostSummary }) {
               <th className="px-3 py-2 text-right">spend</th>
               <th className="px-3 py-2 text-right">share</th>
               <th className="px-3 py-2 text-right">avg duration</th>
+              <th className="px-3 py-2 text-right">failure rate</th>
             </tr>
           </thead>
           <tbody>
@@ -190,6 +193,15 @@ function ProviderSplitTable({ summary }: { summary: CostSummary }) {
                   {totalUsd ? `${((r.usd / totalUsd) * 100).toFixed(0)}%` : "—"}
                 </td>
                 <td className="px-3 py-2 text-right">{fmtMs(r.avgDurationMs)}</td>
+                <td
+                  className={`px-3 py-2 text-right ${
+                    r.calls > 0 && r.failureRate > 0 ? "text-terracotta" : ""
+                  }`}
+                >
+                  {r.calls === 0
+                    ? "—"
+                    : `${(r.failureRate * 100).toFixed(1)}%`}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -240,6 +252,22 @@ function RecentOrdersTable({
                   >
                     {r.orderId}
                   </Link>
+                  {r.failedCalls > 0 && (
+                    <span
+                      className="ml-1 text-terracotta"
+                      title={`${r.failedCalls} failed call${r.failedCalls === 1 ? "" : "s"}`}
+                    >
+                      ⚠
+                    </span>
+                  )}
+                  {r.fallbackCalls > 0 && (
+                    <span
+                      className="ml-1 text-gold"
+                      title={`${r.fallbackCalls} fallback call${r.fallbackCalls === 1 ? "" : "s"}`}
+                    >
+                      ↪
+                    </span>
+                  )}
                 </td>
                 <td className="px-3 py-2">{r.heroName ?? "—"}</td>
                 <td className="px-3 py-2 text-xs">{r.status ?? "—"}</td>
@@ -307,6 +335,68 @@ function OutliersTable({
   );
 }
 
+function RecentFailuresTable({
+  summary,
+  token,
+}: {
+  summary: CostSummary;
+  token: string;
+}) {
+  if (summary.recentFailures.length === 0) return null;
+  return (
+    <section className="mb-6">
+      <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-terracotta">
+        recent failures
+      </h2>
+      <div className="overflow-hidden rounded-lg border border-border-warm bg-white/60">
+        <table className="w-full table-fixed text-sm">
+          <thead className="bg-cream text-xs uppercase text-ink/60">
+            <tr>
+              <th className="w-32 px-3 py-2 text-left">when</th>
+              <th className="w-40 px-3 py-2 text-left">order</th>
+              <th className="w-20 px-3 py-2 text-left">kind</th>
+              <th className="w-24 px-3 py-2 text-left">provider</th>
+              <th className="px-3 py-2 text-left">error</th>
+            </tr>
+          </thead>
+          <tbody>
+            {summary.recentFailures.map((f, i) => (
+              <tr
+                key={`${f.orderId ?? "noorder"}-${i}`}
+                className="border-t border-border-warm/60"
+              >
+                <td className="px-3 py-2 text-xs text-ink/60">
+                  {fmtDate(f.createdAt)}
+                </td>
+                <td className="px-3 py-2 font-mono text-xs">
+                  {f.orderId ? (
+                    <Link
+                      href={`/admin/costs?token=${token}&order=${f.orderId}`}
+                      className="text-terracotta underline"
+                    >
+                      {f.orderId}
+                    </Link>
+                  ) : (
+                    <span className="text-ink/50">—</span>
+                  )}
+                </td>
+                <td className="px-3 py-2 text-xs">{f.kind}</td>
+                <td className="px-3 py-2 font-mono text-xs">{f.provider}</td>
+                <td
+                  className="truncate px-3 py-2 text-xs text-terracotta"
+                  title={f.errorMessage ?? ""}
+                >
+                  {f.errorMessage ?? "—"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
 function OrderDrillIn({
   orderId,
   events,
@@ -315,16 +405,16 @@ function OrderDrillIn({
   events: CostEvent[];
 }) {
   const total = events.reduce((acc, e) => acc + e.costUsd, 0);
-  const byKind = events.reduce<Record<string, { count: number; usd: number }>>(
-    (acc, e) => {
-      const k = e.kind;
-      if (!acc[k]) acc[k] = { count: 0, usd: 0 };
-      acc[k].count += 1;
-      acc[k].usd += e.costUsd;
-      return acc;
-    },
-    {}
-  );
+  const byKind = events.reduce<
+    Record<string, { success: number; failed: number; usd: number }>
+  >((acc, e) => {
+    const k = e.kind;
+    if (!acc[k]) acc[k] = { success: 0, failed: 0, usd: 0 };
+    if (e.status === "failed") acc[k].failed += 1;
+    else acc[k].success += 1;
+    acc[k].usd += e.costUsd;
+    return acc;
+  }, {});
   return (
     <section className="mb-6">
       <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink/70">
@@ -336,7 +426,13 @@ function OrderDrillIn({
             key={k}
             className="rounded bg-cream px-2 py-1 border border-border-warm"
           >
-            {k}: {v.count} × → {fmtUsdFine(v.usd)}
+            {k}: <span className="text-sage">{v.success} success</span>
+            {v.failed > 0 && (
+              <>
+                , <span className="text-terracotta">{v.failed} failed</span>
+              </>
+            )}{" "}
+            → {fmtUsdFine(v.usd)}
           </span>
         ))}
       </div>
@@ -345,6 +441,7 @@ function OrderDrillIn({
           <thead className="bg-cream text-xs uppercase text-ink/60">
             <tr>
               <th className="px-3 py-2 text-left">when</th>
+              <th className="px-3 py-2 text-left">status</th>
               <th className="px-3 py-2 text-left">kind</th>
               <th className="px-3 py-2 text-left">provider</th>
               <th className="px-3 py-2 text-left">model</th>
@@ -353,16 +450,51 @@ function OrderDrillIn({
             </tr>
           </thead>
           <tbody>
-            {events.map((e) => (
-              <tr key={e.id} className="border-t border-border-warm/60">
-                <td className="px-3 py-2 text-xs text-ink/60">{fmtDate(e.createdAt)}</td>
-                <td className="px-3 py-2">{e.kind}</td>
-                <td className="px-3 py-2 font-mono text-xs">{e.provider}</td>
-                <td className="px-3 py-2 font-mono text-xs">{e.model}</td>
-                <td className="px-3 py-2 text-right">{fmtMs(e.durationMs)}</td>
-                <td className="px-3 py-2 text-right">{fmtUsdFine(e.costUsd)}</td>
-              </tr>
-            ))}
+            {events.map((e) => {
+              const failed = e.status === "failed";
+              return (
+                <Fragment key={e.id}>
+                  <tr
+                    className="border-t border-border-warm/60"
+                    title={failed && e.errorMessage ? e.errorMessage : undefined}
+                  >
+                    <td className="px-3 py-2 text-xs text-ink/60">{fmtDate(e.createdAt)}</td>
+                    <td
+                      className={`px-3 py-2 text-xs ${
+                        failed ? "text-terracotta" : "text-sage"
+                      }`}
+                    >
+                      {failed ? "✗ failed" : "✓ success"}
+                    </td>
+                    <td className="px-3 py-2">{e.kind}</td>
+                    <td className="px-3 py-2 font-mono text-xs">
+                      {e.provider}
+                      {e.fallbackFrom && (
+                        <span
+                          className="ml-2 rounded border border-border-warm/60 bg-cream px-1.5 py-0.5 text-[10px] text-gold"
+                          title={`fallback from ${e.fallbackFrom}`}
+                        >
+                          fallback from {e.fallbackFrom}
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2 font-mono text-xs">{e.model}</td>
+                    <td className="px-3 py-2 text-right">{fmtMs(e.durationMs)}</td>
+                    <td className="px-3 py-2 text-right">{fmtUsdFine(e.costUsd)}</td>
+                  </tr>
+                  {failed && e.errorMessage && (
+                    <tr className="border-t border-border-warm/60 bg-terracotta/5">
+                      <td
+                        colSpan={7}
+                        className="px-3 py-1 text-xs text-terracotta"
+                      >
+                        {e.errorMessage}
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>
