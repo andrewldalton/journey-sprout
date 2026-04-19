@@ -190,6 +190,85 @@ function capitalize(s: string): string {
   return s.length ? s[0].toUpperCase() + s.slice(1) : s;
 }
 
+/**
+ * Pre-ship QA. Show Gemini Vision the approved sheet and a just-rendered
+ * page/cover side-by-side and ask: is this the same kid with the same
+ * hairstyle, accessories, outfit, and apparent age?
+ *
+ * Returns { pass, reason } so the pipeline can decide whether to accept
+ * or re-render the page. Token-cheap Vision call.
+ */
+export async function qaHeroMatch(params: {
+  sheetBytes: Buffer;
+  renderedBytes: Buffer;
+  heroFeatures: HeroFeatures | null;
+}): Promise<{ pass: boolean; reason: string }> {
+  const featuresBullets = params.heroFeatures
+    ? [
+        `- HAIR: ${params.heroFeatures.hair}`,
+        `- ACCESSORIES: ${params.heroFeatures.accessories}`,
+        `- OUTFIT: ${params.heroFeatures.outfit}`,
+        `- FACE: ${params.heroFeatures.face}`,
+        `- EYES: ${params.heroFeatures.eyes}`,
+        `- BUILD/AGE: ${params.heroFeatures.build}`,
+      ].join("\n")
+    : "";
+
+  const prompt = `
+You are a pre-ship quality checker for a children's picture book.
+
+The FIRST image is the APPROVED CHARACTER SHEET — the canonical portrait of the hero child the customer signed off on.
+The SECOND image is a rendered illustration from the book that's about to ship.
+
+Your job: decide whether the child in the second image is the SAME exact child as the first, with the SAME hairstyle, SAME accessories, SAME outfit, SAME apparent age.
+
+Check every one of these against the sheet:
+${featuresBullets}
+
+Be strict. Call out any drift:
+- wrong hairstyle (bun down when it should be up, different braid, hair flowing when pinned, etc)
+- missing or changed accessories (glasses dropped, headband missing)
+- different outfit (different top color, different pants, different shoes)
+- wrong apparent age (child looks older or younger than the sheet)
+- clearly different face (different nose shape, different eye color, different skin tone)
+
+Minor artistic variation (slight pose, camera angle, scene lighting shadows) is fine. A child who looks clearly like someone else is NOT fine.
+
+Return ONLY a single JSON object, nothing else, no markdown fences:
+{
+  "pass": true | false,
+  "reason": "one short sentence — what matches or what drifted. max 25 words."
+}
+`.trim();
+
+  const parts: unknown[] = [
+    partFromBuffer(params.sheetBytes, "image/png"),
+    partFromBuffer(params.renderedBytes, "image/png"),
+    { text: prompt },
+  ];
+  const res = await ai().models.generateContent({
+    model: "gemini-2.5-flash",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    contents: [{ role: "user", parts: parts as any }],
+  });
+  const cand = res.candidates?.[0];
+  const text =
+    (cand?.content?.parts?.map((p) => p.text).filter(Boolean) ?? []).join(" ").trim();
+
+  // Parse JSON, tolerate markdown fences.
+  const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  try {
+    const o = JSON.parse(cleaned);
+    if (typeof o.pass === "boolean") {
+      return { pass: o.pass, reason: typeof o.reason === "string" ? o.reason : "" };
+    }
+  } catch {
+    // If the QA model fails to return valid JSON, default to PASS so we
+    // don't block delivery on a parsing flake.
+  }
+  return { pass: true, reason: "qa-parse-failed" };
+}
+
 export function parseHeroFeatures(raw: string | null | undefined): HeroFeatures | null {
   if (!raw) return null;
   // Tolerate markdown fences in case Gemini adds them.

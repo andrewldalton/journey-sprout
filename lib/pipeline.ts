@@ -10,7 +10,7 @@ import {
   generateCover,
   generatePage,
 } from "./image-gen";
-import { describeHero } from "./gemini";
+import { describeHero, qaHeroMatch, parseHeroFeatures } from "./gemini";
 import { getOrder, updateOrder } from "./db";
 import { composeCoverTypography, composePageBubble } from "./overlay";
 import {
@@ -123,17 +123,40 @@ export async function runPageStep(
   ]);
 
   const heroFeatures = await loadHeroFeatures(ctx.orderId);
+  const parsedFeatures = parseHeroFeatures(heroFeatures);
 
-  const raw = await generatePage({
-    heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
-    heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
-    companionSheet: { type: "file", path: companionSheetFile },
-    settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
-    brief: page.brief,
-    textPosition: page.textPosition,
-    heroFeatures: heroFeatures ?? undefined,
-    heroAge: ctx.heroAge,
-  });
+  // Pre-ship QA loop: render, Vision-check against the sheet, retry up to
+  // 2 more times if the hero drifts. Silent fix — customer never sees a
+  // bad page if the re-render succeeds.
+  const MAX_ATTEMPTS = 3;
+  let raw!: Buffer;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    raw = await generatePage({
+      heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
+      heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
+      companionSheet: { type: "file", path: companionSheetFile },
+      settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
+      brief: page.brief,
+      textPosition: page.textPosition,
+      heroFeatures: heroFeatures ?? undefined,
+      heroAge: ctx.heroAge,
+    });
+    if (attempt === MAX_ATTEMPTS) break;
+    try {
+      const qa = await qaHeroMatch({
+        sheetBytes,
+        renderedBytes: raw,
+        heroFeatures: parsedFeatures,
+      });
+      if (qa.pass) break;
+      console.warn(
+        `[qa] order ${ctx.orderId} page ${page.num} attempt ${attempt} drifted: ${qa.reason} — retrying`
+      );
+    } catch (e) {
+      console.warn(`[qa] order ${ctx.orderId} page ${page.num} qa-call failed, accepting:`, e);
+      break;
+    }
+  }
 
   const composed = await composePageBubble({
     rawImage: raw,
@@ -166,19 +189,39 @@ export async function runCoverStep(
   ]);
 
   const heroFeatures = await loadHeroFeatures(ctx.orderId);
+  const parsedFeatures = parseHeroFeatures(heroFeatures);
 
-  const raw = await generateCover({
-    heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
-    heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
-    companionSheet: { type: "file", path: companionSheetFile },
-    settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
-    coverBrief: manuscript.coverBrief ?? "",
-    storyTitle: manuscript.title,
-    heroName: ctx.heroName,
-    companionName: companion.name,
-    heroFeatures: heroFeatures ?? undefined,
-    heroAge: ctx.heroAge,
-  });
+  const MAX_ATTEMPTS = 3;
+  let raw!: Buffer;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    raw = await generateCover({
+      heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
+      heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
+      companionSheet: { type: "file", path: companionSheetFile },
+      settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
+      coverBrief: manuscript.coverBrief ?? "",
+      storyTitle: manuscript.title,
+      heroName: ctx.heroName,
+      companionName: companion.name,
+      heroFeatures: heroFeatures ?? undefined,
+      heroAge: ctx.heroAge,
+    });
+    if (attempt === MAX_ATTEMPTS) break;
+    try {
+      const qa = await qaHeroMatch({
+        sheetBytes,
+        renderedBytes: raw,
+        heroFeatures: parsedFeatures,
+      });
+      if (qa.pass) break;
+      console.warn(
+        `[qa] order ${ctx.orderId} cover attempt ${attempt} drifted: ${qa.reason} — retrying`
+      );
+    } catch (e) {
+      console.warn(`[qa] order ${ctx.orderId} cover qa-call failed, accepting:`, e);
+      break;
+    }
+  }
 
   const composed = await composeCoverTypography({
     rawImage: raw,
