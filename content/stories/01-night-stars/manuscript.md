@@ -227,6 +227,9 @@ A long ribbon of stardust swirls past, soft and singing. {HERO} reaches out and 
 - Composition: Stardust ribbon as diagonal spine of the page, hero at its center catching, companion beside listening — soft, quiet, luminous beat before the climax.
 - Exclusions: no text, no letters, no numbers, no borders or frames, no dark void, no cold silver, no scary creatures. {HERO} is NEVER outside the bubble helmet; the bubble wall stays intact even with the ribbon curling around it. The ribbon curls AROUND the outside of the helmets — it does NOT pierce them or break their shimmer. Neither character is standing on any planet this page.
 
+**PAGE TURN HOOK:**
+A ribbon of singing stardust and a handful of glow in {HERO}'s palm — the reader wants to see where the song leads next.
+
 ---
 
 ### PAGE 9
