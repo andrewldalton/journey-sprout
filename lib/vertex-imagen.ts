@@ -214,22 +214,9 @@ export async function generatePage(params: {
     },
   });
 
-  if (params.heroPhoto) {
-    refs.push({
-      referenceType: "REFERENCE_TYPE_SUBJECT",
-      referenceId: 2,
-      referenceImage: refToBase64(params.heroPhoto),
-      subjectImageConfig: {
-        subjectDescription: "the hero child (likeness anchor)",
-        subjectType: "SUBJECT_TYPE_PERSON",
-      },
-    });
-  }
-
-  const companionRefId = params.heroPhoto ? 3 : 2;
   refs.push({
     referenceType: "REFERENCE_TYPE_SUBJECT",
-    referenceId: companionRefId,
+    referenceId: 2,
     referenceImage: refToBase64(params.companionSheet),
     subjectImageConfig: {
       subjectDescription: "the companion animal",
@@ -237,7 +224,7 @@ export async function generatePage(params: {
     },
   });
 
-  let nextId = companionRefId + 1;
+  let nextId = 3;
   for (const s of params.settingSheets) {
     refs.push({
       referenceType: "REFERENCE_TYPE_STYLE",
@@ -264,8 +251,8 @@ SCENE BRIEF:
 ${params.brief}
 
 IDENTITY LOCK (ABSOLUTE):
-- [1] is the hero character sheet — the painted watercolor reference for this child in this story's style.
-${params.heroPhoto ? "- [2] is the real photo of the same child; anchor facial likeness (eyes, nose, mouth, hair, skin tone) to this photo. Render in watercolor style, not photo-realistic.\n" : ""}- The companion reference must be matched for species, colors, proportions, silhouette, and distinguishing marks exactly.
+- [1] is the hero character sheet. The child on this page MUST match the sheet exactly: face shape, eye shape, eye color, nose, mouth, skin tone, hair (length, color, texture, or lack of hair). Render in the sheet's watercolor style. Do NOT add hair the sheet doesn't show, do NOT change face proportions, do NOT age the child up or down.
+- [2] is the companion reference. Match species, colors, proportions, silhouette, and distinguishing marks exactly.
 - The setting reference(s) lock the environment, architecture, and recurring props. Do NOT reinvent the house, porch, bedroom, meadow, clearing, or any recurring object. Camera angle, time of day, and weather may change per the brief, but setting geometry and identifying props are locked to the sheet(s).
 
 COMPOSITION:
@@ -304,22 +291,9 @@ export async function generateCover(params: {
     },
   });
 
-  if (params.heroPhoto) {
-    refs.push({
-      referenceType: "REFERENCE_TYPE_SUBJECT",
-      referenceId: 2,
-      referenceImage: refToBase64(params.heroPhoto),
-      subjectImageConfig: {
-        subjectDescription: `${params.heroName} (real-photo likeness anchor)`,
-        subjectType: "SUBJECT_TYPE_PERSON",
-      },
-    });
-  }
-
-  const companionRefId = params.heroPhoto ? 3 : 2;
   refs.push({
     referenceType: "REFERENCE_TYPE_SUBJECT",
-    referenceId: companionRefId,
+    referenceId: 2,
     referenceImage: refToBase64(params.companionSheet),
     subjectImageConfig: {
       subjectDescription: `${params.companionName}, the animal companion`,
@@ -327,7 +301,7 @@ export async function generateCover(params: {
     },
   });
 
-  let nextId = companionRefId + 1;
+  let nextId = 3;
   for (const s of params.settingSheets) {
     refs.push({
       referenceType: "REFERENCE_TYPE_STYLE",
@@ -349,8 +323,8 @@ COVER SCENE:
 ${params.coverBrief || fallbackBrief}
 
 IDENTITY LOCK:
-- [1] is the hero character sheet.
-${params.heroPhoto ? "- [2] is the real photo of the same child. Anchor facial likeness (eyes, nose, mouth, hair, skin tone) to this photo. Render in watercolor style, not photo-realistic.\n" : ""}- Match the companion's colors, proportions, and silhouette exactly.
+- [1] is the hero character sheet. The child on the cover MUST match the sheet exactly: face shape, eye shape, eye color, nose, mouth, skin tone, hair (length, color, texture, or lack of hair). Do NOT add hair the sheet doesn't show and do NOT change face proportions.
+- Match the companion's colors, proportions, and silhouette exactly.
 - The environment and recurring props must match the setting reference(s).
 
 COMPOSITION:
