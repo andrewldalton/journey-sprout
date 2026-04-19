@@ -138,7 +138,7 @@ export function StepApproveSheet({ orderId, heroName, onApproved, onBack }: Prop
       </div>
 
       <h1
-        className="font-display font-bold text-4xl md:text-5xl leading-tight text-ink mt-5 fade-rise"
+        className="font-display font-bold text-[2.25rem] sm:text-4xl md:text-5xl leading-tight text-ink mt-5 fade-rise break-words"
         data-delay="2"
       >
         <Sparkle color="#CA8A04" className="w-5 h-5 inline-block mr-2 -mt-1" />
@@ -163,7 +163,7 @@ export function StepApproveSheet({ orderId, heroName, onApproved, onBack }: Prop
       <div className="mt-10 flex justify-center fade-rise" data-delay="4">
         {inReview && snapshot?.sheetUrl ? (
           <div
-            className="relative w-[280px] aspect-[3/4] rounded-[20px] overflow-hidden bg-paper-deep"
+            className="relative w-[240px] sm:w-[280px] aspect-[3/4] rounded-[20px] overflow-hidden bg-paper-deep"
             style={{
               boxShadow:
                 "0 40px 60px -30px rgba(45, 27, 15, 0.35), 0 10px 18px -6px rgba(45, 27, 15, 0.18)",
@@ -174,14 +174,14 @@ export function StepApproveSheet({ orderId, heroName, onApproved, onBack }: Prop
               alt={`${heroName} painted in watercolor`}
               fill
               className="object-cover"
-              sizes="280px"
+              sizes="(max-width: 639px) 240px, 280px"
               priority
               unoptimized
             />
           </div>
         ) : (
           <div
-            className="w-[280px] aspect-[3/4] rounded-[20px] bg-paper-deep flex items-center justify-center"
+            className="w-[240px] sm:w-[280px] aspect-[3/4] rounded-[20px] bg-paper-deep flex items-center justify-center"
             style={{
               boxShadow:
                 "0 40px 60px -30px rgba(45, 27, 15, 0.35), 0 10px 18px -6px rgba(45, 27, 15, 0.18)",
@@ -195,12 +195,12 @@ export function StepApproveSheet({ orderId, heroName, onApproved, onBack }: Prop
       </div>
 
       {inReview && (
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 fade-rise" data-delay="5">
+        <div className="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 fade-rise" data-delay="5">
           <button
             type="button"
             onClick={approve}
             disabled={action !== null}
-            className="btn-primary"
+            className="btn-primary w-full sm:w-auto"
           >
             {action === "approve" ? "One sec…" : "Yes, that's them"}
           </button>
@@ -208,7 +208,7 @@ export function StepApproveSheet({ orderId, heroName, onApproved, onBack }: Prop
             type="button"
             onClick={regenerate}
             disabled={action !== null || (snapshot?.regensLeft ?? 0) <= 0}
-            className="inline-flex items-center gap-2 rounded-full border-2 border-ink/15 px-6 py-3 font-display font-semibold text-ink text-base hover:border-terracotta/60 hover:text-terracotta disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-12 rounded-full border-2 border-ink/15 px-6 py-3 font-display font-semibold text-ink text-base hover:border-terracotta/60 hover:text-terracotta disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {action === "regenerate"
               ? "Repainting…"

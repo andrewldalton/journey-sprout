@@ -51,7 +51,7 @@ export function StepHero({
       </div>
 
       <h1
-        className="font-display font-bold text-4xl md:text-5xl leading-tight text-ink mt-5 fade-rise"
+        className="font-display font-bold text-[2.25rem] sm:text-4xl md:text-5xl leading-tight text-ink mt-5 fade-rise"
         data-delay="2"
       >
         <Sparkle color="#CA8A04" className="w-5 h-5 inline-block mr-2 -mt-1" />

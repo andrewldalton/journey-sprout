@@ -74,7 +74,7 @@ export function Waitlist() {
           Reserve a spot
         </p>
 
-        <h2 className="font-display font-bold text-4xl md:text-5xl lg:text-[3.5rem] leading-[1.02] text-ink mt-5 fade-rise" data-delay="2">
+        <h2 className="font-display font-bold text-[2.25rem] sm:text-4xl md:text-5xl lg:text-[3.5rem] leading-[1.04] sm:leading-[1.02] text-ink mt-5 fade-rise" data-delay="2">
           Save your spot{" "}
           <span className="relative inline-block">
             <span className="relative z-10 text-terracotta handline">in the queue.</span>
@@ -121,7 +121,7 @@ export function Waitlist() {
                 />
                 <button
                   type="submit"
-                  className="btn-primary justify-center whitespace-nowrap"
+                  className="btn-primary whitespace-nowrap w-full sm:w-auto"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Sending…" : "Join the waitlist"}

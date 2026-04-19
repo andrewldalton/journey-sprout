@@ -16,13 +16,13 @@ export function SamplePreview() {
       <Blob
         variant="b"
         color="#CA8A04"
-        className="watercolor-blob absolute -top-24 right-[-6rem] w-[420px] h-[420px]"
+        className="watercolor-blob absolute -top-24 right-[-6rem] w-[240px] h-[240px] sm:w-[340px] sm:h-[340px] md:w-[420px] md:h-[420px]"
         style={{ opacity: 0.18 }}
       />
       <Blob
         variant="a"
         color="#7FA075"
-        className="watercolor-blob absolute bottom-[-6rem] -left-24 w-[380px] h-[380px]"
+        className="watercolor-blob absolute bottom-[-6rem] -left-24 w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] md:w-[380px] md:h-[380px]"
         style={{ opacity: 0.22 }}
       />
 
@@ -44,7 +44,7 @@ export function SamplePreview() {
             A sample journey
           </p>
 
-          <h2 className="font-display font-bold text-4xl md:text-5xl lg:text-[3.6rem] leading-[1.02] text-ink mt-5 fade-rise" data-delay="2">
+          <h2 className="font-display font-bold text-[2.25rem] sm:text-4xl md:text-5xl lg:text-[3.6rem] leading-[1.04] md:leading-[1.02] text-ink mt-5 fade-rise" data-delay="2">
             One book.{" "}
             <span className="relative inline-block">
               <span className="relative z-10 text-terracotta handline">Made for one kid.</span>
@@ -74,7 +74,7 @@ export function SamplePreview() {
         </div>
 
         {/* BOOK FAN */}
-        <div className="relative h-[440px] md:h-[540px] lg:h-[600px] fade-rise" data-delay="3">
+        <div className="relative h-[320px] sm:h-[440px] md:h-[540px] lg:h-[600px] fade-rise" data-delay="3">
           {/* Page 1 — back left, deepest tilt */}
           <figure
             className="absolute left-[2%] top-[14%] w-[48%] aspect-square rounded-[22px] overflow-hidden float-soft-slower"

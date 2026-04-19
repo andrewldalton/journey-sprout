@@ -92,9 +92,9 @@ export function StepUpload({ initialDataUrl, onNext, onBack }: Props) {
           Step 1 of 5
         </p>
 
-        <h1 className="font-display font-bold text-4xl md:text-5xl leading-[1.02] text-ink mt-5 fade-rise flex items-center gap-3" data-delay="2">
+        <h1 className="font-display font-bold text-[2.25rem] sm:text-4xl md:text-5xl leading-[1.04] sm:leading-[1.02] text-ink mt-5 fade-rise flex flex-wrap items-center gap-3" data-delay="2">
           Let&rsquo;s meet your hero.
-          <Sparkle color="#CA8A04" className="w-6 h-6 opacity-90 float-soft" aria-hidden="true" />
+          <Sparkle color="#CA8A04" className="w-6 h-6 opacity-90 float-soft flex-shrink-0" aria-hidden="true" />
         </h1>
 
         <p className="font-body text-lg text-ink-soft mt-5 max-w-xl leading-relaxed fade-rise" data-delay="3">

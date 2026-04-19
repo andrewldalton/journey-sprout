@@ -204,16 +204,16 @@ export default function BookStatusPage({
       : 0;
 
   return (
-    <section className="relative overflow-hidden min-h-[80vh] flex items-center justify-center px-6 py-24 md:py-32">
+    <section className="relative overflow-hidden min-h-[80vh] flex items-center justify-center px-6 py-16 sm:py-24 md:py-32">
       <Blob
         variant="a"
         color="#7FA075"
-        className="watercolor-blob absolute -top-24 -left-24 w-[440px] h-[440px]"
+        className="watercolor-blob absolute -top-24 -left-24 w-[240px] h-[240px] sm:w-[340px] sm:h-[340px] md:w-[440px] md:h-[440px]"
       />
       <Blob
         variant="c"
         color="#CA8A04"
-        className="watercolor-blob absolute -bottom-20 -right-24 w-[460px] h-[460px]"
+        className="watercolor-blob absolute -bottom-20 -right-24 w-[260px] h-[260px] sm:w-[360px] sm:h-[360px] md:w-[460px] md:h-[460px]"
         style={{ opacity: 0.26 }}
       />
       <LeafSpray
@@ -272,7 +272,7 @@ export default function BookStatusPage({
         {inReview && order.sheetUrl && (
           <div className="mt-10 fade-rise" data-delay="4">
             <div
-              className="relative mx-auto w-[280px] aspect-[3/4] rounded-[20px] overflow-hidden bg-paper-deep"
+              className="relative mx-auto w-[240px] sm:w-[280px] aspect-[3/4] rounded-[20px] overflow-hidden bg-paper-deep"
               style={{
                 boxShadow:
                   "0 40px 60px -30px rgba(45, 27, 15, 0.35), 0 10px 18px -6px rgba(45, 27, 15, 0.18)",
@@ -283,17 +283,17 @@ export default function BookStatusPage({
                 alt={`${order.heroName} painted in watercolor`}
                 fill
                 className="object-cover"
-                sizes="280px"
+                sizes="(max-width: 639px) 240px, 280px"
                 priority
               />
             </div>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
               <button
                 type="button"
                 onClick={approve}
                 disabled={actionPending !== null}
-                className="btn-primary"
+                className="btn-primary w-full sm:w-auto"
               >
                 {actionPending === "approve" ? "Starting the book…" : "Yes, make the book"}
               </button>
@@ -301,7 +301,7 @@ export default function BookStatusPage({
                 type="button"
                 onClick={regenerate}
                 disabled={actionPending !== null || order.regensLeft <= 0}
-                className="inline-flex items-center gap-2 rounded-full border-2 border-ink/15 px-6 py-3 font-display font-semibold text-ink text-base hover:border-terracotta/60 hover:text-terracotta disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-12 rounded-full border-2 border-ink/15 px-6 py-3 font-display font-semibold text-ink text-base hover:border-terracotta/60 hover:text-terracotta disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {actionPending === "regenerate"
                   ? "Repainting…"
@@ -327,7 +327,7 @@ export default function BookStatusPage({
         {/* Regenerating — sheet re-rendering after customer clicked Try again */}
         {regenerating && (
           <div className="mt-10 fade-rise" data-delay="4">
-            <div className="mx-auto w-[280px] aspect-[3/4] rounded-[20px] bg-paper-deep flex items-center justify-center">
+            <div className="mx-auto w-[240px] sm:w-[280px] aspect-[3/4] rounded-[20px] bg-paper-deep flex items-center justify-center">
               <p className="font-body text-ink-muted text-sm animate-pulse">
                 Painting a new version…
               </p>
@@ -364,7 +364,7 @@ export default function BookStatusPage({
           >
             <a
               href={order.pdfUrl}
-              className="btn-primary"
+              className="btn-primary w-full sm:w-auto"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -373,7 +373,7 @@ export default function BookStatusPage({
                 <path d="M10 3 V 13 M 5 9 L 10 14 L 15 9 M 4 17 L 16 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
-            <p className="font-body text-sm text-ink-muted">
+            <p className="font-body text-sm text-ink-muted text-center">
               Check your inbox — we just emailed it too.
             </p>
           </div>
