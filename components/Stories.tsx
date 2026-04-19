@@ -41,7 +41,7 @@ export function Stories() {
             data-delay="2"
           >
             Pick a world.{" "}
-            <span className="text-terracotta handline">We'll meet you there.</span>
+            <span className="text-terracotta handline">We&apos;ll meet you there.</span>
           </h2>
           <p
             className="font-body text-lg text-ink-soft mt-6 leading-relaxed fade-rise"
