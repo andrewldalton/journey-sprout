@@ -207,16 +207,16 @@ export async function generatePage(params: {
   // the identity contract — passing the photo again just gives FLUX two
   // references to reconcile and causes drift. Sheet + companion + settings.
   void params.heroPhoto;
-  // Double-weight the sheet by passing it twice. FLUX Kontext Multi averages
-  // attention across the reference bundle; duplicating the sheet makes its
-  // distinctive features (hair curl pattern, outfit colors, eye color)
-  // survive mean-reversion better when the scene/setting is busy.
+  // FLUX Kontext Multi hard-caps at 4 refs ("image_urls must be between 1
+  // and 4"). We used to double-weight the sheet by passing it twice, but
+  // that pushed us to 5 refs on stories with 2 settings and every call
+  // 422'd. Drop the duplicate; identity anchor is the single sheet ref +
+  // the heroFeatures text block + the canonical outfit string.
   const refs: ImgRef[] = [
-    params.heroSheet,
     params.heroSheet,
     params.companionSheet,
     ...params.settingSheets,
-  ];
+  ].slice(0, 4);
 
   const textZone =
     params.textPosition === "bottom"
@@ -277,7 +277,7 @@ ${topFeatureLines}SCENE BRIEF:
 ${params.brief}
 
 HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-The first two reference images are the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. (The sheet is included twice to make sure you weight it heavily.) The child on this page MUST BE IDENTICAL to the sheet:
+The FIRST reference image is the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet:
 - SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone.
 - SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline. If the sheet shows tight ringlet curls, do NOT render looser waves. If the sheet shows short hair, do NOT grow it out.
 - SAME outfit — same top, same bottoms, same shoes.
@@ -318,14 +318,14 @@ export async function generateCover(params: {
   canonicalOutfit?: string;
 }): Promise<Buffer> {
   // Sheet is the identity contract post-approval — photo ref dropped.
-  // Sheet is passed twice to double-weight (see generatePage for rationale).
+  // FLUX Kontext Multi caps at 4 refs; sheet duplication used to push us
+  // over on 2-setting stories. See generatePage for rationale.
   void params.heroPhoto;
   const refs: ImgRef[] = [
     params.heroSheet,
-    params.heroSheet,
     params.companionSheet,
     ...params.settingSheets,
-  ];
+  ].slice(0, 4);
 
   const fallbackBrief = `${params.heroName} and ${params.companionName} stand together at the heart of the story's anchor setting in a welcoming inviting pose, warm open expression on ${params.heroName}'s face, ${params.companionName} close beside as friend.`;
 
@@ -336,7 +336,7 @@ COVER SCENE:
 ${params.coverBrief || fallbackBrief}
 
 HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-The first two reference images are ${params.heroName}'s APPROVED CHARACTER SHEET (included twice to double-weight it). The child on the cover MUST BE IDENTICAL to the sheet:
+The FIRST reference image is ${params.heroName}'s APPROVED CHARACTER SHEET. The child on the cover MUST BE IDENTICAL to the sheet:
 - SAME face shape, eye shape, eye color, nose, mouth, skin tone, cheek fullness.
 - SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline. If the sheet shows tight curls, keep tight curls.
 - SAME outfit — same top, same bottoms, same shoes.
