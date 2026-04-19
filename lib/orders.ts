@@ -9,6 +9,7 @@
 import postgres from "postgres";
 import { Resend } from "resend";
 import crypto from "node:crypto";
+import { STORIES, COMPANIONS } from "./catalog";
 
 let sql: ReturnType<typeof postgres> | null = null;
 let dbWarned = false;
@@ -108,14 +109,20 @@ export async function notifyNewOrder(
   const photoBytes = Math.round((input.photoDataUrl.length * 3) / 4);
   const photoKb = Math.round(photoBytes / 1024);
 
+  const storyTitle =
+    STORIES.find((s) => s.slug === input.storySlug)?.title ?? input.storySlug;
+  const companionName =
+    COMPANIONS.find((c) => c.slug === input.companionSlug)?.name ??
+    input.companionSlug;
+
   const html = `
     <div style="font-family: system-ui, -apple-system, sans-serif; max-width: 560px; padding: 24px; color: #2d1b0f; background: #fdf5e0;">
       <h2 style="font-family: Georgia, serif; color: #2d1b0f; margin: 0 0 8px 0;">A new journeysprout order 🌱</h2>
       <p style="color: #6e4a22; margin: 0 0 24px 0;"><strong>${orderId}</strong></p>
       <table style="border-collapse: collapse; font-size: 14px;">
         <tr><td style="padding: 6px 12px 6px 0; color: #6e4a22;">Hero</td><td style="padding: 6px 0;"><strong>${escapeHtml(input.heroName)}</strong> (${escapeHtml(input.pronouns)})</td></tr>
-        <tr><td style="padding: 6px 12px 6px 0; color: #6e4a22;">Story</td><td style="padding: 6px 0;">${escapeHtml(input.storySlug)}</td></tr>
-        <tr><td style="padding: 6px 12px 6px 0; color: #6e4a22;">Companion</td><td style="padding: 6px 0;">${escapeHtml(input.companionSlug)}</td></tr>
+        <tr><td style="padding: 6px 12px 6px 0; color: #6e4a22;">Story</td><td style="padding: 6px 0;">${escapeHtml(storyTitle)}</td></tr>
+        <tr><td style="padding: 6px 12px 6px 0; color: #6e4a22;">Companion</td><td style="padding: 6px 0;">${escapeHtml(companionName)}</td></tr>
         <tr><td style="padding: 6px 12px 6px 0; color: #6e4a22;">Email</td><td style="padding: 6px 0;">${escapeHtml(input.email)}</td></tr>
         <tr><td style="padding: 6px 12px 6px 0; color: #6e4a22;">Photo</td><td style="padding: 6px 0;">${photoKb} KB</td></tr>
         <tr><td style="padding: 6px 12px 6px 0; color: #6e4a22;">IP</td><td style="padding: 6px 0;">${escapeHtml(input.ip)}</td></tr>
@@ -127,7 +134,7 @@ export async function notifyNewOrder(
   await resend.emails.send({
     from,
     to,
-    subject: `New journeysprout order: ${input.heroName} + ${input.companionSlug}`,
+    subject: `New journeysprout order: ${input.heroName} + ${companionName}`,
     html,
   });
 }

@@ -1,6 +1,7 @@
 import { createOrder } from "@/lib/db";
 import { uploadDataUrl } from "@/lib/blob";
 import { inngest } from "@/lib/inngest/client";
+import { STORIES, COMPANIONS } from "@/lib/catalog";
 import { Resend } from "resend";
 
 export const runtime = "nodejs";
@@ -143,6 +144,13 @@ async function fireNotifyEmail(
   const from = process.env.RESEND_FROM ?? "journeysprout <onboarding@resend.dev>";
   const to = process.env.NOTIFY_EMAIL ?? "andrewldalton@gmail.com";
 
+  // Look up display titles/names from the catalog so the email shows the
+  // CURRENT story title (not the raw slug like "03-seed-took-time").
+  const storyTitle =
+    STORIES.find((s) => s.slug === storySlug)?.title ?? storySlug;
+  const companionName =
+    COMPANIONS.find((c) => c.slug === companionSlug)?.name ?? companionSlug;
+
   const ts = new Date().toLocaleString("en-US", {
     timeZone: "America/Chicago",
     dateStyle: "medium",
@@ -176,8 +184,8 @@ async function fireNotifyEmail(
           <tr><td style="padding:16px 20px;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#2d1b0f;line-height:1.7;">
             <div style="color:#6e4a22;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;font-weight:700;margin-bottom:8px;">The order</div>
             <div><strong>Hero:</strong> ${escape(heroName)}</div>
-            <div><strong>Story:</strong> ${escape(storySlug)}</div>
-            <div><strong>Companion:</strong> ${escape(companionSlug)}</div>
+            <div><strong>Story:</strong> ${escape(storyTitle)}</div>
+            <div><strong>Companion:</strong> ${escape(companionName)}</div>
             <div><strong>Customer:</strong> ${escape(email)}</div>
             <div><strong>Submitted:</strong> ${escape(ts)} CT</div>
           </td></tr>
@@ -209,7 +217,7 @@ async function fireNotifyEmail(
   await resend.emails.send({
     from,
     to,
-    subject: `New journeysprout order — ${heroName} · ${storySlug}`,
+    subject: `New journeysprout order — ${heroName} · ${storyTitle}`,
     html,
   });
 }
