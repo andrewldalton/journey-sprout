@@ -20,7 +20,7 @@ const POLL_MS = 3000;
 type Props = {
   orderId: string;
   heroName: string;
-  onApproved: () => void;
+  onApproved: (sheetUrl: string) => void;
   onBack: () => void;
 };
 
@@ -74,12 +74,13 @@ export function StepApproveSheet({ orderId, heroName, onApproved, onBack }: Prop
   useEffect(() => {
     if (
       snapshot?.sheetStatus === "approved" &&
+      snapshot.sheetUrl &&
       !advancedRef.current
     ) {
       advancedRef.current = true;
-      onApproved();
+      onApproved(snapshot.sheetUrl);
     }
-  }, [snapshot?.sheetStatus, onApproved]);
+  }, [snapshot?.sheetStatus, snapshot?.sheetUrl, onApproved]);
 
   const approve = useCallback(async () => {
     setAction("approve");

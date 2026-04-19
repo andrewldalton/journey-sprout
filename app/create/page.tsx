@@ -8,13 +8,14 @@ import { StepHero } from "@/components/create/StepHero";
 import { StepApproveSheet } from "@/components/create/StepApproveSheet";
 import { StepStory } from "@/components/create/StepStory";
 import { StepCompanion } from "@/components/create/StepCompanion";
+import { StepConfirm } from "@/components/create/StepConfirm";
 import type { Pronouns } from "@/lib/catalog";
 
 // Phases: 1 photo → 2 hero (name+pronouns+email) → 3 approve painted portrait
-// → 4 story → 5 companion → finalize → /book/[id]
-const STEP_LABELS = ["Photo", "You", "Portrait", "Story", "Friend"];
+// → 4 story → 5 companion → 6 confirm → finalize → /book/[id]
+const STEP_LABELS = ["Photo", "You", "Portrait", "Story", "Friend", "Confirm"];
 
-type Phase = 1 | 2 | 3 | 4 | 5;
+type Phase = 1 | 2 | 3 | 4 | 5 | 6;
 
 type Draft = {
   photoDataUrl?: string;
@@ -23,6 +24,7 @@ type Draft = {
   pronouns?: Pronouns;
   email?: string;
   orderId?: string;
+  sheetUrl?: string;
   storySlug?: string;
   companionSlug?: string;
 };
@@ -150,7 +152,10 @@ export default function CreatePage() {
         <StepApproveSheet
           orderId={draft.orderId}
           heroName={draft.heroName}
-          onApproved={() => setPhase(4)}
+          onApproved={(sheetUrl) => {
+            setDraft((d) => ({ ...d, sheetUrl }));
+            setPhase(4);
+          }}
           onBack={goBack}
         />
       )}
@@ -165,22 +170,39 @@ export default function CreatePage() {
       )}
 
       {phase === 5 && draft.storySlug && (
+        <StepCompanion
+          selectedSlug={draft.companionSlug ?? null}
+          onSelect={(slug) => setDraft((d) => ({ ...d, companionSlug: slug }))}
+          onBack={goBack}
+          onNext={() => {
+            if (draft.storySlug && draft.companionSlug) setPhase(6);
+          }}
+        />
+      )}
+
+      {phase === 6 &&
+        draft.heroName &&
+        draft.heroAge !== undefined &&
+        draft.email &&
+        draft.storySlug &&
+        draft.companionSlug && (
         <>
-          <StepCompanion
-            selectedSlug={draft.companionSlug ?? null}
-            onSelect={(slug) => setDraft((d) => ({ ...d, companionSlug: slug }))}
-            onBack={goBack}
-            onNext={() => {
+          <StepConfirm
+            heroName={draft.heroName}
+            heroAge={draft.heroAge}
+            email={draft.email}
+            storySlug={draft.storySlug}
+            companionSlug={draft.companionSlug}
+            sheetUrl={draft.sheetUrl ?? null}
+            submitting={submitting}
+            onEdit={(p) => setPhase(p)}
+            onConfirm={() => {
               if (draft.storySlug && draft.companionSlug) {
                 finalizeBook(draft.storySlug, draft.companionSlug);
               }
             }}
+            onBack={goBack}
           />
-          {submitting && (
-            <p className="mx-auto max-w-2xl px-6 -mt-6 text-ink-muted font-body text-sm text-center">
-              Starting the book…
-            </p>
-          )}
           {submitError && (
             <p className="mx-auto max-w-2xl px-6 -mt-6 text-terracotta font-body text-sm text-center">
               {submitError}

@@ -108,7 +108,7 @@ Render the child in the journeysprout illustration style:
 - Palette: rich saturated colors — bright and joyful, confident playful shapes
 - Lighting: warm vibrant daylight, punchy not muted
 
-Outfit: comfortable everyday clothes in warm earth tones — soft short-sleeve tee, simple play pants, plain sneakers. Nothing costumey.
+Outfit: paint the child in the SAME outfit they are wearing in the reference photo. Match the top, bottom, and shoes exactly — same colors, same style, same cut. Do NOT substitute generic "warm earth tones" or default children's-book clothing. If the photo shows a red striped t-shirt and denim shorts, paint a red striped t-shirt and denim shorts. This outfit becomes the character's canonical outfit for every page of the book.
 
 Composition: a SINGLE neutral soft-cream background. Show the child in a full-body T-pose-ish hero stance, centered, facing camera, calm friendly expression, eyes open, mouth in a small smile. No props, no companion, no scenery. Just the character, clearly lit, full body visible head to toe with a little margin.
 

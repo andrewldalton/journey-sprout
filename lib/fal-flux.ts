@@ -153,7 +153,7 @@ AGE: The child is about ${age} years old. Render at ${proportionsForAge(age)}. D
 
 Style: modern vibrant watercolor illustration with digital polish — rich saturated colors, confident playful shapes, soft painterly edges, contemporary bestseller picture-book energy. Bright and joyful, not muted or vintage. No harsh black outlines.
 
-Outfit: comfortable everyday clothes in warm tones — simple short-sleeve tee, simple play pants, plain sneakers. Nothing costumey.
+Outfit: paint the child in the SAME outfit they are wearing in the reference photo. Match the top, bottom, and shoes exactly — same colors, same style, same cut. Do NOT substitute generic "warm earth tones" or default children's-book clothing. If the photo shows a red striped t-shirt and denim shorts, paint a red striped t-shirt and denim shorts. This outfit becomes the character's canonical outfit for every page.
 
 Composition: SINGLE neutral soft-cream background. Full-body T-pose hero stance, centered, facing camera, calm friendly expression, eyes open, small smile. No props, no companion, no scenery. Full body visible head to toe with a little margin.
 
