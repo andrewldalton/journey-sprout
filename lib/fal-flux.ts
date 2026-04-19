@@ -198,15 +198,20 @@ export async function generatePage(params: {
   const parsed = parseHeroFeatures(params.heroFeatures);
   const featuresBlock = parsed
     ? `
-THE CHILD'S EXACT FEATURES (painted version MUST match these — these are the most load-bearing identity anchors, weight them heavily):
+THE CHILD'S EXACT FEATURES (painted version MUST match these — weight them heavily):
 - FACE: ${parsed.face}
 - EYES: ${parsed.eyes}
-- HAIR: ${parsed.hair}
+- HAIR (length + color + texture + EXACT HAIRSTYLE): ${parsed.hair}
+- ACCESSORIES (MUST be worn on EVERY page if listed — glasses, headbands, etc): ${parsed.accessories}
 - NOSE: ${parsed.nose}
 - MOUTH: ${parsed.mouth}
 - SKIN: ${parsed.skin}
 - BUILD/SIZE: ${parsed.build}
 - OUTFIT (MUST be identical every page — same top, same pants, same shoes): ${parsed.outfit}
+
+HAIRSTYLE LOCK: If the HAIR description above says the hair is up (bun / ponytail / braid / pigtails / half-up), the hair MUST stay in that exact style on every page — do NOT let it fall out, do NOT render it loose, do NOT substitute a different updo. If the HAIR is down, keep it down. The hairstyle is a fingerprint of this child; preserve it exactly.
+
+ACCESSORIES LOCK: If ACCESSORIES lists glasses, headbands, hair clips, bows, earrings, or anything else, every one of those accessories MUST be worn on this page in the same style and color. Glasses do NOT come off between pages.
 `.trim()
     : params.heroFeatures
       ? `THE CHILD'S EXACT FEATURES (match precisely): ${params.heroFeatures}`
@@ -221,7 +226,9 @@ THE CHILD'S EXACT FEATURES (painted version MUST match these — these are the m
     ? `TOP-PRIORITY IDENTITY ANCHORS (MOST LOAD-BEARING — DO NOT DEVIATE):
 - FACE: ${parsed.face}
 - EYES: ${parsed.eyes}
-- SIZE/BUILD: ${parsed.build}
+- HAIR + EXACT HAIRSTYLE (bun/ponytail/braid/down — same every page): ${parsed.hair}
+- ACCESSORIES (glasses/headbands/clips — same every page): ${parsed.accessories}
+- SIZE/BUILD (same apparent age every page): ${parsed.build}
 - OUTFIT (same every page): ${parsed.outfit}
 
 `
@@ -242,7 +249,7 @@ The first two reference images are the hero's APPROVED CHARACTER SHEET — the p
 ${featuresLine}
 Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face. Just paint THIS child, in THIS outfit, doing the scene described.
 
-AGE LOCK: The child is ${params.heroAge ?? 3} years old, rendered at ${proportionsForAge(params.heroAge)}. Paint them at this age on EVERY page. Do NOT age them up (no older-kid proportions) or down (no baby proportions). Height relative to scene props (doorways, fences, tables, the companion animal) must stay consistent with a ${params.heroAge ?? 3}-year-old across every page.
+AGE LOCK (RIGID): The child is EXACTLY ${params.heroAge ?? 3} years old on EVERY page — same face roundness, same head-to-body ratio, same limb length, same facial features as the sheet. Do NOT age them up (older-kid proportions, leaner face, longer limbs, more defined chin) or down (baby/younger-toddler proportions). If the sheet shows a ${params.heroAge ?? 3}-year-old with ${proportionsForAge(params.heroAge).split("—")[0].trim()}, keep that exact apparent age on every page. Height relative to scene props (doorways, fences, tables, plants, the companion animal) must stay consistent with a ${params.heroAge ?? 3}-year-old across every page — never taller, never shorter between pages.
 
 COLOR LOCK (READ THIS — THIS IS WHERE YOU USUALLY FAIL):
 The hero's HAIR COLOR, SKIN TONE, and CLOTHING COLORS are fixed by the sheet. They do NOT change with scene lighting. If the sheet shows blonde hair and a yellow top, paint blonde hair and a yellow top EVEN IF the scene is lit in golden hour, blue twilight, green jungle shade, cool moonlight, or warm honey glow. You may render soft cast shadows and gentle rim-light across the hero from the scene's light source, but you must NEVER repaint the hero's actual hair color, skin tone, or clothing colors to harmonize with the scene palette. Yellow stays yellow. Blonde stays blonde. Do not tint, wash, or palette-shift the hero.
@@ -300,21 +307,25 @@ The first two reference images are ${params.heroName}'s APPROVED CHARACTER SHEET
 ${(() => {
   const parsed = parseHeroFeatures(params.heroFeatures);
   if (parsed) {
-    return `\n${params.heroName.toUpperCase()}'S EXACT FEATURES (MUST match — weight these heavily):
+    return `\n${params.heroName.toUpperCase()}'S EXACT FEATURES (weight heavily):
 - FACE: ${parsed.face}
 - EYES: ${parsed.eyes}
-- HAIR: ${parsed.hair}
+- HAIR (length + color + texture + EXACT HAIRSTYLE — bun stays bun, ponytail stays ponytail): ${parsed.hair}
+- ACCESSORIES (worn on cover if listed, same as every page — glasses stay on): ${parsed.accessories}
 - NOSE: ${parsed.nose}
 - MOUTH: ${parsed.mouth}
 - SKIN: ${parsed.skin}
 - BUILD/SIZE: ${parsed.build}
-- OUTFIT (identical to every page — same top, same pants, same shoes): ${parsed.outfit}\n`;
+- OUTFIT (identical to every page): ${parsed.outfit}
+
+HAIRSTYLE LOCK: If HAIR says the style is up (bun/ponytail/braid/pigtails), it stays UP on the cover — do NOT render it down or loose.
+ACCESSORIES LOCK: Glasses, headbands, clips, bows listed above MUST be on the hero on the cover — do NOT remove them.\n`;
   }
   return params.heroFeatures ? `\n${params.heroName.toUpperCase()}'S EXACT FEATURES: ${params.heroFeatures}\n` : "";
 })()}
 Do NOT reinterpret, modernize, or "improve" the child. Paint THIS child, in THIS outfit, on the cover.
 
-AGE LOCK: ${params.heroName} is ${params.heroAge ?? 3} years old, rendered at ${proportionsForAge(params.heroAge)}. Render at that age on the cover.
+AGE LOCK (RIGID): ${params.heroName} is EXACTLY ${params.heroAge ?? 3} years old. Same head-to-body ratio, same face roundness, same limb length as the sheet. Do NOT age them up or down on the cover — the cover must show the same apparent age as every interior page.
 COLOR LOCK: ${params.heroName}'s hair color, skin tone, and clothing colors are fixed by the sheet and do NOT change with scene lighting. You may render soft cast shadows and gentle rim-light, but NEVER repaint the hero's actual colors to match the scene palette. If the sheet shows blonde hair and a yellow top, they stay blonde and yellow under any lighting.
 
 COMPANION LOCK: Match ${params.companionName}'s reference — species, colors, proportions, silhouette exactly.

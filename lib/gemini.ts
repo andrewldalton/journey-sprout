@@ -137,7 +137,8 @@ You are a forensic sketch artist. Look at the attached CHARACTER REFERENCE SHEET
 Return a SINGLE JSON object, nothing else (no prose, no markdown fences, no commentary). Use this exact shape. Each value must be a concrete dense phrase, never empty.
 
 {
-  "hair": "length + color + texture + hairline — e.g. 'shoulder-length platinum-blonde tight ringlet curls with a soft middle part, no bangs'",
+  "hair": "length + color + texture + hairline + HAIRSTYLE (down / up in a top-bun / low-bun / single-braid / french-braid / pigtails / ponytail / half-up / pulled-back — be specific about the style) — e.g. 'medium-brown wavy shoulder-length hair pulled up into a high top-bun with a loose strand framing the face'",
+  "accessories": "any glasses (shape + color), headbands, hair clips, bows, earrings, necklaces visible — e.g. 'round tortoiseshell glasses with a mild magnification' or 'none'",
   "eyes": "color + shape + spacing + brow color/shape — e.g. 'large round gray-blue eyes, normal spacing, thin medium-arched light-blonde eyebrows'",
   "face": "face shape + cheek fullness + chin + notable features (dimples / freckles / birthmarks) — e.g. 'round toddler face with full pudgy cheeks, a soft rounded chin, tiny dimples'",
   "nose": "nose shape — e.g. 'small button nose, slightly upturned'",
@@ -156,6 +157,7 @@ Rules:
 
 export type HeroFeatures = {
   hair: string;
+  accessories: string;
   eyes: string;
   face: string;
   nose: string;
@@ -201,6 +203,7 @@ export function parseHeroFeatures(raw: string | null | undefined): HeroFeatures 
     ) {
       return {
         hair: o.hair ?? "",
+        accessories: o.accessories ?? "none",
         eyes: o.eyes ?? "",
         face: o.face ?? "",
         nose: o.nose ?? "",
@@ -275,15 +278,19 @@ The FIRST TWO attached images are the hero's APPROVED CHARACTER SHEET (included 
 ${(() => {
   const parsed = parseHeroFeatures(heroFeatures);
   if (parsed) {
-    return `\nTHE CHILD'S EXACT FEATURES (weight these heavily — face + eyes + size + outfit are the most load-bearing):
+    return `\nTHE CHILD'S EXACT FEATURES (weight heavily):
 - FACE: ${parsed.face}
 - EYES: ${parsed.eyes}
-- HAIR: ${parsed.hair}
+- HAIR (length + color + texture + EXACT HAIRSTYLE — bun stays bun, ponytail stays ponytail, down stays down): ${parsed.hair}
+- ACCESSORIES (on every page if listed — glasses stay on): ${parsed.accessories}
 - NOSE: ${parsed.nose}
 - MOUTH: ${parsed.mouth}
 - SKIN: ${parsed.skin}
 - BUILD/SIZE: ${parsed.build}
-- OUTFIT (same every page): ${parsed.outfit}\n`;
+- OUTFIT (same every page — same top, same pants, same shoes): ${parsed.outfit}
+
+HAIRSTYLE LOCK: Preserve the exact hairstyle from the sheet. Do NOT let buns fall out or ponytails dissolve.
+ACCESSORIES LOCK: Glasses, headbands, clips listed above MUST be worn on this page.\n`;
   }
   return heroFeatures ? `\nTHE CHILD'S EXACT FEATURES: ${heroFeatures}\n` : "";
 })()}
@@ -334,10 +341,11 @@ The FIRST TWO attached images are ${heroName}'s APPROVED CHARACTER SHEET (includ
 ${(() => {
   const parsed = parseHeroFeatures(heroFeatures);
   if (parsed) {
-    return `\n${heroName.toUpperCase()}'S EXACT FEATURES (weight heavily — face, eyes, size, outfit are most load-bearing):
+    return `\n${heroName.toUpperCase()}'S EXACT FEATURES (weight heavily):
 - FACE: ${parsed.face}
 - EYES: ${parsed.eyes}
-- HAIR: ${parsed.hair}
+- HAIR (with EXACT HAIRSTYLE — bun stays bun, ponytail stays ponytail): ${parsed.hair}
+- ACCESSORIES (glasses stay on for the cover if listed): ${parsed.accessories}
 - NOSE: ${parsed.nose}
 - MOUTH: ${parsed.mouth}
 - SKIN: ${parsed.skin}
