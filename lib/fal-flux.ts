@@ -156,12 +156,18 @@ export async function generatePage(params: {
   settingSheets: ImgRef[];
   brief: string;
   textPosition: "top" | "bottom";
+  heroFeatures?: string;
 }): Promise<Buffer> {
   // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
   // the identity contract — passing the photo again just gives FLUX two
   // references to reconcile and causes drift. Sheet + companion + settings.
   void params.heroPhoto;
+  // Double-weight the sheet by passing it twice. FLUX Kontext Multi averages
+  // attention across the reference bundle; duplicating the sheet makes its
+  // distinctive features (hair curl pattern, outfit colors, eye color)
+  // survive mean-reversion better when the scene/setting is busy.
   const refs: ImgRef[] = [
+    params.heroSheet,
     params.heroSheet,
     params.companionSheet,
     ...params.settingSheets,
@@ -172,6 +178,10 @@ export async function generatePage(params: {
       ? "Keep all characters, faces, hands, and key action in the UPPER ~75% of the frame. Reserve the BOTTOM ~22% as a calm, gently-washed area. No faces or critical detail in the bottom band."
       : "Keep all characters, faces, hands, and key action in the LOWER ~75% of the frame. Reserve the TOP ~22% as a calm, gently-washed area. No faces or critical detail in the top band.";
 
+  const featuresLine = params.heroFeatures
+    ? `\nTHE CHILD'S EXACT FEATURES (the painted version must match these precisely): ${params.heroFeatures}\n`
+    : "";
+
   const prompt = `
 Render a single children's picture-book page illustration.
 
@@ -179,11 +189,12 @@ SCENE BRIEF:
 ${params.brief}
 
 HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-The first reference image is the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet:
+The first two reference images are the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. (The sheet is included twice to make sure you weight it heavily.) The child on this page MUST BE IDENTICAL to the sheet:
 - SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone.
-- SAME hair — exact length, color, texture, hairline.
+- SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline. If the sheet shows tight ringlet curls, do NOT render looser waves. If the sheet shows short hair, do NOT grow it out.
 - SAME outfit — same top, same bottoms, same shoes.
 - SAME apparent age.
+${featuresLine}
 Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face. Just paint THIS child, in THIS outfit, doing the scene described.
 
 COMPANION LOCK: Match the companion animal reference exactly — species, colors, proportions, silhouette, distinguishing marks.
@@ -209,10 +220,13 @@ export async function generateCover(params: {
   storyTitle: string;
   heroName: string;
   companionName: string;
+  heroFeatures?: string;
 }): Promise<Buffer> {
   // Sheet is the identity contract post-approval — photo ref dropped.
+  // Sheet is passed twice to double-weight (see generatePage for rationale).
   void params.heroPhoto;
   const refs: ImgRef[] = [
+    params.heroSheet,
     params.heroSheet,
     params.companionSheet,
     ...params.settingSheets,
@@ -227,11 +241,12 @@ COVER SCENE:
 ${params.coverBrief || fallbackBrief}
 
 HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-The first reference image is ${params.heroName}'s APPROVED CHARACTER SHEET. The child on the cover MUST BE IDENTICAL to the sheet:
+The first two reference images are ${params.heroName}'s APPROVED CHARACTER SHEET (included twice to double-weight it). The child on the cover MUST BE IDENTICAL to the sheet:
 - SAME face shape, eye shape, eye color, nose, mouth, skin tone, cheek fullness.
-- SAME hair — exact length, color, texture, hairline.
+- SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline. If the sheet shows tight curls, keep tight curls.
 - SAME outfit — same top, same bottoms, same shoes.
 - SAME apparent age.
+${params.heroFeatures ? `\n${params.heroName.toUpperCase()}'S EXACT FEATURES: ${params.heroFeatures}\n` : ""}
 Do NOT reinterpret, modernize, or "improve" the child. Paint THIS child, in THIS outfit, on the cover.
 
 COMPANION LOCK: Match ${params.companionName}'s reference — species, colors, proportions, silhouette exactly.

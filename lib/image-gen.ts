@@ -20,6 +20,14 @@ import * as flux from "./fal-flux";
 
 type Provider = "flux" | "vertex" | "gemini";
 
+// Narrow "just the image-gen ops" interface. gemini exports extras
+// (describeHero) that aren't part of the provider contract.
+type ImageProvider = {
+  generateCharacterSheet: typeof gemini.generateCharacterSheet;
+  generatePage: typeof gemini.generatePage;
+  generateCover: typeof gemini.generateCover;
+};
+
 function pick(): Provider {
   const forced = process.env.IMAGE_PROVIDER?.toLowerCase();
   if (forced === "flux" || forced === "vertex" || forced === "gemini") return forced;
@@ -30,7 +38,7 @@ function pick(): Provider {
   return "gemini";
 }
 
-function mod(p: Provider) {
+function mod(p: Provider): ImageProvider {
   if (p === "flux") return flux;
   if (p === "vertex") return vertex;
   return gemini;
@@ -45,7 +53,7 @@ const FALLBACK_ORDER: Record<Provider, Provider[]> = {
 async function withFallback<T>(
   label: string,
   primary: Provider,
-  run: (m: typeof gemini) => Promise<T>
+  run: (m: ImageProvider) => Promise<T>
 ): Promise<T> {
   const tried: Provider[] = [primary];
   try {

@@ -110,6 +110,44 @@ export async function generateCharacterSheet(params: {
   return generateImage([params.photo], SHEET_PROMPT);
 }
 
+/**
+ * Given the approved character sheet, ask Gemini to write a concrete,
+ * sketch-artist-style description of the child's identifying features.
+ * Used downstream in page/cover prompts to reinforce identity when the
+ * sheet image alone gets diluted by other references.
+ *
+ * Returns ~2 short sentences of plain text. Token-cheap.
+ */
+const DESCRIBE_PROMPT = `
+You are a children's book art director. Look at the attached CHARACTER REFERENCE SHEET of a painted child.
+
+Describe this child's identifying features in 2 short sentences, like a police sketch brief, so another illustrator could recreate them exactly. Cover:
+- HAIR: length (buzz / short / shoulder / long), color, texture (straight / wavy / curly / coily / ringlet), visible hairline
+- EYES: color, shape
+- FACE: shape (round / oval / heart), notable features (dimples, freckles)
+- SKIN TONE
+- OUTFIT: top (color, style), bottom (color, style), shoes (color, style)
+
+Be concrete and specific. No fluff, no metaphor. Start the response with "The child has" and stay under 60 words total.
+`.trim();
+
+export async function describeHero(sheet: Buffer): Promise<string> {
+  const parts: unknown[] = [
+    partFromBuffer(sheet, "image/png"),
+    { text: DESCRIBE_PROMPT },
+  ];
+  const res = await ai().models.generateContent({
+    model: "gemini-2.5-flash",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    contents: [{ role: "user", parts: parts as any }],
+  });
+  const cand = res.candidates?.[0];
+  const textParts = cand?.content?.parts?.map((p) => p.text).filter(Boolean) ?? [];
+  const text = textParts.join(" ").trim();
+  if (!text) throw new Error("describeHero: no text in response");
+  return text;
+}
+
 export async function generatePage(params: {
   heroSheet: ImgRef;
   heroPhoto?: ImgRef;
@@ -117,8 +155,9 @@ export async function generatePage(params: {
   settingSheets: ImgRef[];
   brief: string;
   textPosition: "top" | "bottom";
+  heroFeatures?: string;
 }): Promise<Buffer> {
-  const { heroSheet, companionSheet, settingSheets, brief, textPosition } = params;
+  const { heroSheet, companionSheet, settingSheets, brief, textPosition, heroFeatures } = params;
   // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
   // the identity contract — passing the photo again just gives Gemini two
   // references to reconcile and causes drift.
@@ -145,9 +184,9 @@ Render a single children's picture-book page illustration following this brief e
 ${brief}
 
 IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-The FIRST attached image is the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.
-
-- The SECOND attached image is the COMPANION SHEET. Match the companion's species, colors, proportions, silhouette, and distinguishing marks exactly.
+The FIRST TWO attached images are the hero's APPROVED CHARACTER SHEET (included twice to double-weight it) — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline; SAME outfit (top, bottom, shoes); SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. If the sheet shows tight ringlet curls, do NOT render looser waves. If the sheet shows short hair, do NOT grow it out.
+${heroFeatures ? `\nTHE CHILD'S EXACT FEATURES: ${heroFeatures}\n` : ""}
+- The NEXT attached image is the COMPANION SHEET. Match the companion's species, colors, proportions, silhouette, and distinguishing marks exactly.
 - If the brief below describes hero or companion features differently than the sheets, the sheets WIN. The brief is for scene and action only.
 
 ${settingLockBlock}
@@ -159,7 +198,7 @@ ${textZone}
 - Full-bleed illustration outside the reserved calm zone, modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy. Bright and joyful, not muted or vintage. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
-  const refs: ImgRef[] = [heroSheet, companionSheet, ...settingSheets];
+  const refs: ImgRef[] = [heroSheet, heroSheet, companionSheet, ...settingSheets];
   return generateImage(refs, prompt);
 }
 
@@ -172,8 +211,9 @@ export async function generateCover(params: {
   storyTitle: string;
   heroName: string;
   companionName: string;
+  heroFeatures?: string;
 }): Promise<Buffer> {
-  const { heroSheet, companionSheet, settingSheets, coverBrief, storyTitle, heroName, companionName } = params;
+  const { heroSheet, companionSheet, settingSheets, coverBrief, storyTitle, heroName, companionName, heroFeatures } = params;
   // Sheet is the identity contract post-approval — photo ref dropped.
   void params.heroPhoto;
 
@@ -186,9 +226,9 @@ COVER SCENE:
 ${coverBrief || fallbackBrief}
 
 IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-The FIRST attached image is ${heroName}'s APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on the cover MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.
-
-- The SECOND attached image is the COMPANION SHEET — match colors, proportions, silhouette exactly.
+The FIRST TWO attached images are ${heroName}'s APPROVED CHARACTER SHEET (included twice to double-weight it). The child on the cover MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline; SAME outfit; SAME apparent age. Treat the sheet as a portrait contract.
+${heroFeatures ? `\n${heroName.toUpperCase()}'S EXACT FEATURES: ${heroFeatures}\n` : ""}
+- The NEXT attached image is the COMPANION SHEET — match colors, proportions, silhouette exactly.
 
 ${
   settingSheets.length
@@ -205,6 +245,6 @@ COMPOSITION CONSTRAINTS (CRITICAL):
 - Modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy. Bright and joyful. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
-  const refs: ImgRef[] = [heroSheet, companionSheet, ...settingSheets];
+  const refs: ImgRef[] = [heroSheet, heroSheet, companionSheet, ...settingSheets];
   return generateImage(refs, prompt);
 }

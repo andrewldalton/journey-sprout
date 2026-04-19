@@ -10,6 +10,8 @@ import {
   generateCover,
   generatePage,
 } from "./image-gen";
+import { describeHero } from "./gemini";
+import { getOrder, updateOrder } from "./db";
 import { composeCoverTypography, composePageBubble } from "./overlay";
 import {
   companionSheetPath,
@@ -74,7 +76,31 @@ export async function runSheetStep(ctx: RenderContext): Promise<string> {
     sheet,
     { contentType: "image/png", addRandomSuffix: false }
   );
+
+  // Belt-and-suspenders identity lock: have Gemini Vision describe the
+  // sheet's distinctive features in plain text. Stored on the order and
+  // included in every downstream page/cover prompt so the model has both
+  // an image ref AND a text description to anchor to. Rare features (tight
+  // curls, specific outfit colors) survive mean-reversion better this way.
+  try {
+    const description = await describeHero(sheet);
+    await updateOrder(ctx.orderId, { sheetDescription: description });
+  } catch (err) {
+    console.warn(`[sheet-describe] order ${ctx.orderId} describe failed:`, err);
+    // Non-fatal — pages will still render, just without the text anchor.
+  }
+
   return url;
+}
+
+/**
+ * Fetch the cached hero-features description produced by runSheetStep.
+ * Returns null if not yet computed (e.g. order predates the feature, or
+ * describe call failed).
+ */
+async function loadHeroFeatures(orderId: string): Promise<string | null> {
+  const o = await getOrder(orderId);
+  return o?.sheetDescription ?? null;
 }
 
 /**
@@ -94,6 +120,8 @@ export async function runPageStep(
     fetchBytes(ctx.photoUrl),
   ]);
 
+  const heroFeatures = await loadHeroFeatures(ctx.orderId);
+
   const raw = await generatePage({
     heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
     heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
@@ -101,6 +129,7 @@ export async function runPageStep(
     settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
     brief: page.brief,
     textPosition: page.textPosition,
+    heroFeatures: heroFeatures ?? undefined,
   });
 
   const composed = await composePageBubble({
@@ -133,6 +162,8 @@ export async function runCoverStep(
     fetchBytes(ctx.photoUrl),
   ]);
 
+  const heroFeatures = await loadHeroFeatures(ctx.orderId);
+
   const raw = await generateCover({
     heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
     heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
@@ -142,6 +173,7 @@ export async function runCoverStep(
     storyTitle: manuscript.title,
     heroName: ctx.heroName,
     companionName: companion.name,
+    heroFeatures: heroFeatures ?? undefined,
   });
 
   const composed = await composeCoverTypography({

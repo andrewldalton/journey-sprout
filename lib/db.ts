@@ -55,6 +55,7 @@ export type Order = {
   sheetStatus: SheetStatus;
   regenCount: number;
   sheetApprovedAt: Date | null;
+  sheetDescription: string | null;
   error: string | null;
   ip: string | null;
   userAgent: string | null;
@@ -81,6 +82,7 @@ export type OrderPatch = Partial<{
   sheetStatus: SheetStatus;
   regenCount: number;
   sheetApprovedAt: Date | null;
+  sheetDescription: string | null;
   storySlug: string | null;
   companionSlug: string | null;
   error: string | null;
@@ -103,6 +105,7 @@ type OrderRow = {
   sheet_status: SheetStatus;
   regen_count: number;
   sheet_approved_at: Date | null;
+  sheet_description: string | null;
   error: string | null;
   ip: string | null;
   user_agent: string | null;
@@ -148,6 +151,7 @@ async function ensureSchema(sql: Sql): Promise<void> {
       sheet_status TEXT NOT NULL DEFAULT 'pending',
       regen_count INTEGER NOT NULL DEFAULT 0,
       sheet_approved_at TIMESTAMPTZ,
+      sheet_description TEXT,
       error TEXT,
       ip TEXT,
       user_agent TEXT,
@@ -159,6 +163,7 @@ async function ensureSchema(sql: Sql): Promise<void> {
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS sheet_status TEXT NOT NULL DEFAULT 'pending'`;
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS regen_count INTEGER NOT NULL DEFAULT 0`;
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS sheet_approved_at TIMESTAMPTZ`;
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS sheet_description TEXT`;
   // Loosen: story and companion are now picked after sheet approval, not upfront.
   await sql`ALTER TABLE orders ALTER COLUMN story_slug DROP NOT NULL`;
   await sql`ALTER TABLE orders ALTER COLUMN companion_slug DROP NOT NULL`;
@@ -186,6 +191,7 @@ function mapRow(row: OrderRow): Order {
     sheetStatus: row.sheet_status,
     regenCount: row.regen_count,
     sheetApprovedAt: row.sheet_approved_at,
+    sheetDescription: row.sheet_description,
     error: row.error,
     ip: row.ip,
     userAgent: row.user_agent,
@@ -249,6 +255,8 @@ export async function updateOrder(
       patch.sheetApprovedAt === null ? null : patch.sheetApprovedAt.toISOString();
   if (patch.storySlug !== undefined) updates.story_slug = patch.storySlug;
   if (patch.companionSlug !== undefined) updates.companion_slug = patch.companionSlug;
+  if (patch.sheetDescription !== undefined)
+    updates.sheet_description = patch.sheetDescription;
   if (patch.error !== undefined) updates.error = patch.error;
 
   const columns = Object.keys(updates);
