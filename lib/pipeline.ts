@@ -9,7 +9,7 @@ import {
   generateCharacterSheet,
   generateCover,
   generatePage,
-} from "./gemini";
+} from "./image-gen";
 import { composeCoverTypography, composePageBubble } from "./overlay";
 import {
   companionSheetPath,
