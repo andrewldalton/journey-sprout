@@ -290,7 +290,9 @@ AGE LOCK (RIGID): The child is EXACTLY ${params.heroAge ?? 3} years old on EVERY
 COLOR LOCK (READ THIS — THIS IS WHERE YOU USUALLY FAIL):
 The hero's HAIR COLOR, SKIN TONE, and CLOTHING COLORS are fixed by the sheet. They do NOT change with scene lighting. If the sheet shows blonde hair and a yellow top, paint blonde hair and a yellow top EVEN IF the scene is lit in golden hour, blue twilight, green jungle shade, cool moonlight, or warm honey glow. You may render soft cast shadows and gentle rim-light across the hero from the scene's light source, but you must NEVER repaint the hero's actual hair color, skin tone, or clothing colors to harmonize with the scene palette. Yellow stays yellow. Blonde stays blonde. Do not tint, wash, or palette-shift the hero.
 
-COMPANION LOCK: Match the companion animal reference exactly — species, colors, proportions, silhouette, distinguishing marks.
+COMPANION LOCK: Match the companion animal reference exactly — species, colors, proportions, silhouette, distinguishing marks. CRITICAL: the companion's SIZE relative to the child stays constant on every page. A small fox stays small; a large dinosaur stays large; the companion does NOT grow or shrink between pages. If the companion sheet shows a knee-height animal, it is knee-height on every page. If it shows a child-sized animal, it stays child-sized.
+
+CAST LOCK: The ONLY characters in this illustration are the hero child and the companion animal. Do NOT paint any other people (no friends, no siblings, no parents, no background adults, no onlookers, no strangers), no other animals, and no additional creatures — unless the scene brief below EXPLICITLY introduces them by name on this specific page. Empty the background of humans; crowd scenes become quiet scenes.
 
 SETTING LOCK: Match the environment references — architecture, props, palette, and painted surfaces. Do NOT reinvent recurring landmarks. Camera angle, time of day, and weather may change per the brief, but setting geometry and identifying props are locked.
 
@@ -368,7 +370,9 @@ Do NOT reinterpret, modernize, or "improve" the child. Paint THIS child, in THIS
 AGE LOCK (RIGID): ${params.heroName} is EXACTLY ${params.heroAge ?? 3} years old. Same head-to-body ratio, same face roundness, same limb length as the sheet. Do NOT age them up or down on the cover — the cover must show the same apparent age as every interior page.
 COLOR LOCK: ${params.heroName}'s hair color, skin tone, and clothing colors are fixed by the sheet and do NOT change with scene lighting. You may render soft cast shadows and gentle rim-light, but NEVER repaint the hero's actual colors to match the scene palette. If the sheet shows blonde hair and a yellow top, they stay blonde and yellow under any lighting.
 
-COMPANION LOCK: Match ${params.companionName}'s reference — species, colors, proportions, silhouette exactly.
+COMPANION LOCK: Match ${params.companionName}'s reference — species, colors, proportions, silhouette exactly. ${params.companionName}'s SIZE relative to ${params.heroName} must match the proportions shown in the companion reference (same relative size as on the interior pages — cover must NOT grow or shrink ${params.companionName}).
+
+CAST LOCK: The ONLY characters on this cover are ${params.heroName} and ${params.companionName}. Do NOT paint any other people or animals in the scene.
 
 SETTING LOCK: Environment and recurring props must match the setting reference(s).
 

@@ -62,13 +62,13 @@ export async function composePageBubble(params: {
   const lineHeightMul = 1.28;
   const panelSideMargin = Math.round(W * 0.06);
   const panelPadX = Math.round(W * 0.022);
-  const panelPadY = Math.round(W * 0.016);
+  const panelPadY = Math.round(W * 0.014);
   const panelEdgeMargin = Math.round(H * 0.03);
-  const panelMaxHeight = Math.round(H * 0.26);
+  const panelMaxHeight = Math.round(H * 0.20);
   const panelWidth = W - 2 * panelSideMargin;
   const panelInnerWidth = panelWidth - 2 * panelPadX;
 
-  let fontSize = Math.round(W * 0.026);
+  let fontSize = Math.round(W * 0.021);
   let dropSize = 0;
   let lineHeight = 0;
   let lines: string[] = [];
