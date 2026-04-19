@@ -69,10 +69,13 @@ export async function loadStoryForOrder(ctx: RenderContext): Promise<{
  */
 export async function runSheetStep(ctx: RenderContext): Promise<string> {
   const photoBytes = await fetchBytes(ctx.photoUrl);
-  const sheet = await generateCharacterSheet({
-    photo: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
-    heroAge: ctx.heroAge,
-  });
+  const sheet = await generateCharacterSheet(
+    {
+      photo: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
+      heroAge: ctx.heroAge,
+    },
+    { orderId: ctx.orderId }
+  );
   const { url } = await uploadBytes(
     `orders/${ctx.orderId}/sheet.png`,
     sheet,
@@ -131,16 +134,19 @@ export async function runPageStep(
   const MAX_ATTEMPTS = 3;
   let raw!: Buffer;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    raw = await generatePage({
-      heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
-      heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
-      companionSheet: { type: "file", path: companionSheetFile },
-      settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
-      brief: page.brief,
-      textPosition: page.textPosition,
-      heroFeatures: heroFeatures ?? undefined,
-      heroAge: ctx.heroAge,
-    });
+    raw = await generatePage(
+      {
+        heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
+        heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
+        companionSheet: { type: "file", path: companionSheetFile },
+        settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
+        brief: page.brief,
+        textPosition: page.textPosition,
+        heroFeatures: heroFeatures ?? undefined,
+        heroAge: ctx.heroAge,
+      },
+      { orderId: ctx.orderId }
+    );
     if (attempt === MAX_ATTEMPTS) break;
     try {
       const qa = await qaHeroMatch({
@@ -194,18 +200,21 @@ export async function runCoverStep(
   const MAX_ATTEMPTS = 3;
   let raw!: Buffer;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    raw = await generateCover({
-      heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
-      heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
-      companionSheet: { type: "file", path: companionSheetFile },
-      settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
-      coverBrief: manuscript.coverBrief ?? "",
-      storyTitle: manuscript.title,
-      heroName: ctx.heroName,
-      companionName: companion.name,
-      heroFeatures: heroFeatures ?? undefined,
-      heroAge: ctx.heroAge,
-    });
+    raw = await generateCover(
+      {
+        heroSheet: { type: "buffer", bytes: sheetBytes, mimeType: "image/png" },
+        heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
+        companionSheet: { type: "file", path: companionSheetFile },
+        settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
+        coverBrief: manuscript.coverBrief ?? "",
+        storyTitle: manuscript.title,
+        heroName: ctx.heroName,
+        companionName: companion.name,
+        heroFeatures: heroFeatures ?? undefined,
+        heroAge: ctx.heroAge,
+      },
+      { orderId: ctx.orderId }
+    );
     if (attempt === MAX_ATTEMPTS) break;
     try {
       const qa = await qaHeroMatch({

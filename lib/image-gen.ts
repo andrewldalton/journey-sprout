@@ -17,6 +17,7 @@
 import * as gemini from "./gemini";
 import * as vertex from "./vertex-imagen";
 import * as flux from "./fal-flux";
+import { logCostEvent, type CostKind } from "./cost";
 
 type Provider = "flux" | "vertex" | "gemini";
 
@@ -26,6 +27,31 @@ type ImageProvider = {
   generateCharacterSheet: typeof gemini.generateCharacterSheet;
   generatePage: typeof gemini.generatePage;
   generateCover: typeof gemini.generateCover;
+};
+
+// Model id per provider for cost-event logging. `flux` uses two endpoints
+// (single-ref for sheet, multi-ref for page/cover); we log whichever the
+// provider actually hit based on the `kind`.
+const MODEL_ID: Record<Provider, Record<CostKind, string>> = {
+  gemini: {
+    sheet: "gemini-2.5-flash-image",
+    page:  "gemini-2.5-flash-image",
+    cover: "gemini-2.5-flash-image",
+  },
+  vertex: {
+    sheet: "imagen-3.0-capability-preview-0930",
+    page:  "imagen-3.0-capability-preview-0930",
+    cover: "imagen-3.0-capability-preview-0930",
+  },
+  flux: {
+    sheet: "fal-ai/flux-pro/kontext",
+    page:  "fal-ai/flux-pro/kontext/multi",
+    cover: "fal-ai/flux-pro/kontext/multi",
+  },
+};
+
+export type GenMeta = {
+  orderId?: string | null;
 };
 
 function pick(): Provider {
@@ -50,28 +76,49 @@ const FALLBACK_ORDER: Record<Provider, Provider[]> = {
   gemini: ["flux", "vertex"],
 };
 
+async function runAndLog<T>(
+  provider: Provider,
+  kind: CostKind,
+  meta: GenMeta | undefined,
+  run: (m: ImageProvider) => Promise<T>
+): Promise<T> {
+  const startedAt = Date.now();
+  const result = await run(mod(provider));
+  const durationMs = Date.now() - startedAt;
+  // Fire-and-forget — logCostEvent swallows its own errors.
+  void logCostEvent({
+    orderId: meta?.orderId ?? null,
+    kind,
+    provider,
+    model: MODEL_ID[provider][kind],
+    durationMs,
+  });
+  return result;
+}
+
 async function withFallback<T>(
-  label: string,
+  kind: CostKind,
   primary: Provider,
+  meta: GenMeta | undefined,
   run: (m: ImageProvider) => Promise<T>
 ): Promise<T> {
   const tried: Provider[] = [primary];
   try {
-    return await run(mod(primary));
+    return await runAndLog(primary, kind, meta, run);
   } catch (err) {
     console.warn(
-      `[image-gen] ${label} failed on ${primary}:`,
+      `[image-gen] ${kind} failed on ${primary}:`,
       (err as Error).message
     );
     for (const secondary of FALLBACK_ORDER[primary]) {
       if (tried.includes(secondary)) continue;
       tried.push(secondary);
       try {
-        console.warn(`[image-gen] ${label} falling back to ${secondary}`);
-        return await run(mod(secondary));
+        console.warn(`[image-gen] ${kind} falling back to ${secondary}`);
+        return await runAndLog(secondary, kind, meta, run);
       } catch (err2) {
         console.warn(
-          `[image-gen] ${label} also failed on ${secondary}:`,
+          `[image-gen] ${kind} also failed on ${secondary}:`,
           (err2 as Error).message
         );
       }
@@ -80,11 +127,15 @@ async function withFallback<T>(
   }
 }
 
-export const generateCharacterSheet: typeof gemini.generateCharacterSheet = (params) =>
-  withFallback("sheet", pick(), (m) => m.generateCharacterSheet(params));
+type SheetArgs = Parameters<typeof gemini.generateCharacterSheet>[0];
+type PageArgs = Parameters<typeof gemini.generatePage>[0];
+type CoverArgs = Parameters<typeof gemini.generateCover>[0];
 
-export const generatePage: typeof gemini.generatePage = (params) =>
-  withFallback("page", pick(), (m) => m.generatePage(params));
+export const generateCharacterSheet = (params: SheetArgs, meta?: GenMeta) =>
+  withFallback("sheet", pick(), meta, (m) => m.generateCharacterSheet(params));
 
-export const generateCover: typeof gemini.generateCover = (params) =>
-  withFallback("cover", pick(), (m) => m.generateCover(params));
+export const generatePage = (params: PageArgs, meta?: GenMeta) =>
+  withFallback("page", pick(), meta, (m) => m.generatePage(params));
+
+export const generateCover = (params: CoverArgs, meta?: GenMeta) =>
+  withFallback("cover", pick(), meta, (m) => m.generateCover(params));
