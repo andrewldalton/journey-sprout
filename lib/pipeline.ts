@@ -23,6 +23,7 @@ import {
   type TokenContext,
 } from "./manuscripts";
 import { COMPANIONS } from "./catalog";
+import { pickOutfit } from "./outfits";
 
 export type RenderContext = {
   orderId: string;
@@ -69,10 +70,12 @@ export async function loadStoryForOrder(ctx: RenderContext): Promise<{
  */
 export async function runSheetStep(ctx: RenderContext): Promise<string> {
   const photoBytes = await fetchBytes(ctx.photoUrl);
+  const outfit = pickOutfit(ctx.pronouns, ctx.heroAge);
   const sheet = await generateCharacterSheet(
     {
       photo: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
       heroAge: ctx.heroAge,
+      canonicalOutfit: outfit.description,
     },
     { orderId: ctx.orderId }
   );
@@ -126,7 +129,14 @@ export async function runPageStep(
   ]);
 
   const heroFeatures = await loadHeroFeatures(ctx.orderId);
-  const parsedFeatures = parseHeroFeatures(heroFeatures);
+  const parsedFeaturesRaw = parseHeroFeatures(heroFeatures);
+  const outfit = pickOutfit(ctx.pronouns, ctx.heroAge);
+  // Override the describeHero-derived outfit with the canonical one so QA
+  // measures against the outfit the book is actually supposed to render,
+  // not whatever Gemini extracted from the sheet.
+  const parsedFeatures = parsedFeaturesRaw
+    ? { ...parsedFeaturesRaw, outfit: outfit.description }
+    : parsedFeaturesRaw;
 
   // Pre-ship QA loop: render, Vision-check against the sheet, retry up to
   // 2 more times if the hero drifts. Silent fix — customer never sees a
@@ -144,6 +154,7 @@ export async function runPageStep(
         textPosition: page.textPosition,
         heroFeatures: heroFeatures ?? undefined,
         heroAge: ctx.heroAge,
+        canonicalOutfit: outfit.description,
       },
       { orderId: ctx.orderId }
     );
@@ -195,7 +206,11 @@ export async function runCoverStep(
   ]);
 
   const heroFeatures = await loadHeroFeatures(ctx.orderId);
-  const parsedFeatures = parseHeroFeatures(heroFeatures);
+  const parsedFeaturesRaw = parseHeroFeatures(heroFeatures);
+  const outfit = pickOutfit(ctx.pronouns, ctx.heroAge);
+  const parsedFeatures = parsedFeaturesRaw
+    ? { ...parsedFeaturesRaw, outfit: outfit.description }
+    : parsedFeaturesRaw;
 
   const MAX_ATTEMPTS = 3;
   let raw!: Buffer;
@@ -212,6 +227,7 @@ export async function runCoverStep(
         companionName: companion.name,
         heroFeatures: heroFeatures ?? undefined,
         heroAge: ctx.heroAge,
+        canonicalOutfit: outfit.description,
       },
       { orderId: ctx.orderId }
     );

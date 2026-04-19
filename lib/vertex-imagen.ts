@@ -163,8 +163,14 @@ async function predict(params: {
 
 export async function generateCharacterSheet(params: {
   photo: ImgRef;
+  heroAge?: number | null;
+  canonicalOutfit?: string;
 }): Promise<Buffer> {
+  void params.heroAge;
   const photo = refToBase64(params.photo);
+  const outfitLine = params.canonicalOutfit
+    ? `Outfit: ignore whatever [1] is wearing in the photo. Paint [1] in this exact outfit: ${params.canonicalOutfit}.`
+    : `Outfit: comfortable everyday clothes in warm earth tones — soft short-sleeve tee, simple play pants, plain sneakers. Nothing costumey.`;
   const prompt = `
 Produce a CHARACTER REFERENCE SHEET for a children's picture book starring the child [1].
 
@@ -172,7 +178,7 @@ CRITICAL IDENTITY: Preserve the exact facial likeness of [1] — face shape, eye
 
 Style: modern vibrant watercolor illustration with rich saturated colors, confident playful shapes, soft paper grain, and contemporary picture-book energy (think Oliver Jeffers, Sam Usher, Christian Robinson at their most vivid — NOT muted, NOT vintage, NOT sepia). Bright, joyful, warm but punchy. Soft edges, painterly, no harsh black outlines. Classic picture-book toddler proportions (large head ~3 heads tall, short limbs, rounded belly, sturdy legs).
 
-Outfit: comfortable everyday clothes in warm earth tones — soft short-sleeve tee, simple play pants, plain sneakers. Nothing costumey.
+${outfitLine}
 
 Composition: SINGLE neutral soft-cream background. Full-body T-pose-ish hero stance, centered, facing camera, calm friendly expression, eyes open, small smile. No props, no companion, no scenery. Full body visible head to toe with a little margin.
 
@@ -205,6 +211,7 @@ export async function generatePage(params: {
   textPosition: "top" | "bottom";
   heroFeatures?: string;
   heroAge?: number | null;
+  canonicalOutfit?: string;
 }): Promise<Buffer> {
   void params.heroFeatures; // signature-only for router compatibility
   void params.heroAge;
@@ -257,6 +264,9 @@ export async function generatePage(params: {
       ? "Keep all characters, faces, hands, and key action in the UPPER ~75% of the frame. Reserve the BOTTOM ~22% as a calm, gently-washed area (porch boards / grass / ground wash). No faces or critical detail in the bottom band."
       : "Keep all characters, faces, hands, and key action in the LOWER ~75% of the frame. Reserve the TOP ~22% as a calm, gently-washed area (sky / open wall / soft distant background). No faces or critical detail in the top band.";
 
+  const outfitLine = params.canonicalOutfit
+    ? `\nOUTFIT (identical on every page — override whatever looks slightly different in the sheet): ${params.canonicalOutfit}.`
+    : "";
   const prompt = `
 Render a single children's picture-book page illustration starring [1] and [2].
 
@@ -264,7 +274,7 @@ SCENE BRIEF:
 ${params.brief}
 
 HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-[1] is the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.
+[1] is the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.${outfitLine}
 
 OTHER LOCKS:
 - [2] is the companion animal reference. Match species, colors, proportions, silhouette, and distinguishing marks exactly.
@@ -295,6 +305,7 @@ export async function generateCover(params: {
   companionName: string;
   heroFeatures?: string;
   heroAge?: number | null;
+  canonicalOutfit?: string;
 }): Promise<Buffer> {
   // Sheet is the identity contract post-approval — photo ref dropped.
   void params.heroPhoto;
@@ -338,6 +349,9 @@ export async function generateCover(params: {
 
   const fallbackBrief = `${params.heroName} and ${params.companionName} stand together at the heart of the story's anchor setting in a welcoming inviting pose, warm open expression on ${params.heroName}'s face, ${params.companionName} close beside as friend.`;
 
+  const outfitLine = params.canonicalOutfit
+    ? `\nOUTFIT (identical to every page): ${params.canonicalOutfit}.`
+    : "";
   const prompt = `
 Render a children's picture-book COVER illustration in modern vibrant watercolor style for the book titled "${params.storyTitle}".
 
@@ -345,7 +359,7 @@ COVER SCENE:
 ${params.coverBrief || fallbackBrief}
 
 HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-[1] is ${params.heroName}'s APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on the cover MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.
+[1] is ${params.heroName}'s APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on the cover MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.${outfitLine}
 
 OTHER LOCKS:
 - Match the companion's colors, proportions, and silhouette exactly.

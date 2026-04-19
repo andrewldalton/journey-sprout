@@ -142,6 +142,7 @@ function proportionsForAge(age: number | null | undefined): string {
 export async function generateCharacterSheet(params: {
   photo: ImgRef;
   heroAge?: number | null;
+  canonicalOutfit?: string;
 }): Promise<Buffer> {
   // Lean prompt on purpose: FLUX Kontext's single-ref endpoint matches the
   // photo much better when text is minimal. Every "LOCK" paragraph we added
@@ -149,12 +150,15 @@ export async function generateCharacterSheet(params: {
   // photo→painted portrait — we want FLUX to focus on the face, not parse
   // instructions.
   const age = params.heroAge ?? 3;
+  const outfitLine = params.canonicalOutfit
+    ? `Paint the child in this outfit (IGNORE whatever they are wearing in the photo — use this exact outfit): ${params.canonicalOutfit}.`
+    : `Paint the child in the same outfit they are wearing in the reference photo (same top, bottom, shoes, colors).`;
   const prompt = `
 Produce a CHARACTER REFERENCE SHEET for a children's picture book starring this child.
 
 Preserve the exact facial likeness of the child in the reference — face, eyes, nose, mouth, cheeks, chin, skin tone, and hair (length, color, texture, hairline) must match. Readers must instantly recognize this real child. About ${age} years old — ${proportionsForAge(age)}.
 
-Paint the child in the same outfit they are wearing in the reference photo (same top, bottom, shoes, colors).
+${outfitLine}
 
 Modern vibrant watercolor with digital polish — rich saturated colors, soft painterly edges, no harsh black outlines.
 
@@ -173,6 +177,7 @@ export async function generatePage(params: {
   textPosition: "top" | "bottom";
   heroFeatures?: string;
   heroAge?: number | null;
+  canonicalOutfit?: string;
 }): Promise<Buffer> {
   // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
   // the identity contract — passing the photo again just gives FLUX two
@@ -196,7 +201,13 @@ export async function generatePage(params: {
 
   // Parse the structured JSON features (new path) or fall back to the
   // legacy free-form paragraph (older orders stored the raw ~100-word blob).
-  const parsed = parseHeroFeatures(params.heroFeatures);
+  // When a canonicalOutfit is provided, it overrides whatever describeHero
+  // pulled out of the sheet — the book's outfit is a deterministic choice,
+  // not a photo-derived description.
+  const parsedRaw = parseHeroFeatures(params.heroFeatures);
+  const parsed = parsedRaw && params.canonicalOutfit
+    ? { ...parsedRaw, outfit: params.canonicalOutfit }
+    : parsedRaw;
   const featuresBlock = parsed
     ? `
 THE CHILD'S EXACT FEATURES (painted version MUST match these — weight them heavily):
@@ -280,6 +291,7 @@ export async function generateCover(params: {
   companionName: string;
   heroFeatures?: string;
   heroAge?: number | null;
+  canonicalOutfit?: string;
 }): Promise<Buffer> {
   // Sheet is the identity contract post-approval — photo ref dropped.
   // Sheet is passed twice to double-weight (see generatePage for rationale).
@@ -306,7 +318,10 @@ The first two reference images are ${params.heroName}'s APPROVED CHARACTER SHEET
 - SAME outfit — same top, same bottoms, same shoes.
 - SAME apparent age.
 ${(() => {
-  const parsed = parseHeroFeatures(params.heroFeatures);
+  const parsedRaw = parseHeroFeatures(params.heroFeatures);
+  const parsed = parsedRaw && params.canonicalOutfit
+    ? { ...parsedRaw, outfit: params.canonicalOutfit }
+    : parsedRaw;
   if (parsed) {
     return `\n${params.heroName.toUpperCase()}'S EXACT FEATURES (weight heavily):
 - FACE: ${parsed.face}

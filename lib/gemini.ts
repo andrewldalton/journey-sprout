@@ -94,7 +94,10 @@ function proportionsForAge(age: number | null | undefined): string {
   return "older-child proportions — ~4.5-5 heads tall, longer limbs, youthful but leaner face, less baby fat";
 }
 
-function buildSheetPrompt(age: number | null | undefined): string {
+function buildSheetPrompt(age: number | null | undefined, canonicalOutfit?: string): string {
+  const outfitLine = canonicalOutfit
+    ? `Outfit: paint the child in THIS outfit, IGNORING whatever they wear in the reference photo: ${canonicalOutfit}. This is the character's canonical outfit for every page of the book.`
+    : `Outfit: paint the child in the SAME outfit they are wearing in the reference photo. Match the top, bottom, and shoes exactly — same colors, same style, same cut. Do NOT substitute generic "warm earth tones" or default children's-book clothing. This outfit becomes the character's canonical outfit for every page of the book.`;
   return `
 You are producing a CHARACTER REFERENCE SHEET for a children's picture book.
 
@@ -108,7 +111,7 @@ Render the child in the journeysprout illustration style:
 - Palette: rich saturated colors — bright and joyful, confident playful shapes
 - Lighting: warm vibrant daylight, punchy not muted
 
-Outfit: paint the child in the SAME outfit they are wearing in the reference photo. Match the top, bottom, and shoes exactly — same colors, same style, same cut. Do NOT substitute generic "warm earth tones" or default children's-book clothing. If the photo shows a red striped t-shirt and denim shorts, paint a red striped t-shirt and denim shorts. This outfit becomes the character's canonical outfit for every page of the book.
+${outfitLine}
 
 Composition: a SINGLE neutral soft-cream background. Show the child in a full-body T-pose-ish hero stance, centered, facing camera, calm friendly expression, eyes open, mouth in a small smile. No props, no companion, no scenery. Just the character, clearly lit, full body visible head to toe with a little margin.
 
@@ -119,8 +122,9 @@ This sheet will be the identity anchor for every subsequent illustration. Match 
 export async function generateCharacterSheet(params: {
   photo: ImgRef;
   heroAge?: number | null;
+  canonicalOutfit?: string;
 }): Promise<Buffer> {
-  return generateImage([params.photo], buildSheetPrompt(params.heroAge));
+  return generateImage([params.photo], buildSheetPrompt(params.heroAge, params.canonicalOutfit));
 }
 
 /**
@@ -325,8 +329,9 @@ export async function generatePage(params: {
   textPosition: "top" | "bottom";
   heroFeatures?: string;
   heroAge?: number | null;
+  canonicalOutfit?: string;
 }): Promise<Buffer> {
-  const { heroSheet, companionSheet, settingSheets, brief, textPosition, heroFeatures, heroAge } = params;
+  const { heroSheet, companionSheet, settingSheets, brief, textPosition, heroFeatures, heroAge, canonicalOutfit } = params;
   // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
   // the identity contract — passing the photo again just gives Gemini two
   // references to reconcile and causes drift.
@@ -355,7 +360,10 @@ ${brief}
 IDENTITY LOCK (THE SHEET IS THE CONTRACT):
 The FIRST TWO attached images are the hero's APPROVED CHARACTER SHEET (included twice to double-weight it) — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline; SAME outfit (top, bottom, shoes); SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. If the sheet shows tight ringlet curls, do NOT render looser waves. If the sheet shows short hair, do NOT grow it out.
 ${(() => {
-  const parsed = parseHeroFeatures(heroFeatures);
+  const parsedRaw = parseHeroFeatures(heroFeatures);
+  const parsed = parsedRaw && canonicalOutfit
+    ? { ...parsedRaw, outfit: canonicalOutfit }
+    : parsedRaw;
   if (parsed) {
     return `\nTHE CHILD'S EXACT FEATURES (weight heavily):
 - FACE: ${parsed.face}
@@ -402,8 +410,9 @@ export async function generateCover(params: {
   companionName: string;
   heroFeatures?: string;
   heroAge?: number | null;
+  canonicalOutfit?: string;
 }): Promise<Buffer> {
-  const { heroSheet, companionSheet, settingSheets, coverBrief, storyTitle, heroName, companionName, heroFeatures, heroAge } = params;
+  const { heroSheet, companionSheet, settingSheets, coverBrief, storyTitle, heroName, companionName, heroFeatures, heroAge, canonicalOutfit } = params;
   // Sheet is the identity contract post-approval — photo ref dropped.
   void params.heroPhoto;
 
@@ -418,7 +427,10 @@ ${coverBrief || fallbackBrief}
 IDENTITY LOCK (THE SHEET IS THE CONTRACT):
 The FIRST TWO attached images are ${heroName}'s APPROVED CHARACTER SHEET (included twice to double-weight it). The child on the cover MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline; SAME outfit; SAME apparent age. Treat the sheet as a portrait contract.
 ${(() => {
-  const parsed = parseHeroFeatures(heroFeatures);
+  const parsedRaw = parseHeroFeatures(heroFeatures);
+  const parsed = parsedRaw && canonicalOutfit
+    ? { ...parsedRaw, outfit: canonicalOutfit }
+    : parsedRaw;
   if (parsed) {
     return `\n${heroName.toUpperCase()}'S EXACT FEATURES (weight heavily):
 - FACE: ${parsed.face}
