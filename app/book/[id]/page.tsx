@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { use } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Blob, LeafSpray, Sparkle, Sprout } from "@/components/decorations";
 import { COMPANIONS, STORIES } from "@/lib/catalog";
@@ -11,11 +12,14 @@ const POLL_MS = 3_000;
 type Status =
   | "pending"
   | "generating_sheet"
+  | "awaiting_sheet_review"
   | "rendering_pages"
   | "finalizing"
   | "ready"
   | "failed"
   | "emailed";
+
+type SheetStatus = "pending" | "pending_review" | "approved" | "regenerating";
 
 type OrderSnapshot = {
   id: string;
@@ -27,6 +31,10 @@ type OrderSnapshot = {
   pagesTotal: number;
   pdfUrl: string | null;
   sheetUrl: string | null;
+  sheetStatus: SheetStatus;
+  regenCount: number;
+  maxRegens: number;
+  regensLeft: number;
   error: string | null;
   createdAt: string;
   updatedAt: string;
@@ -40,6 +48,10 @@ const STATUS_COPY: Record<Status, { title: string; sub: string }> = {
   generating_sheet: {
     title: "Painting the hero.",
     sub: "Turning your photo into a watercolor character.",
+  },
+  awaiting_sheet_review: {
+    title: "Here's your little one.",
+    sub: "Does this look like them? We'll only make the book once you say yes.",
   },
   rendering_pages: {
     title: "Painting the pages.",
@@ -71,6 +83,8 @@ export default function BookStatusPage({
   const { id } = use(params);
   const [order, setOrder] = useState<OrderSnapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [actionPending, setActionPending] = useState<null | "approve" | "regenerate">(null);
+  const [actionError, setActionError] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchStatus = useCallback(async () => {
@@ -87,6 +101,9 @@ export default function BookStatusPage({
       const data = (await res.json()) as OrderSnapshot;
       setOrder(data);
       setError(null);
+      // Stop polling only when a terminal state is reached. pending_review
+      // keeps polling so if the customer leaves the tab open during a
+      // background re-render it'll pick up the new sheet.
       return data.status !== "emailed" && data.status !== "failed";
     } catch {
       setError("Network hiccup. Retrying…");
@@ -109,6 +126,42 @@ export default function BookStatusPage({
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [fetchStatus]);
+
+  const approve = useCallback(async () => {
+    setActionPending("approve");
+    setActionError(null);
+    try {
+      const res = await fetch(`/api/orders/${id}/sheet/approve`, { method: "POST" });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setActionError(body.error ?? "Couldn't approve — try again.");
+      } else {
+        fetchStatus();
+      }
+    } catch {
+      setActionError("Network hiccup — try again.");
+    } finally {
+      setActionPending(null);
+    }
+  }, [id, fetchStatus]);
+
+  const regenerate = useCallback(async () => {
+    setActionPending("regenerate");
+    setActionError(null);
+    try {
+      const res = await fetch(`/api/orders/${id}/sheet/regenerate`, { method: "POST" });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setActionError(body.error ?? "Couldn't regenerate — try again.");
+      } else {
+        fetchStatus();
+      }
+    } catch {
+      setActionError("Network hiccup — try again.");
+    } finally {
+      setActionPending(null);
+    }
+  }, [id, fetchStatus]);
 
   if (error && !order) {
     return (
@@ -135,6 +188,15 @@ export default function BookStatusPage({
   const copy = STATUS_COPY[order.status];
   const story = STORIES.find((s) => s.slug === order.storySlug);
   const companion = COMPANIONS.find((c) => c.slug === order.companionSlug);
+
+  const inReview = order.sheetStatus === "pending_review" && !!order.sheetUrl;
+  const regenerating = order.sheetStatus === "regenerating";
+
+  // Progress bar shown once the book is actually being rendered (post-approval).
+  const showProgress =
+    order.sheetStatus === "approved" &&
+    order.status !== "emailed" &&
+    order.status !== "failed";
 
   const pct =
     order.pagesTotal > 0
@@ -171,7 +233,13 @@ export default function BookStatusPage({
             <span />
             <span />
           </span>
-          {order.status === "emailed" ? "Delivered" : "In the oven"}
+          {order.status === "emailed"
+            ? "Delivered"
+            : inReview
+              ? "A first look"
+              : regenerating
+                ? "Repainting"
+                : "In the oven"}
         </p>
 
         <h1
@@ -200,8 +268,77 @@ export default function BookStatusPage({
           </p>
         )}
 
-        {/* Progress bar */}
-        {order.status !== "emailed" && order.status !== "failed" && (
+        {/* Sheet review — customer approves or regenerates */}
+        {inReview && order.sheetUrl && (
+          <div className="mt-10 fade-rise" data-delay="4">
+            <div
+              className="relative mx-auto w-[280px] aspect-[3/4] rounded-[20px] overflow-hidden bg-paper-deep"
+              style={{
+                boxShadow:
+                  "0 40px 60px -30px rgba(45, 27, 15, 0.35), 0 10px 18px -6px rgba(45, 27, 15, 0.18)",
+              }}
+            >
+              <Image
+                src={order.sheetUrl}
+                alt={`${order.heroName} painted in watercolor`}
+                fill
+                className="object-cover"
+                sizes="280px"
+                priority
+              />
+            </div>
+
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={approve}
+                disabled={actionPending !== null}
+                className="btn-primary"
+              >
+                {actionPending === "approve" ? "Starting the book…" : "Yes, make the book"}
+              </button>
+              <button
+                type="button"
+                onClick={regenerate}
+                disabled={actionPending !== null || order.regensLeft <= 0}
+                className="inline-flex items-center gap-2 rounded-full border-2 border-ink/15 px-6 py-3 font-display font-semibold text-ink text-base hover:border-terracotta/60 hover:text-terracotta disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                {actionPending === "regenerate"
+                  ? "Repainting…"
+                  : order.regensLeft > 0
+                    ? `Try again (${order.regensLeft} left)`
+                    : "No regenerations left"}
+              </button>
+            </div>
+
+            {actionError && (
+              <p className="mt-4 text-rose font-body text-sm">{actionError}</p>
+            )}
+
+            <p className="mt-6 text-xs text-ink-muted font-body max-w-md mx-auto">
+              Once you approve, we paint the full ten-page book — roughly three
+              minutes. Your book will look like this version of {order.heroName},
+              across lots of scenes and poses.
+            </p>
+          </div>
+        )}
+
+        {/* Regenerating — sheet re-rendering after customer clicked Try again */}
+        {regenerating && (
+          <div className="mt-10 fade-rise" data-delay="4">
+            <div className="mx-auto w-[280px] aspect-[3/4] rounded-[20px] bg-paper-deep flex items-center justify-center">
+              <p className="font-body text-ink-muted text-sm animate-pulse">
+                Painting a new version…
+              </p>
+            </div>
+            <p className="mt-6 text-xs text-ink-muted font-body">
+              This usually takes about fifteen seconds.
+            </p>
+          </div>
+        )}
+
+        {/* Progress bar (post-approval book render) */}
+        {showProgress && (
           <div className="mt-10 fade-rise" data-delay="4">
             <div className="h-2 w-full rounded-full bg-paper-deep overflow-hidden">
               <div
@@ -218,7 +355,7 @@ export default function BookStatusPage({
           </div>
         )}
 
-        {/* Emailed state: show download + close-tab */}
+        {/* Delivered */}
         {order.status === "emailed" && order.pdfUrl && (
           <div
             className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 fade-rise"

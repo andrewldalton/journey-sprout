@@ -1,6 +1,10 @@
 import { serve } from "inngest/next";
 import { inngest } from "@/lib/inngest/client";
-import { renderBook, markOrderFailed } from "@/lib/inngest/functions";
+import {
+  generateSheet,
+  renderBook,
+  markOrderFailed,
+} from "@/lib/inngest/functions";
 
 /**
  * Inngest webhook endpoint. Vercel's Inngest integration pings this route
@@ -12,5 +16,5 @@ export const maxDuration = 800; // long-running steps for book rendering
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
-  functions: [renderBook, markOrderFailed],
+  functions: [generateSheet, renderBook, markOrderFailed],
 });

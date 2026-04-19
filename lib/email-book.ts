@@ -148,3 +148,71 @@ Reply to this email to opt out anytime.
   if (error) throw new Error(`Resend send failed: ${JSON.stringify(error)}`);
   return data?.id ?? "unknown";
 }
+
+/**
+ * "Your hero portrait is ready — come take a look" email. Fires after
+ * phase 1 of the pipeline. Points the customer at /book/[id] where they
+ * can approve the sheet or try again.
+ */
+export async function sendSheetReadyEmail(params: {
+  to: string;
+  orderId: string;
+  heroName: string;
+  sheetUrl: string;
+}): Promise<string> {
+  const { to, orderId, heroName, sheetUrl } = params;
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) throw new Error("RESEND_API_KEY not set");
+
+  const resend = new Resend(apiKey);
+  const from = process.env.RESEND_FROM ?? "journeysprout <onboarding@resend.dev>";
+  const subject = `${heroName}'s portrait is ready — take a look`;
+  const reviewUrl = `${SITE_URL}/book/${orderId}`;
+  const preheader = `We painted ${heroName}. If it looks right, we'll make the book.`;
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(subject)}</title></head>
+<body style="margin:0;padding:0;background:#f3e7c4;font-family:Georgia,'Times New Roman',serif;color:#2d1b0f;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeHtml(preheader)}</div>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f3e7c4;">
+  <tr><td align="center" style="padding:32px 16px;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560" style="max-width:560px;background:#fdf5e0;border-radius:20px;overflow:hidden;border:1px solid #d9c9a7;">
+      <tr><td align="center" style="padding:28px 24px 4px 24px;">
+        <div style="font-family:Georgia,serif;font-size:12px;letter-spacing:0.32em;color:#b26a6a;text-transform:uppercase;">A first look</div>
+      </td></tr>
+      <tr><td style="padding:10px 36px 0 36px;" align="center">
+        <h1 style="margin:0 0 6px 0;font-family:Georgia,serif;font-style:italic;font-weight:700;color:#2d1b0f;font-size:28px;line-height:1.2;">
+          ${escapeHtml(heroName)}'s portrait is ready.
+        </h1>
+        <p style="margin:14px 0 22px 0;font-family:Georgia,serif;font-size:15px;line-height:1.55;color:#4a3220;">
+          We've painted ${escapeHtml(heroName)} in watercolor. Come say hello — if it looks like your little one, we'll make the book.
+        </p>
+      </td></tr>
+      <tr><td align="center" style="padding:4px 36px 20px 36px;">
+        <img src="${escapeHtml(sheetUrl)}" alt="${escapeHtml(heroName)}" width="360" style="display:block;max-width:100%;height:auto;border-radius:14px;border:1px solid #d9c9a7;"/>
+      </td></tr>
+      <tr><td align="center" style="padding:0 36px 28px 36px;">
+        <a href="${escapeHtml(reviewUrl)}" style="display:inline-block;background:#c9672a;color:#fdf5e0;font-family:Georgia,serif;font-weight:600;font-size:16px;text-decoration:none;padding:14px 26px;border-radius:999px;">
+          Take a look →
+        </a>
+      </td></tr>
+      <tr><td style="padding:12px 36px 26px 36px;border-top:1px solid #d9c9a7;text-align:center;">
+        <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:11px;color:#9a7a44;line-height:1.55;">
+          <strong style="color:#2d1b0f;">journeysprout</strong> · hand-painted picture books
+        </p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+
+  const { data, error } = await resend.emails.send({
+    from,
+    to,
+    subject,
+    html,
+  });
+  if (error) throw new Error(`Resend sheet email failed: ${JSON.stringify(error)}`);
+  return data?.id ?? "unknown";
+}

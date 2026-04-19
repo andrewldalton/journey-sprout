@@ -1,4 +1,4 @@
-import { getOrder } from "@/lib/db";
+import { getOrder, MAX_SHEET_REGENS } from "@/lib/db";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -29,6 +29,10 @@ export async function GET(
     pagesTotal: order.pagesTotal,
     pdfUrl: order.pdfUrl,
     sheetUrl: order.sheetUrl,
+    sheetStatus: order.sheetStatus,
+    regenCount: order.regenCount,
+    maxRegens: MAX_SHEET_REGENS,
+    regensLeft: Math.max(0, MAX_SHEET_REGENS - order.regenCount),
     error: order.error,
     createdAt: order.createdAt.toISOString(),
     updatedAt: order.updatedAt.toISOString(),

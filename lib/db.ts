@@ -24,11 +24,20 @@ type Sql = ReturnType<typeof postgres>;
 export type OrderStatus =
   | "pending"
   | "generating_sheet"
+  | "awaiting_sheet_review"
   | "rendering_pages"
   | "finalizing"
   | "ready"
   | "failed"
   | "emailed";
+
+export type SheetStatus =
+  | "pending"            // sheet not yet generated
+  | "pending_review"     // sheet rendered, awaiting customer approve/regen
+  | "approved"           // customer approved, book render can proceed
+  | "regenerating";      // customer clicked "try again", sheet re-rendering
+
+export const MAX_SHEET_REGENS = 2;
 
 export type Order = {
   id: string;
@@ -43,6 +52,9 @@ export type Order = {
   status: OrderStatus;
   pagesDone: number;
   pagesTotal: number;
+  sheetStatus: SheetStatus;
+  regenCount: number;
+  sheetApprovedAt: Date | null;
   error: string | null;
   ip: string | null;
   userAgent: string | null;
@@ -66,6 +78,9 @@ export type OrderPatch = Partial<{
   pagesDone: number;
   sheetUrl: string | null;
   pdfUrl: string | null;
+  sheetStatus: SheetStatus;
+  regenCount: number;
+  sheetApprovedAt: Date | null;
   error: string | null;
 }>;
 
@@ -83,6 +98,9 @@ type OrderRow = {
   status: OrderStatus;
   pages_done: number;
   pages_total: number;
+  sheet_status: SheetStatus;
+  regen_count: number;
+  sheet_approved_at: Date | null;
   error: string | null;
   ip: string | null;
   user_agent: string | null;
@@ -125,6 +143,9 @@ async function ensureSchema(sql: Sql): Promise<void> {
       status TEXT NOT NULL DEFAULT 'pending',
       pages_done INTEGER NOT NULL DEFAULT 0,
       pages_total INTEGER NOT NULL DEFAULT 11,
+      sheet_status TEXT NOT NULL DEFAULT 'pending',
+      regen_count INTEGER NOT NULL DEFAULT 0,
+      sheet_approved_at TIMESTAMPTZ,
       error TEXT,
       ip TEXT,
       user_agent TEXT,
@@ -132,6 +153,10 @@ async function ensureSchema(sql: Sql): Promise<void> {
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `;
+  // Additive migrations for existing deployments — idempotent.
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS sheet_status TEXT NOT NULL DEFAULT 'pending'`;
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS regen_count INTEGER NOT NULL DEFAULT 0`;
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS sheet_approved_at TIMESTAMPTZ`;
   schemaReady = true;
 }
 
@@ -153,6 +178,9 @@ function mapRow(row: OrderRow): Order {
     status: row.status,
     pagesDone: row.pages_done,
     pagesTotal: row.pages_total,
+    sheetStatus: row.sheet_status,
+    regenCount: row.regen_count,
+    sheetApprovedAt: row.sheet_approved_at,
     error: row.error,
     ip: row.ip,
     userAgent: row.user_agent,
@@ -209,6 +237,11 @@ export async function updateOrder(
   if (patch.pagesDone !== undefined) updates.pages_done = patch.pagesDone;
   if (patch.sheetUrl !== undefined) updates.sheet_url = patch.sheetUrl;
   if (patch.pdfUrl !== undefined) updates.pdf_url = patch.pdfUrl;
+  if (patch.sheetStatus !== undefined) updates.sheet_status = patch.sheetStatus;
+  if (patch.regenCount !== undefined) updates.regen_count = patch.regenCount;
+  if (patch.sheetApprovedAt !== undefined)
+    updates.sheet_approved_at =
+      patch.sheetApprovedAt === null ? null : patch.sheetApprovedAt.toISOString();
   if (patch.error !== undefined) updates.error = patch.error;
 
   const columns = Object.keys(updates);

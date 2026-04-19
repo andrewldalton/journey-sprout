@@ -1,14 +1,19 @@
 /**
  * Inngest functions that drive the journeysprout book pipeline.
  *
- * Event flow:
- *   - `journeysprout/order.created` is sent by POST /api/orders after
- *     validating input, uploading the photo to Blob, and inserting the
- *     order row.
- *   - renderBook fires on that event and walks the pipeline:
- *     sheet → 10 pages → cover → PDF → email → mark emailed.
- *     Each step updates the order row so the /book/[id] page can poll
- *     for live progress.
+ * Flow (now two-phase with a customer approval checkpoint):
+ *
+ *   `journeysprout/order.created` (from POST /api/orders)
+ *     → generateSheet: renders the character sheet, saves sheet_url,
+ *       sets sheet_status='pending_review', emails customer "your sheet is
+ *       ready — come take a look." Stops here.
+ *
+ *   `journeysprout/sheet.regenerate` (from POST /api/orders/[id]/sheet/regenerate)
+ *     → generateSheet again. regen_count was bumped before the event fired.
+ *
+ *   `journeysprout/sheet.approved` (from POST /api/orders/[id]/sheet/approve)
+ *     → renderBook: walks the remaining pipeline —
+ *       10 pages → cover → PDF → email → mark emailed.
  */
 import { inngest } from "./client";
 import {
@@ -25,7 +30,7 @@ import {
   runSheetStep,
   type RenderContext,
 } from "../pipeline";
-import { sendBookReadyEmail } from "../email-book";
+import { sendBookReadyEmail, sendSheetReadyEmail } from "../email-book";
 
 function toRenderContext(order: Order): RenderContext {
   if (!order.photoUrl) {
@@ -41,46 +46,100 @@ function toRenderContext(order: Order): RenderContext {
   };
 }
 
-export const renderBook = inngest.createFunction(
+/**
+ * Phase 1: generate the character sheet. Fired on a new order OR on a
+ * customer-initiated regeneration. Stops at sheet_status='pending_review'
+ * so the customer can approve or try again.
+ */
+export const generateSheet = inngest.createFunction(
   {
-    id: "render-book",
+    id: "generate-sheet",
     retries: 1,
-    concurrency: { limit: 4 }, // cap parallel book renders account-wide
-    triggers: [{ event: "journeysprout/order.created" }],
+    concurrency: { limit: 8 }, // cheaper step, higher parallelism
+    triggers: [
+      { event: "journeysprout/order.created" },
+      { event: "journeysprout/sheet.regenerate" },
+    ],
   },
   async ({ event, step }) => {
     const orderId = event.data?.orderId as string | undefined;
     if (!orderId) throw new Error("event.data.orderId missing");
 
-    // Load + ensure we can render. Return only the subset needed for the
-    // pipeline (strings/primitives) since step.run serializes through JSON
-    // and would strip Date types off a full Order row.
-    const ctx = await step.run("load-order", async () => {
+    const { ctx, customerEmail } = await step.run("load-order", async () => {
       const o = await getOrder(orderId);
       if (!o) throw new Error(`order ${orderId} not found`);
-      return toRenderContext(o);
-    });
-    const customerEmail = await step.run("load-email", async () => {
-      const o = await getOrder(orderId);
-      if (!o) throw new Error(`order ${orderId} not found`);
-      return o.email;
+      return { ctx: toRenderContext(o), customerEmail: o.email };
     });
 
-    // Pre-flight: confirm story + companion exist (throws early on bad data)
     await step.run("preflight", async () => {
       await loadStoryForOrder(ctx);
-      await updateOrder(orderId, { status: "generating_sheet" });
+      await updateOrder(orderId, {
+        status: "generating_sheet",
+        sheetStatus: "regenerating",
+      });
     });
 
-    // 1. Character sheet from the photo
     const sheetUrl = await step.run("generate-sheet", async () => {
       const url = await runSheetStep(ctx);
-      await updateOrder(orderId, { sheetUrl: url, status: "rendering_pages" });
-      await incrementPagesDone(orderId);
+      await updateOrder(orderId, {
+        sheetUrl: url,
+        status: "awaiting_sheet_review",
+        sheetStatus: "pending_review",
+      });
       return url;
     });
 
-    // 2. Render each manuscript page (one durable step per page)
+    await step.run("email-sheet-ready", async () => {
+      await sendSheetReadyEmail({
+        to: customerEmail,
+        orderId,
+        heroName: ctx.heroName,
+        sheetUrl,
+      });
+    });
+
+    return { orderId, sheetUrl };
+  }
+);
+
+/**
+ * Phase 2: the book itself. Fires on customer approval.
+ */
+export const renderBook = inngest.createFunction(
+  {
+    id: "render-book",
+    retries: 1,
+    concurrency: { limit: 4 },
+    triggers: [{ event: "journeysprout/sheet.approved" }],
+  },
+  async ({ event, step }) => {
+    const orderId = event.data?.orderId as string | undefined;
+    if (!orderId) throw new Error("event.data.orderId missing");
+
+    const { ctx, customerEmail, sheetUrl } = await step.run(
+      "load-order",
+      async () => {
+        const o = await getOrder(orderId);
+        if (!o) throw new Error(`order ${orderId} not found`);
+        if (!o.sheetUrl) throw new Error(`order ${orderId} has no sheet_url`);
+        if (o.sheetStatus !== "approved") {
+          throw new Error(
+            `order ${orderId} sheet_status=${o.sheetStatus}, expected 'approved'`
+          );
+        }
+        return {
+          ctx: toRenderContext(o),
+          customerEmail: o.email,
+          sheetUrl: o.sheetUrl,
+        };
+      }
+    );
+
+    await step.run("mark-rendering", async () => {
+      await updateOrder(orderId, { status: "rendering_pages" });
+      await incrementPagesDone(orderId); // count the already-approved sheet
+    });
+
     const { manuscript } = await loadStoryForOrder(ctx);
 
     const pageUrls: { num: number; url: string }[] = [];
@@ -96,14 +155,12 @@ export const renderBook = inngest.createFunction(
       pageUrls.push({ num: page.num, url });
     }
 
-    // 3. Cover
     const coverUrl = await step.run("generate-cover", async () => {
       const url = await runCoverStep(ctx, sheetUrl);
       await incrementPagesDone(orderId);
       return url;
     });
 
-    // 4. PDF
     await step.run("mark-finalizing", () =>
       updateOrder(orderId, { status: "finalizing" })
     );
@@ -116,7 +173,6 @@ export const renderBook = inngest.createFunction(
       updateOrder(orderId, { status: "ready", pdfUrl })
     );
 
-    // 5. Email the customer
     await step.run("email-customer", async () => {
       await sendBookReadyEmail({
         to: customerEmail,
@@ -134,8 +190,8 @@ export const renderBook = inngest.createFunction(
 );
 
 /**
- * Fallback error handler — if the function ultimately fails after retries,
- * record the error on the order row so the /book/[id] page can show it.
+ * Fallback error handler — record a failed run on the order so /book/[id]
+ * can surface it. Catches failures of either phase.
  */
 export const markOrderFailed = inngest.createFunction(
   {
@@ -143,13 +199,13 @@ export const markOrderFailed = inngest.createFunction(
     triggers: [{ event: "inngest/function.failed" }],
   },
   async ({ event }) => {
-    // Defensive parse — we only care about our own function's failures.
     const data = event.data as {
       function_id?: string;
       event?: { data?: { orderId?: string } };
       error?: { message?: string };
     };
-    if (!data.function_id?.endsWith("render-book")) return;
+    const fid = data.function_id ?? "";
+    if (!fid.endsWith("render-book") && !fid.endsWith("generate-sheet")) return;
     const orderId = data.event?.data?.orderId;
     if (!orderId) return;
     await updateOrder(orderId, {
