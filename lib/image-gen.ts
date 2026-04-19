@@ -46,9 +46,9 @@ const MODEL_ID: Record<Provider, Record<CostKind, string>> = {
     cover: "gemini-2.5-flash-image",
   },
   vertex: {
-    sheet: "imagen-3.0-capability-preview-0930",
-    page:  "imagen-3.0-capability-preview-0930",
-    cover: "imagen-3.0-capability-preview-0930",
+    sheet: "imagen-3.0-capability-001",
+    page:  "imagen-3.0-capability-001",
+    cover: "imagen-3.0-capability-001",
   },
   flux: {
     sheet: "fal-ai/flux-pro/kontext",

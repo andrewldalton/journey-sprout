@@ -13,7 +13,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { GoogleAuth } from "google-auth-library";
 
-const MODEL = "imagen-3.0-capability-preview-0930";
+// GA successor of imagen-3.0-capability-preview-0930; preview SKU was
+// deprecated and now 404s. Subject-customization payload shape is stable.
+const MODEL = "imagen-3.0-capability-001";
 const LOCATION = process.env.VERTEX_LOCATION || "us-central1";
 
 type ImgRef =
