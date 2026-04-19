@@ -186,6 +186,7 @@ ${brief}
 IDENTITY LOCK (THE SHEET IS THE CONTRACT):
 The FIRST TWO attached images are the hero's APPROVED CHARACTER SHEET (included twice to double-weight it) — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline; SAME outfit (top, bottom, shoes); SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. If the sheet shows tight ringlet curls, do NOT render looser waves. If the sheet shows short hair, do NOT grow it out.
 ${heroFeatures ? `\nTHE CHILD'S EXACT FEATURES: ${heroFeatures}\n` : ""}
+COLOR LOCK: The hero's hair color, skin tone, and clothing colors are fixed by the sheet. They do NOT change with scene lighting. You may render soft cast shadows and gentle rim-light from the scene's light source, but you must NEVER repaint the hero's actual hair color, skin tone, or clothing colors to harmonize with golden-hour / twilight / jungle-green / etc. scene palettes. Yellow stays yellow. Blonde stays blonde.
 - The NEXT attached image is the COMPANION SHEET. Match the companion's species, colors, proportions, silhouette, and distinguishing marks exactly.
 - If the brief below describes hero or companion features differently than the sheets, the sheets WIN. The brief is for scene and action only.
 
@@ -228,6 +229,7 @@ ${coverBrief || fallbackBrief}
 IDENTITY LOCK (THE SHEET IS THE CONTRACT):
 The FIRST TWO attached images are ${heroName}'s APPROVED CHARACTER SHEET (included twice to double-weight it). The child on the cover MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline; SAME outfit; SAME apparent age. Treat the sheet as a portrait contract.
 ${heroFeatures ? `\n${heroName.toUpperCase()}'S EXACT FEATURES: ${heroFeatures}\n` : ""}
+COLOR LOCK: ${heroName}'s hair color, skin tone, and clothing colors do NOT change with cover lighting. Soft shadows and rim-light OK; never repaint ${heroName}'s actual colors to match the scene palette.
 - The NEXT attached image is the COMPANION SHEET — match colors, proportions, silhouette exactly.
 
 ${
