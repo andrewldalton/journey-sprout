@@ -156,8 +156,10 @@ export function StepUpload({ initialDataUrl, onNext, onBack }: Props) {
           ) : (
             <div className="flex flex-col items-center">
               <figure
-                className="relative rounded-[28px] overflow-hidden bg-paper w-full max-w-md aspect-square"
+                className="relative rounded-[28px] overflow-hidden bg-paper w-full max-w-md flex items-center justify-center"
                 style={{
+                  minHeight: "280px",
+                  maxHeight: "560px",
                   boxShadow:
                     "0 40px 60px -30px rgba(45, 27, 15, 0.35), 0 10px 18px -6px rgba(45, 27, 15, 0.18)",
                 }}
@@ -167,7 +169,7 @@ export function StepUpload({ initialDataUrl, onNext, onBack }: Props) {
                   <img
                     src={dataUrl}
                     alt="Your uploaded hero photo"
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto max-h-[560px] object-contain"
                     onError={() => setPreviewFailed(true)}
                   />
                 ) : (
