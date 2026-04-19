@@ -41,7 +41,7 @@ export function Hero() {
         <div className="relative z-10">
           <p className="eyebrow fade-rise" data-delay="1">
             <span className="dot-rule mr-3"><span /><span /><span /></span>
-            A Journey Sprout story
+            A journeysprout story
           </p>
 
           <h1 className="font-display font-bold text-5xl md:text-[4.5rem] lg:text-[5rem] leading-[0.98] text-ink mt-5 fade-rise" data-delay="2">
@@ -94,7 +94,7 @@ export function Hero() {
           >
             <Image
               src="/samples/seed-p01.png"
-              alt="A sample interior page from a Journey Sprout book"
+              alt="A sample interior page from a journeysprout book"
               width={800}
               height={800}
               className="w-full h-full object-cover"
@@ -114,7 +114,7 @@ export function Hero() {
           >
             <Image
               src="/samples/seed-p10.png"
-              alt="A sample ending page from a Journey Sprout book"
+              alt="A sample ending page from a journeysprout book"
               width={800}
               height={800}
               className="w-full h-full object-cover"
@@ -135,7 +135,7 @@ export function Hero() {
           >
             <Image
               src="/samples/seed-cover.png"
-              alt="Sample Journey Sprout cover titled The Seed That Took Its Time"
+              alt="Sample journeysprout cover titled The Seed That Took Its Time"
               width={800}
               height={800}
               className="w-full h-full object-cover"

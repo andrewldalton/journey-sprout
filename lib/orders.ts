@@ -103,14 +103,14 @@ export async function notifyNewOrder(
     return;
   }
   const resend = new Resend(apiKey);
-  const from = process.env.RESEND_FROM ?? "Journey Sprout <hello@journeysprout.com>";
+  const from = process.env.RESEND_FROM ?? "journeysprout <hello@journeysprout.com>";
   const to = process.env.NOTIFY_EMAIL ?? "andrewldalton@gmail.com";
   const photoBytes = Math.round((input.photoDataUrl.length * 3) / 4);
   const photoKb = Math.round(photoBytes / 1024);
 
   const html = `
     <div style="font-family: system-ui, -apple-system, sans-serif; max-width: 560px; padding: 24px; color: #2d1b0f; background: #fdf5e0;">
-      <h2 style="font-family: Georgia, serif; color: #2d1b0f; margin: 0 0 8px 0;">A new Journey Sprout order 🌱</h2>
+      <h2 style="font-family: Georgia, serif; color: #2d1b0f; margin: 0 0 8px 0;">A new journeysprout order 🌱</h2>
       <p style="color: #6e4a22; margin: 0 0 24px 0;"><strong>${orderId}</strong></p>
       <table style="border-collapse: collapse; font-size: 14px;">
         <tr><td style="padding: 6px 12px 6px 0; color: #6e4a22;">Hero</td><td style="padding: 6px 0;"><strong>${escapeHtml(input.heroName)}</strong> (${escapeHtml(input.pronouns)})</td></tr>
@@ -127,7 +127,7 @@ export async function notifyNewOrder(
   await resend.emails.send({
     from,
     to,
-    subject: `New Journey Sprout order: ${input.heroName} + ${input.companionSlug}`,
+    subject: `New journeysprout order: ${input.heroName} + ${input.companionSlug}`,
     html,
   });
 }

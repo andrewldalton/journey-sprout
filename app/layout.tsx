@@ -17,11 +17,11 @@ const body = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Journey Sprout — A picture book starring your little one",
+  title: "journeysprout — A picture book starring your little one",
   description:
     "Upload a photo, pick a tale, and we'll hand-paint a watercolor picture book where your child is the hero. Personalized children's books, delivered in minutes.",
   openGraph: {
-    title: "Journey Sprout",
+    title: "journeysprout",
     description:
       "Personalized watercolor picture books, starring your child.",
     type: "website",

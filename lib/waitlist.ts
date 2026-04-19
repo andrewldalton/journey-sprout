@@ -106,7 +106,7 @@ export async function sendNotification(record: SignupRecord): Promise<void> {
   }
 
   const from =
-    process.env.RESEND_FROM ?? "Journey Sprout <hello@journeysprout.com>";
+    process.env.RESEND_FROM ?? "journeysprout <hello@journeysprout.com>";
   const to = process.env.NOTIFY_EMAIL ?? "andrewldalton@gmail.com";
   const timestamp = new Date().toISOString();
 
@@ -114,12 +114,12 @@ export async function sendNotification(record: SignupRecord): Promise<void> {
   await resend.emails.send({
     from,
     to,
-    subject: `New Journey Sprout signup: ${record.email}`,
+    subject: `New journeysprout signup: ${record.email}`,
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; color: #1f1b16;">
         <h2 style="margin: 0 0 12px; font-size: 20px; color: #c9672a;">A new sprout just landed</h2>
         <p style="margin: 0 0 20px; font-size: 15px; line-height: 1.5; color: #3f3830;">
-          Someone just joined the Journey Sprout waitlist. Here are the details:
+          Someone just joined the journeysprout waitlist. Here are the details:
         </p>
         <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
           <tr>

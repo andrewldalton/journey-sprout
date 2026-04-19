@@ -1,0 +1,286 @@
+/**
+ * Image compositing with `sharp` — text bubble overlays for pages and
+ * typographic overlays for covers. Ported from render-book.mjs so the
+ * server-side pipeline produces identical output to the local script.
+ */
+import sharp from "sharp";
+
+// --- Shared ---
+
+const escapeXml = (s: string) =>
+  s.replace(
+    /[<>&'"]/g,
+    (c) =>
+      ({
+        "<": "&lt;",
+        ">": "&gt;",
+        "&": "&amp;",
+        "'": "&apos;",
+        '"': "&quot;",
+      }[c] ?? c)
+  );
+
+// --- Page text bubble ---
+
+export async function composePageBubble(params: {
+  rawImage: Buffer;
+  text: string;
+  textPosition: "top" | "bottom";
+  companionAccent: string; // hex color for drop cap
+}): Promise<Buffer> {
+  const { rawImage, text, textPosition, companionAccent } = params;
+  const img = sharp(rawImage);
+  const meta = await img.metadata();
+  const W = meta.width ?? 1024;
+  const H = meta.height ?? 1024;
+
+  const fullText = text.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
+  const firstChar = fullText[0] ?? "";
+  const bodyText = fullText.slice(1).trimStart();
+
+  const avgCharWidth = (fs: number) => fs * 0.52;
+  const lineHeightMul = 1.28;
+  const panelSideMargin = Math.round(W * 0.06);
+  const panelPadX = Math.round(W * 0.022);
+  const panelPadY = Math.round(W * 0.016);
+  const panelEdgeMargin = Math.round(H * 0.03);
+  const panelMaxHeight = Math.round(H * 0.26);
+  const panelWidth = W - 2 * panelSideMargin;
+  const panelInnerWidth = panelWidth - 2 * panelPadX;
+
+  function wrapLines(input: string, fontSize: number, firstLineIndent: number) {
+    const cw = avgCharWidth(fontSize);
+    const spaceW = cw;
+    const words = input.split(/\s+/).filter(Boolean);
+    const lines: string[] = [];
+    let cur: string[] = [];
+    let curW = 0;
+    let maxW = panelInnerWidth - firstLineIndent;
+    for (const w of words) {
+      const ww = w.length * cw;
+      const sep = cur.length > 0 ? spaceW : 0;
+      if (curW + sep + ww > maxW && cur.length > 0) {
+        lines.push(cur.join(" "));
+        cur = [w];
+        curW = ww;
+        maxW = panelInnerWidth;
+      } else {
+        cur.push(w);
+        curW += sep + ww;
+      }
+    }
+    if (cur.length) lines.push(cur.join(" "));
+    return lines;
+  }
+
+  let fontSize = Math.round(W * 0.026);
+  let dropSize = 0;
+  let lineHeight = 0;
+  let lines: string[] = [];
+  for (;; fontSize -= 1) {
+    dropSize = Math.round(fontSize * 1.9);
+    lineHeight = Math.round(fontSize * lineHeightMul);
+    const firstLineIndent = Math.round(dropSize * 0.75);
+    lines = wrapLines(bodyText, fontSize, firstLineIndent);
+    const textBlockH = Math.max(dropSize, lines.length * lineHeight);
+    const panelH = textBlockH + 2 * panelPadY;
+    if (panelH <= panelMaxHeight || fontSize <= 14) break;
+  }
+
+  const firstLineIndent = Math.round(dropSize * 0.75);
+  const textBlockH = Math.max(dropSize, lines.length * lineHeight);
+  const panelH = Math.round(textBlockH + 2 * panelPadY);
+  const panelX = panelSideMargin;
+  const panelY =
+    textPosition === "bottom" ? H - panelEdgeMargin - panelH : panelEdgeMargin;
+
+  const innerTop = panelY + panelPadY;
+  const dropX = panelX + panelPadX;
+  const dropY = innerTop + Math.round(dropSize * 0.82);
+
+  const firstTextBaseline =
+    innerTop + Math.round(fontSize * 1.05) + Math.round((dropSize - fontSize) * 0.35);
+  const lineXFirst = panelX + panelPadX + firstLineIndent;
+  const lineXRest = panelX + panelPadX;
+
+  const linesSvg = lines
+    .map((line, i) => {
+      const x = i === 0 ? lineXFirst : lineXRest;
+      const y = firstTextBaseline + i * lineHeight;
+      return `<text x="${x}" y="${y}" font-family="Nunito, 'Helvetica Neue', Helvetica, Arial, sans-serif"
+              font-size="${fontSize}" font-weight="600" fill="#2d1b0f" xml:space="preserve">${escapeXml(
+        line
+      )}</text>`;
+    })
+    .join("\n  ");
+
+  const corner = Math.round(Math.min(panelH * 0.22, 28));
+
+  const svg = `
+<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="bubbleShadow" x="-10%" y="-10%" width="120%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="${Math.round(W * 0.004)}"/>
+      <feOffset dx="0" dy="${Math.round(W * 0.003)}"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect x="${panelX}" y="${panelY}" width="${panelWidth}" height="${panelH}"
+        rx="${corner}" ry="${corner}"
+        fill="rgba(253, 245, 224, 0.94)"
+        stroke="rgba(175, 140, 80, 0.45)" stroke-width="1.5"
+        filter="url(#bubbleShadow)"/>
+  <text x="${dropX}" y="${dropY}" font-family="Nunito, 'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="${dropSize}" font-weight="800" fill="${companionAccent}" xml:space="preserve">${escapeXml(
+    firstChar
+  )}</text>
+  ${linesSvg}
+</svg>`.trim();
+
+  return img.composite([{ input: Buffer.from(svg), top: 0, left: 0 }]).png().toBuffer();
+}
+
+// --- Cover typography overlay ---
+
+export async function composeCoverTypography(params: {
+  rawImage: Buffer;
+  storyTitle: string;
+  heroName: string;
+  companionName: string;
+  companionAccent: string;
+}): Promise<Buffer> {
+  const { rawImage, storyTitle, heroName, companionName, companionAccent } =
+    params;
+  const img = sharp(rawImage);
+  const meta = await img.metadata();
+  const W = meta.width ?? 1024;
+  const H = meta.height ?? 1024;
+
+  const SERIF = "Georgia, 'Times New Roman', 'Book Antiqua', serif";
+  const SANS = "Nunito, 'Helvetica Neue', Helvetica, Arial, sans-serif";
+
+  const eyebrowText = `${heroName.toUpperCase()} AND ${companionName.toUpperCase()} IN`;
+  const seriesLabel = "A JOURNEYSPROUT STORY";
+
+  const serifCharW = (s: string, fs: number) => s.length * fs * 0.54;
+
+  const titlePadX = Math.round(W * 0.08);
+  const titleMaxWidth = W - 2 * titlePadX;
+  function wrapTitle(input: string, fs: number) {
+    const words = input.split(/\s+/);
+    const out: string[] = [];
+    let cur: string[] = [];
+    let curW = 0;
+    const sp = fs * 0.3;
+    for (const w of words) {
+      const ww = serifCharW(w, fs);
+      const sep = cur.length > 0 ? sp : 0;
+      if (curW + sep + ww > titleMaxWidth && cur.length > 0) {
+        out.push(cur.join(" "));
+        cur = [w];
+        curW = ww;
+      } else {
+        cur.push(w);
+        curW += sep + ww;
+      }
+    }
+    if (cur.length) out.push(cur.join(" "));
+    return out;
+  }
+
+  let titleSize = Math.round(W * 0.054);
+  let titleLines: string[] = [];
+  for (;; titleSize -= 2) {
+    titleLines = wrapTitle(storyTitle, titleSize);
+    if (titleLines.length <= 3 || titleSize <= 26) break;
+  }
+  const titleLineHeight = Math.round(titleSize * 1.06);
+
+  const eyebrowSize = Math.round(W * 0.018);
+  const eyebrowSpacing = Math.round(eyebrowSize * 0.28);
+  const ruleSize = Math.round(W * 0.016);
+  const seriesSize = Math.round(W * 0.015);
+  const seriesSpacing = Math.round(seriesSize * 0.32);
+
+  const topPad = Math.round(H * 0.04);
+  const afterEyebrow = Math.round(eyebrowSize * 1.6);
+  const afterTitle = Math.round(titleSize * 0.45);
+  const afterRule = Math.round(ruleSize * 1.7);
+
+  const eyebrowY = topPad + eyebrowSize;
+  const titleTopY = eyebrowY + afterEyebrow;
+  const titleBaseline0 = titleTopY + Math.round(titleSize * 0.82);
+  const titleEnd =
+    titleBaseline0 +
+    (titleLines.length - 1) * titleLineHeight +
+    Math.round(titleSize * 0.18);
+  const ruleY = titleEnd + afterTitle;
+  const seriesY = ruleY + afterRule;
+  const plateBottom = seriesY + Math.round(seriesSize * 0.8);
+
+  const plateSideMargin = Math.round(W * 0.055);
+  const plateTop = topPad - Math.round(eyebrowSize * 0.9);
+  const plateH = Math.round(plateBottom - plateTop + eyebrowSize * 0.3);
+  const plateCorner = Math.round(W * 0.03);
+
+  const dotR = Math.round(ruleSize * 0.28);
+  const dotSpacing = Math.round(ruleSize * 1.4);
+  const dots = [-1, 0, 1]
+    .map(
+      (i) =>
+        `<circle cx="${W / 2 + i * dotSpacing}" cy="${ruleY}" r="${dotR}" fill="${companionAccent}" opacity="0.85"/>`
+    )
+    .join("");
+
+  const titleLinesSvg = titleLines
+    .map((line, i) => {
+      const y = titleBaseline0 + i * titleLineHeight;
+      return `<text x="${W / 2}" y="${y}" text-anchor="middle"
+      font-family="${SERIF}" font-size="${titleSize}" font-weight="700" font-style="italic"
+      fill="#2a1810" filter="url(#titleShadow)" xml:space="preserve">${escapeXml(
+        line
+      )}</text>`;
+    })
+    .join("\n  ");
+
+  const svg = `
+<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="titleShadow" x="-10%" y="-10%" width="120%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="${Math.max(1, Math.round(W * 0.002))}"/>
+      <feOffset dx="0" dy="${Math.round(W * 0.0015)}"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="plateShadow" x="-10%" y="-10%" width="120%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="${Math.round(W * 0.005)}"/>
+      <feOffset dx="0" dy="${Math.round(W * 0.004)}"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.32"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect x="${plateSideMargin}" y="${plateTop}" width="${W - 2 * plateSideMargin}" height="${plateH}"
+        rx="${plateCorner}" ry="${plateCorner}"
+        fill="rgba(253, 245, 224, 0.92)"
+        stroke="rgba(175, 140, 80, 0.55)" stroke-width="1.8"
+        filter="url(#plateShadow)"/>
+
+  <text x="${W / 2}" y="${eyebrowY}" text-anchor="middle"
+        font-family="${SANS}" font-size="${eyebrowSize}" font-weight="800"
+        letter-spacing="${eyebrowSpacing}" fill="${companionAccent}"
+        xml:space="preserve">${escapeXml(eyebrowText)}</text>
+
+  ${titleLinesSvg}
+
+  ${dots}
+
+  <text x="${W / 2}" y="${seriesY}" text-anchor="middle"
+        font-family="${SANS}" font-size="${seriesSize}" font-weight="700"
+        letter-spacing="${seriesSpacing}" fill="#6e4a22"
+        xml:space="preserve">${escapeXml(seriesLabel)}</text>
+</svg>`.trim();
+
+  return img.composite([{ input: Buffer.from(svg), top: 0, left: 0 }]).png().toBuffer();
+}

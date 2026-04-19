@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Stepper } from "@/components/create/Stepper";
 import { StepUpload } from "@/components/create/StepUpload";
 import { StepHero } from "@/components/create/StepHero";
 import { StepStory } from "@/components/create/StepStory";
 import { StepCompanion } from "@/components/create/StepCompanion";
 import { StepReview } from "@/components/create/StepReview";
-import { StepDone } from "@/components/create/StepDone";
 import type { Pronouns } from "@/lib/catalog";
 
 const STEP_LABELS = ["Photo", "Name", "Story", "Friend", "Review"];
 
-type Phase = 1 | 2 | 3 | 4 | 5 | "done";
+type Phase = 1 | 2 | 3 | 4 | 5;
 
 type Draft = {
   photoDataUrl?: string;
@@ -26,11 +26,10 @@ type Draft = {
 export default function CreatePage() {
   const [phase, setPhase] = useState<Phase>(1);
   const [draft, setDraft] = useState<Draft>({});
-  const [orderId, setOrderId] = useState<string | null>(null);
+  const router = useRouter();
 
   function goBack() {
     setPhase((p) => {
-      if (p === "done") return 5;
       if (p === 1) return 1;
       return (p - 1) as Phase;
     });
@@ -68,9 +67,7 @@ export default function CreatePage() {
 
   return (
     <main className="flex-1 min-h-screen">
-      {phase !== "done" && (
-        <Stepper current={phase as number} labels={STEP_LABELS} />
-      )}
+      <Stepper current={phase} labels={STEP_LABELS} />
 
       {phase === 1 && (
         <StepUpload
@@ -130,19 +127,10 @@ export default function CreatePage() {
             onBack={goBack}
             onSubmit={submit}
             onSuccess={(id) => {
-              setOrderId(id);
-              setPhase("done");
+              router.push(`/book/${id}`);
             }}
           />
         )}
-
-      {phase === "done" && orderId && draft.email && draft.heroName && (
-        <StepDone
-          orderId={orderId}
-          email={draft.email}
-          heroName={draft.heroName}
-        />
-      )}
     </main>
   );
 }

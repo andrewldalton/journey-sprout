@@ -158,7 +158,7 @@ function PaintedPlaceholder({ story }: { story: Story }) {
           style={{ color: fg }}
         >
           <span className="inline-block w-1 h-1 rounded-full" style={{ background: fg }} />
-          A Journey Sprout tale
+          A journeysprout tale
           <span className="inline-block w-1 h-1 rounded-full" style={{ background: fg }} />
         </span>
       </div>

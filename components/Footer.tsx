@@ -9,7 +9,7 @@ export function Footer() {
         <div className="flex items-center gap-3">
           <Sprout color="#7FA075" className="w-6 h-6 opacity-85" />
           <span className="font-display font-medium text-2xl md:text-[1.75rem] text-ink-soft tracking-tight">
-            Journey Sprout
+            journeysprout
           </span>
         </div>
 
@@ -44,7 +44,7 @@ export function Footer() {
         </nav>
 
         <p className="mt-6 text-xs text-ink-muted/80 font-body tracking-wide">
-          &copy; {year} Journey Sprout
+          &copy; {year} journeysprout
         </p>
       </div>
     </footer>

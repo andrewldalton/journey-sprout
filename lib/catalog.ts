@@ -1,5 +1,5 @@
 /**
- * Shared catalog of stories and companions available in Journey Sprout.
+ * Shared catalog of stories and companions available in journeysprout.
  *
  * This is the source of truth for the book builder flow. Keep in sync with
  * the companion repo at /Users/andrewdalton/CLAUDE/story-hero-prototype/.

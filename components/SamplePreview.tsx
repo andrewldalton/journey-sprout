@@ -52,7 +52,7 @@ export function SamplePreview() {
           </h2>
 
           <p className="font-body text-lg text-ink-soft mt-7 max-w-lg leading-relaxed fade-rise" data-delay="3">
-            Every Journey Sprout book is written by hand, painted in watercolor,
+            Every journeysprout book is written by hand, painted in watercolor,
             and starred by your child. No templates, no name-swap. The little
             one on the page looks like yours — because it is yours.
           </p>
@@ -119,7 +119,7 @@ export function SamplePreview() {
           >
             <Image
               src="/samples/seed-cover.png"
-              alt="Sample Journey Sprout cover titled The Seed That Took Its Time"
+              alt="Sample journeysprout cover titled The Seed That Took Its Time"
               width={1024}
               height={1024}
               className="w-full h-full object-cover"

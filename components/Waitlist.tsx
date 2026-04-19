@@ -84,7 +84,7 @@ export function Waitlist() {
         {!isSuccess ? (
           <>
             <p className="font-body text-lg text-ink-soft mt-7 leading-relaxed fade-rise" data-delay="3">
-              We&apos;re opening Journey Sprout to a small group first. Leave
+              We&apos;re opening journeysprout to a small group first. Leave
               your email and we&apos;ll write to you the day we open — no
               newsletter, no noise, just the one letter.
             </p>
@@ -169,7 +169,7 @@ export function Waitlist() {
               <Sparkle color="#C9672A" className="w-5 h-5 float-soft-slower" />
             </div>
             <p className="font-body text-lg text-ink-soft mt-5 leading-relaxed">
-              We&apos;ll write you one letter the day Journey Sprout opens.
+              We&apos;ll write you one letter the day journeysprout opens.
               Promise — no spam, no noise.
             </p>
             <div className="mt-8 flex justify-center">

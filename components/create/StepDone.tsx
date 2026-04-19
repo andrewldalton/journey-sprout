@@ -30,7 +30,7 @@ export function StepDone({ orderId, email, heroName }: Props) {
     try {
       if (canShare) {
         await navigator.share({
-          title: "Journey Sprout",
+          title: "journeysprout",
           text: SHARE_TEXT,
           url: SHARE_URL,
         });
