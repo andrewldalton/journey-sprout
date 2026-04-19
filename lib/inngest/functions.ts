@@ -30,18 +30,23 @@ import {
   runSheetStep,
   type RenderContext,
 } from "../pipeline";
-import { sendBookReadyEmail, sendSheetReadyEmail } from "../email-book";
+import { sendBookReadyEmail } from "../email-book";
 
-function toRenderContext(order: Order): RenderContext {
+function toRenderContext(order: Order, opts?: { requireBook?: boolean }): RenderContext {
   if (!order.photoUrl) {
     throw new Error(`order ${order.id} has no photoUrl`);
+  }
+  if (opts?.requireBook) {
+    if (!order.storySlug) throw new Error(`order ${order.id} has no storySlug`);
+    if (!order.companionSlug) throw new Error(`order ${order.id} has no companionSlug`);
   }
   return {
     orderId: order.id,
     heroName: order.heroName,
     pronouns: order.pronouns,
-    storySlug: order.storySlug,
-    companionSlug: order.companionSlug,
+    // Sheet step doesn't need these; book step requires them (checked above).
+    storySlug: order.storySlug ?? "",
+    companionSlug: order.companionSlug ?? "",
     photoUrl: order.photoUrl,
   };
 }
@@ -65,14 +70,15 @@ export const generateSheet = inngest.createFunction(
     const orderId = event.data?.orderId as string | undefined;
     if (!orderId) throw new Error("event.data.orderId missing");
 
-    const { ctx, customerEmail } = await step.run("load-order", async () => {
+    const ctx = await step.run("load-order", async () => {
       const o = await getOrder(orderId);
       if (!o) throw new Error(`order ${orderId} not found`);
-      return { ctx: toRenderContext(o), customerEmail: o.email };
+      return toRenderContext(o);
     });
 
     await step.run("preflight", async () => {
-      await loadStoryForOrder(ctx);
+      // Sheet step doesn't need story/companion; just flag the order as in
+      // progress. (Book step re-validates story+companion exist when it runs.)
       await updateOrder(orderId, {
         status: "generating_sheet",
         sheetStatus: "regenerating",
@@ -89,14 +95,10 @@ export const generateSheet = inngest.createFunction(
       return url;
     });
 
-    await step.run("email-sheet-ready", async () => {
-      await sendSheetReadyEmail({
-        to: customerEmail,
-        orderId,
-        heroName: ctx.heroName,
-        sheetUrl,
-      });
-    });
+    // NB: no "sheet ready" email here. The customer is watching the wizard
+    // live — the portrait appears on the same screen. An email would just
+    // add noise. (Edge case: if they close the tab, they lose the flow.
+    // Acceptable for v1.)
 
     return { orderId, sheetUrl };
   }
@@ -128,7 +130,7 @@ export const renderBook = inngest.createFunction(
           );
         }
         return {
-          ctx: toRenderContext(o),
+          ctx: toRenderContext(o, { requireBook: true }),
           customerEmail: o.email,
           sheetUrl: o.sheetUrl,
         };

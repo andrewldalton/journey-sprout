@@ -1,15 +1,12 @@
 /**
  * POST /api/orders/[id]/sheet/approve
  *
- * Customer clicked "Make the book" on the sheet-review screen. Flips the
- * order to sheet_status='approved' and fires the `sheet.approved` event so
- * Inngest kicks off phase 2 (pages → cover → PDF → email).
- *
- * Idempotent: if the sheet is already approved, returns 200 without firing
- * a second event. Rejects if the sheet isn't yet in pending_review.
+ * Customer clicked "Yes, looks like them!" on the sheet-review step. Flips
+ * sheet_status to 'approved'. Does NOT yet fire the render event — the
+ * customer still needs to pick a story + companion, which happens in the
+ * next wizard step. `/api/orders/[id]/book` fires the render event.
  */
 import { getOrder, updateOrder } from "@/lib/db";
-import { inngest } from "@/lib/inngest/client";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -48,19 +45,6 @@ export async function POST(
     sheetStatus: "approved",
     sheetApprovedAt: new Date(),
   });
-
-  try {
-    await inngest.send({
-      name: "journeysprout/sheet.approved",
-      data: { orderId: id },
-    });
-  } catch (err) {
-    console.error("[sheet-approve] inngest dispatch failed", err);
-    return Response.json(
-      { error: "Queued, but the dispatcher hiccuped. You can try again in a moment." },
-      { status: 502 }
-    );
-  }
 
   return Response.json({ ok: true });
 }

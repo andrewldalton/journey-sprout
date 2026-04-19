@@ -63,11 +63,15 @@ export async function POST(request: Request) {
   if (!pronouns || typeof pronouns !== "string") {
     return Response.json({ error: "Pronouns missing." }, { status: 400 });
   }
-  if (!storySlug || typeof storySlug !== "string") {
-    return Response.json({ error: "Pick a story first." }, { status: 400 });
+  // storySlug / companionSlug are OPTIONAL at this stage. The new flow lets
+  // the customer upload a photo + name first, preview+approve the painted
+  // portrait, then pick story + companion on /api/orders/[id]/book. We still
+  // accept them here for backwards-compat with any old clients.
+  if (storySlug !== undefined && storySlug !== null && typeof storySlug !== "string") {
+    return Response.json({ error: "Invalid story." }, { status: 400 });
   }
-  if (!companionSlug || typeof companionSlug !== "string") {
-    return Response.json({ error: "Pick a companion first." }, { status: 400 });
+  if (companionSlug !== undefined && companionSlug !== null && typeof companionSlug !== "string") {
+    return Response.json({ error: "Invalid companion." }, { status: 400 });
   }
   if (!photoDataUrl || typeof photoDataUrl !== "string" || !photoDataUrl.startsWith("data:image/")) {
     return Response.json({ error: "Photo is missing or invalid." }, { status: 400 });
@@ -96,8 +100,8 @@ export async function POST(request: Request) {
       email: cleanEmail,
       heroName: cleanHero,
       pronouns,
-      storySlug,
-      companionSlug,
+      storySlug: storySlug ?? null,
+      companionSlug: companionSlug ?? null,
       photoUrl,
       ip,
       userAgent,
@@ -116,11 +120,15 @@ export async function POST(request: Request) {
     }
 
     // 4. Notify Andrew a new order landed (fire-and-forget).
-    fireNotifyEmail(order.id, cleanEmail, cleanHero, storySlug, companionSlug).catch(
-      (e) => console.error("[orders] notify failed", e)
-    );
+    fireNotifyEmail(
+      order.id,
+      cleanEmail,
+      cleanHero,
+      storySlug ?? null,
+      companionSlug ?? null,
+    ).catch((e) => console.error("[orders] notify failed", e));
 
-    console.log(`[orders] created ${order.id} for ${storySlug} + ${companionSlug}`);
+    console.log(`[orders] created ${order.id} (story=${storySlug ?? "tbd"}, companion=${companionSlug ?? "tbd"})`);
     return Response.json({ ok: true, orderId: order.id });
   } catch (err) {
     console.error("[orders] failed", err);
@@ -135,8 +143,8 @@ async function fireNotifyEmail(
   orderId: string,
   email: string,
   heroName: string,
-  storySlug: string,
-  companionSlug: string
+  storySlug: string | null,
+  companionSlug: string | null
 ) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return;
@@ -144,12 +152,12 @@ async function fireNotifyEmail(
   const from = process.env.RESEND_FROM ?? "journeysprout <onboarding@resend.dev>";
   const to = process.env.NOTIFY_EMAIL ?? "andrewldalton@gmail.com";
 
-  // Look up display titles/names from the catalog so the email shows the
-  // CURRENT story title (not the raw slug like "03-seed-took-time").
-  const storyTitle =
-    STORIES.find((s) => s.slug === storySlug)?.title ?? storySlug;
-  const companionName =
-    COMPANIONS.find((c) => c.slug === companionSlug)?.name ?? companionSlug;
+  const storyTitle = storySlug
+    ? (STORIES.find((s) => s.slug === storySlug)?.title ?? storySlug)
+    : "(picking after sheet approval)";
+  const companionName = companionSlug
+    ? (COMPANIONS.find((c) => c.slug === companionSlug)?.name ?? companionSlug)
+    : "(picking after sheet approval)";
 
   const ts = new Date().toLocaleString("en-US", {
     timeZone: "America/Chicago",

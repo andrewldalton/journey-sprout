@@ -44,8 +44,8 @@ export type Order = {
   email: string;
   heroName: string;
   pronouns: string;
-  storySlug: string;
-  companionSlug: string;
+  storySlug: string | null;
+  companionSlug: string | null;
   photoUrl: string | null;
   sheetUrl: string | null;
   pdfUrl: string | null;
@@ -66,8 +66,8 @@ export type OrderInsert = {
   email: string;
   heroName: string;
   pronouns: string;
-  storySlug: string;
-  companionSlug: string;
+  storySlug?: string | null;
+  companionSlug?: string | null;
   photoUrl: string;
   ip: string;
   userAgent: string;
@@ -81,6 +81,8 @@ export type OrderPatch = Partial<{
   sheetStatus: SheetStatus;
   regenCount: number;
   sheetApprovedAt: Date | null;
+  storySlug: string | null;
+  companionSlug: string | null;
   error: string | null;
 }>;
 
@@ -90,8 +92,8 @@ type OrderRow = {
   email: string;
   hero_name: string;
   pronouns: string;
-  story_slug: string;
-  companion_slug: string;
+  story_slug: string | null;
+  companion_slug: string | null;
   photo_url: string | null;
   sheet_url: string | null;
   pdf_url: string | null;
@@ -135,8 +137,8 @@ async function ensureSchema(sql: Sql): Promise<void> {
       email TEXT NOT NULL,
       hero_name TEXT NOT NULL,
       pronouns TEXT NOT NULL,
-      story_slug TEXT NOT NULL,
-      companion_slug TEXT NOT NULL,
+      story_slug TEXT,
+      companion_slug TEXT,
       photo_url TEXT,
       sheet_url TEXT,
       pdf_url TEXT,
@@ -157,6 +159,9 @@ async function ensureSchema(sql: Sql): Promise<void> {
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS sheet_status TEXT NOT NULL DEFAULT 'pending'`;
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS regen_count INTEGER NOT NULL DEFAULT 0`;
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS sheet_approved_at TIMESTAMPTZ`;
+  // Loosen: story and companion are now picked after sheet approval, not upfront.
+  await sql`ALTER TABLE orders ALTER COLUMN story_slug DROP NOT NULL`;
+  await sql`ALTER TABLE orders ALTER COLUMN companion_slug DROP NOT NULL`;
   schemaReady = true;
 }
 
@@ -201,7 +206,7 @@ export async function createOrder(input: OrderInsert): Promise<Order> {
     )
     VALUES (
       ${id}, ${input.email}, ${input.heroName}, ${input.pronouns},
-      ${input.storySlug}, ${input.companionSlug}, ${input.photoUrl},
+      ${input.storySlug ?? null}, ${input.companionSlug ?? null}, ${input.photoUrl},
       ${input.ip}, ${input.userAgent}
     )
     RETURNING *
@@ -242,6 +247,8 @@ export async function updateOrder(
   if (patch.sheetApprovedAt !== undefined)
     updates.sheet_approved_at =
       patch.sheetApprovedAt === null ? null : patch.sheetApprovedAt.toISOString();
+  if (patch.storySlug !== undefined) updates.story_slug = patch.storySlug;
+  if (patch.companionSlug !== undefined) updates.companion_slug = patch.companionSlug;
   if (patch.error !== undefined) updates.error = patch.error;
 
   const columns = Object.keys(updates);
