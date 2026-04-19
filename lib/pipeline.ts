@@ -75,6 +75,7 @@ export async function runSheetStep(ctx: RenderContext): Promise<string> {
     {
       photo: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
       heroAge: ctx.heroAge,
+      heroName: ctx.heroName,
       canonicalOutfit: outfit.description,
     },
     { orderId: ctx.orderId }
@@ -154,6 +155,7 @@ export async function runPageStep(
         textPosition: page.textPosition,
         heroFeatures: heroFeatures ?? undefined,
         heroAge: ctx.heroAge,
+        heroName: ctx.heroName,
         canonicalOutfit: outfit.description,
       },
       { orderId: ctx.orderId }

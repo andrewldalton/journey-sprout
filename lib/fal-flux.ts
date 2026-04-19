@@ -166,6 +166,7 @@ function proportionsForAge(age: number | null | undefined): string {
 export async function generateCharacterSheet(params: {
   photo: ImgRef;
   heroAge?: number | null;
+  heroName?: string;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
   // Lean prompt on purpose: FLUX Kontext's single-ref endpoint matches the
@@ -174,13 +175,14 @@ export async function generateCharacterSheet(params: {
   // photo→painted portrait — we want FLUX to focus on the face, not parse
   // instructions.
   const age = params.heroAge ?? 3;
+  const name = params.heroName ?? "the child";
   const outfitLine = params.canonicalOutfit
-    ? `Paint the child in this outfit (IGNORE whatever they are wearing in the photo — use this exact outfit): ${params.canonicalOutfit}.`
-    : `Paint the child in the same outfit they are wearing in the reference photo (same top, bottom, shoes, colors).`;
+    ? `Paint ${name} in this outfit (IGNORE whatever they are wearing in the photo — use this exact outfit): ${params.canonicalOutfit}.`
+    : `Paint ${name} in the same outfit they are wearing in the reference photo (same top, bottom, shoes, colors).`;
   const prompt = `
-Produce a CHARACTER REFERENCE SHEET for a children's picture book starring this child.
+Produce a CHARACTER REFERENCE SHEET for a children's picture book starring ${name}.
 
-Preserve the exact facial likeness of the child in the reference — face, eyes, nose, mouth, cheeks, chin, skin tone, and hair (length, color, texture, hairline) must match. Readers must instantly recognize this real child. About ${age} years old — ${proportionsForAge(age)}.
+Preserve ${name}'s exact facial likeness from the reference photo — face, eyes, nose, mouth, cheeks, chin, skin tone, and hair (length, color, texture, hairline) must match. Readers must instantly recognize ${name}. About ${age} years old — ${proportionsForAge(age)}.
 
 ${outfitLine}
 
@@ -201,8 +203,10 @@ export async function generatePage(params: {
   textPosition: "top" | "bottom";
   heroFeatures?: string;
   heroAge?: number | null;
+  heroName?: string;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
+  const name = params.heroName ?? "the hero";
   // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
   // the identity contract — passing the photo again just gives FLUX two
   // references to reconcile and causes drift. Sheet + companion + settings.
@@ -271,28 +275,28 @@ ACCESSORIES LOCK: If ACCESSORIES lists glasses, headbands, hair clips, bows, ear
     : "";
 
   const prompt = `
-Render a single children's picture-book page illustration.
+Render a single children's picture-book page illustration starring ${name}.
 
 ${topFeatureLines}SCENE BRIEF:
 ${params.brief}
 
-HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-The FIRST reference image is the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet:
+${name.toUpperCase()} IDENTITY LOCK (THE SHEET IS THE CONTRACT):
+The FIRST reference image is ${name}'s APPROVED CHARACTER SHEET — the painted canonical portrait of ${name} that the customer has signed off on. ${name} on this page MUST BE IDENTICAL to the sheet:
 - SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone.
 - SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline. If the sheet shows tight ringlet curls, do NOT render looser waves. If the sheet shows short hair, do NOT grow it out.
 - SAME outfit — same top, same bottoms, same shoes.
 - SAME apparent age.
 ${featuresLine}
-Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face. Just paint THIS child, in THIS outfit, doing the scene described.
+Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" ${name}. Do NOT substitute a generic toddler face. Just paint ${name}, in ${name}'s outfit, doing the scene described.
 
-AGE LOCK (RIGID): The child is EXACTLY ${params.heroAge ?? 3} years old on EVERY page — same face roundness, same head-to-body ratio, same limb length, same facial features as the sheet. Do NOT age them up (older-kid proportions, leaner face, longer limbs, more defined chin) or down (baby/younger-toddler proportions). If the sheet shows a ${params.heroAge ?? 3}-year-old with ${proportionsForAge(params.heroAge).split("—")[0].trim()}, keep that exact apparent age on every page. Height relative to scene props (doorways, fences, tables, plants, the companion animal) must stay consistent with a ${params.heroAge ?? 3}-year-old across every page — never taller, never shorter between pages.
+AGE LOCK (RIGID): ${name} is EXACTLY ${params.heroAge ?? 3} years old on EVERY page — same face roundness, same head-to-body ratio, same limb length, same facial features as the sheet. Do NOT age ${name} up (older-kid proportions, leaner face, longer limbs, more defined chin) or down (baby/younger-toddler proportions). If the sheet shows a ${params.heroAge ?? 3}-year-old with ${proportionsForAge(params.heroAge).split("—")[0].trim()}, keep that exact apparent age on every page. ${name}'s height relative to scene props (doorways, fences, tables, plants, the companion animal) must stay consistent with a ${params.heroAge ?? 3}-year-old across every page — never taller, never shorter between pages.
 
 COLOR LOCK (READ THIS — THIS IS WHERE YOU USUALLY FAIL):
-The hero's HAIR COLOR, SKIN TONE, and CLOTHING COLORS are fixed by the sheet. They do NOT change with scene lighting. If the sheet shows blonde hair and a yellow top, paint blonde hair and a yellow top EVEN IF the scene is lit in golden hour, blue twilight, green jungle shade, cool moonlight, or warm honey glow. You may render soft cast shadows and gentle rim-light across the hero from the scene's light source, but you must NEVER repaint the hero's actual hair color, skin tone, or clothing colors to harmonize with the scene palette. Yellow stays yellow. Blonde stays blonde. Do not tint, wash, or palette-shift the hero.
+${name}'s HAIR COLOR, SKIN TONE, and CLOTHING COLORS are fixed by the sheet. They do NOT change with scene lighting. If the sheet shows blonde hair and a yellow top, paint blonde hair and a yellow top EVEN IF the scene is lit in golden hour, blue twilight, green jungle shade, cool moonlight, or warm honey glow. You may render soft cast shadows and gentle rim-light across ${name} from the scene's light source, but you must NEVER repaint ${name}'s actual hair color, skin tone, or clothing colors to harmonize with the scene palette. Yellow stays yellow. Blonde stays blonde. Do not tint, wash, or palette-shift ${name}.
 
-COMPANION LOCK: Match the companion animal reference exactly — species, colors, proportions, silhouette, distinguishing marks. CRITICAL: the companion's SIZE relative to the child stays constant on every page. A small fox stays small; a large dinosaur stays large; the companion does NOT grow or shrink between pages. If the companion sheet shows a knee-height animal, it is knee-height on every page. If it shows a child-sized animal, it stays child-sized.
+COMPANION LOCK: Match the companion animal reference exactly — species, colors, proportions, silhouette, distinguishing marks. CRITICAL: the companion's SIZE relative to ${name} stays constant on every page. A small fox stays small; a large dinosaur stays large; the companion does NOT grow or shrink between pages. If the companion sheet shows a knee-height animal, it is knee-height on every page. If it shows a child-sized animal, it stays child-sized.
 
-CAST LOCK: The ONLY characters in this illustration are the hero child and the companion animal. Do NOT paint any other people (no friends, no siblings, no parents, no background adults, no onlookers, no strangers), no other animals, and no additional creatures — unless the scene brief below EXPLICITLY introduces them by name on this specific page. Empty the background of humans; crowd scenes become quiet scenes.
+CAST LOCK: The ONLY characters in this illustration are ${name} and the companion animal. Do NOT paint any other people (no friends, no siblings, no parents, no background adults, no onlookers, no strangers), no other animals, and no additional creatures — unless the scene brief above EXPLICITLY introduces them by name on this specific page. Empty the background of humans; crowd scenes become quiet scenes.
 
 SETTING LOCK: Match the environment references — architecture, props, palette, and painted surfaces. Do NOT reinvent recurring landmarks. Camera angle, time of day, and weather may change per the brief, but setting geometry and identifying props are locked.
 

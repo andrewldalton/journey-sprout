@@ -122,8 +122,10 @@ This sheet will be the identity anchor for every subsequent illustration. Match 
 export async function generateCharacterSheet(params: {
   photo: ImgRef;
   heroAge?: number | null;
+  heroName?: string;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
+  void params.heroName;
   return generateImage([params.photo], buildSheetPrompt(params.heroAge, params.canonicalOutfit));
 }
 
@@ -329,9 +331,11 @@ export async function generatePage(params: {
   textPosition: "top" | "bottom";
   heroFeatures?: string;
   heroAge?: number | null;
+  heroName?: string;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
   const { heroSheet, companionSheet, settingSheets, brief, textPosition, heroFeatures, heroAge, canonicalOutfit } = params;
+  void params.heroName;
   // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
   // the identity contract — passing the photo again just gives Gemini two
   // references to reconcile and causes drift.

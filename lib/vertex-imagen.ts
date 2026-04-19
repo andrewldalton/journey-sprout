@@ -164,9 +164,11 @@ async function predict(params: {
 export async function generateCharacterSheet(params: {
   photo: ImgRef;
   heroAge?: number | null;
+  heroName?: string;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
   void params.heroAge;
+  void params.heroName;
   const photo = refToBase64(params.photo);
   const outfitLine = params.canonicalOutfit
     ? `Outfit: ignore whatever [1] is wearing in the photo. Paint [1] in this exact outfit: ${params.canonicalOutfit}.`
@@ -211,10 +213,12 @@ export async function generatePage(params: {
   textPosition: "top" | "bottom";
   heroFeatures?: string;
   heroAge?: number | null;
+  heroName?: string;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
   void params.heroFeatures; // signature-only for router compatibility
   void params.heroAge;
+  void params.heroName;
   // NB: heroPhoto is intentionally unused here. Post-approval, the painted
   // character sheet IS the identity contract — it becomes the PERSON subject
   // ref (id=1). Passing the photo in as well gives Imagen two references to
