@@ -202,8 +202,10 @@ export async function generatePage(params: {
   brief: string;
   textPosition: "top" | "bottom";
   heroFeatures?: string;
+  heroAge?: number | null;
 }): Promise<Buffer> {
-  void params.heroFeatures; // signature-only for router compatibility; Vertex is not currently reachable
+  void params.heroFeatures; // signature-only for router compatibility
+  void params.heroAge;
   // NB: heroPhoto is intentionally unused here. Post-approval, the painted
   // character sheet IS the identity contract — it becomes the PERSON subject
   // ref (id=1). Passing the photo in as well gives Imagen two references to
@@ -290,10 +292,12 @@ export async function generateCover(params: {
   heroName: string;
   companionName: string;
   heroFeatures?: string;
+  heroAge?: number | null;
 }): Promise<Buffer> {
   // Sheet is the identity contract post-approval — photo ref dropped.
   void params.heroPhoto;
   void params.heroFeatures; // signature-only for router compatibility
+  void params.heroAge;
 
   const refs: ReferenceImage[] = [];
 

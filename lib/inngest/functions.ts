@@ -43,6 +43,7 @@ function toRenderContext(order: Order, opts?: { requireBook?: boolean }): Render
   return {
     orderId: order.id,
     heroName: order.heroName,
+    heroAge: order.heroAge,
     pronouns: order.pronouns,
     // Sheet step doesn't need these; book step requires them (checked above).
     storySlug: order.storySlug ?? "",

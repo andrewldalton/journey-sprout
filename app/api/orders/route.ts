@@ -26,6 +26,7 @@ function isRateLimited(ip: string) {
 type Body = {
   email?: string;
   heroName?: string;
+  heroAge?: number;
   pronouns?: string;
   storySlug?: string;
   companionSlug?: string;
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  const { email, heroName, pronouns, storySlug, companionSlug, photoDataUrl } =
+  const { email, heroName, heroAge, pronouns, storySlug, companionSlug, photoDataUrl } =
     body;
 
   if (!email || typeof email !== "string" || !EMAIL_RE.test(email.trim())) {
@@ -59,6 +60,13 @@ export async function POST(request: Request) {
   }
   if (!heroName || typeof heroName !== "string" || !heroName.trim()) {
     return Response.json({ error: "Hero name is required." }, { status: 400 });
+  }
+  if (
+    heroAge !== undefined &&
+    heroAge !== null &&
+    (typeof heroAge !== "number" || !Number.isFinite(heroAge) || heroAge < 0 || heroAge > 18)
+  ) {
+    return Response.json({ error: "Age must be a number between 0 and 18." }, { status: 400 });
   }
   if (!pronouns || typeof pronouns !== "string") {
     return Response.json({ error: "Pronouns missing." }, { status: 400 });
@@ -99,6 +107,7 @@ export async function POST(request: Request) {
     const order = await createOrder({
       email: cleanEmail,
       heroName: cleanHero,
+      heroAge: typeof heroAge === "number" ? Math.round(heroAge) : null,
       pronouns,
       storySlug: storySlug ?? null,
       companionSlug: companionSlug ?? null,

@@ -43,6 +43,7 @@ export type Order = {
   id: string;
   email: string;
   heroName: string;
+  heroAge: number | null;
   pronouns: string;
   storySlug: string | null;
   companionSlug: string | null;
@@ -66,6 +67,7 @@ export type Order = {
 export type OrderInsert = {
   email: string;
   heroName: string;
+  heroAge?: number | null;
   pronouns: string;
   storySlug?: string | null;
   companionSlug?: string | null;
@@ -93,6 +95,7 @@ type OrderRow = {
   id: string;
   email: string;
   hero_name: string;
+  hero_age: number | null;
   pronouns: string;
   story_slug: string | null;
   companion_slug: string | null;
@@ -139,6 +142,7 @@ async function ensureSchema(sql: Sql): Promise<void> {
       id TEXT PRIMARY KEY,
       email TEXT NOT NULL,
       hero_name TEXT NOT NULL,
+      hero_age INTEGER,
       pronouns TEXT NOT NULL,
       story_slug TEXT,
       companion_slug TEXT,
@@ -164,6 +168,7 @@ async function ensureSchema(sql: Sql): Promise<void> {
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS regen_count INTEGER NOT NULL DEFAULT 0`;
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS sheet_approved_at TIMESTAMPTZ`;
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS sheet_description TEXT`;
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS hero_age INTEGER`;
   // Loosen: story and companion are now picked after sheet approval, not upfront.
   await sql`ALTER TABLE orders ALTER COLUMN story_slug DROP NOT NULL`;
   await sql`ALTER TABLE orders ALTER COLUMN companion_slug DROP NOT NULL`;
@@ -179,6 +184,7 @@ function mapRow(row: OrderRow): Order {
     id: row.id,
     email: row.email,
     heroName: row.hero_name,
+    heroAge: row.hero_age,
     pronouns: row.pronouns,
     storySlug: row.story_slug,
     companionSlug: row.companion_slug,
@@ -207,11 +213,12 @@ export async function createOrder(input: OrderInsert): Promise<Order> {
   const id = generateOrderId();
   const rows = await sql<OrderRow[]>`
     INSERT INTO orders (
-      id, email, hero_name, pronouns, story_slug, companion_slug,
+      id, email, hero_name, hero_age, pronouns, story_slug, companion_slug,
       photo_url, ip, user_agent
     )
     VALUES (
-      ${id}, ${input.email}, ${input.heroName}, ${input.pronouns},
+      ${id}, ${input.email}, ${input.heroName}, ${input.heroAge ?? null},
+      ${input.pronouns},
       ${input.storySlug ?? null}, ${input.companionSlug ?? null}, ${input.photoUrl},
       ${input.ip}, ${input.userAgent}
     )

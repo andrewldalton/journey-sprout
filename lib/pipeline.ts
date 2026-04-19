@@ -27,6 +27,7 @@ import { COMPANIONS } from "./catalog";
 export type RenderContext = {
   orderId: string;
   heroName: string;
+  heroAge: number | null;   // child's age in years if known, null → default
   pronouns: string;    // "she-her" | "he-him" | "they-them"
   storySlug: string;
   companionSlug: string;
@@ -70,6 +71,7 @@ export async function runSheetStep(ctx: RenderContext): Promise<string> {
   const photoBytes = await fetchBytes(ctx.photoUrl);
   const sheet = await generateCharacterSheet({
     photo: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
+    heroAge: ctx.heroAge,
   });
   const { url } = await uploadBytes(
     `orders/${ctx.orderId}/sheet.png`,
@@ -130,6 +132,7 @@ export async function runPageStep(
     brief: page.brief,
     textPosition: page.textPosition,
     heroFeatures: heroFeatures ?? undefined,
+    heroAge: ctx.heroAge,
   });
 
   const composed = await composePageBubble({
@@ -174,6 +177,7 @@ export async function runCoverStep(
     heroName: ctx.heroName,
     companionName: companion.name,
     heroFeatures: heroFeatures ?? undefined,
+    heroAge: ctx.heroAge,
   });
 
   const composed = await composeCoverTypography({

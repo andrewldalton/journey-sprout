@@ -127,17 +127,30 @@ async function runMulti(params: {
   return fetchBytes(url);
 }
 
+function proportionsForAge(age: number | null | undefined): string {
+  const a = age ?? 3;
+  if (a <= 2) return "baby/toddler proportions — very large head (~3 heads tall), short chubby limbs, rounded belly, sturdy legs, pudgy cheeks";
+  if (a <= 4) return "toddler proportions — large head (~3.25 heads tall), short-to-medium limbs, softly rounded belly, round face";
+  if (a <= 6) return "preschooler proportions — head still large (~3.5-4 heads tall), longer limbs, leaner build, round friendly face";
+  if (a <= 9) return "young-child proportions — ~4-4.5 heads tall, balanced limbs, leaner body, slimmer face, more defined chin";
+  return "older-child proportions — ~4.5-5 heads tall, longer limbs, youthful but leaner face, less baby fat";
+}
+
 // --- Public API mirrors lib/gemini.ts / lib/vertex-imagen.ts ---
 
 export async function generateCharacterSheet(params: {
   photo: ImgRef;
+  heroAge?: number | null;
 }): Promise<Buffer> {
+  const age = params.heroAge ?? 3;
   const prompt = `
 Produce a CHARACTER REFERENCE SHEET for a children's picture book starring this child.
 
-CRITICAL IDENTITY: Preserve the exact facial likeness of the child in the reference — face shape, eye color, eye spacing, nose, mouth, cheek shape, skin tone, and hair (length, color, texture, hairline) must match exactly. Do NOT generic-ify. Readers must instantly recognize this real child.
+CRITICAL IDENTITY: Preserve the exact facial likeness of the child in the reference — face shape, eye color + shape + spacing, eyebrow color + shape, nose shape, mouth + lip fullness, cheek fullness, chin shape, skin tone (with any freckles/dimples/birthmarks), and hair (length, color, texture, hairline) must match exactly. Do NOT generic-ify. Readers must instantly recognize this real child.
 
-Style: modern vibrant watercolor illustration with digital polish — rich saturated colors, confident playful shapes, soft painterly edges, contemporary bestseller picture-book energy. Bright and joyful, not muted or vintage. No harsh black outlines. Classic picture-book toddler proportions (large head ~3 heads tall, short limbs, rounded belly, sturdy legs).
+AGE: The child is about ${age} years old. Render at ${proportionsForAge(age)}. Do NOT paint them older or younger than their actual age.
+
+Style: modern vibrant watercolor illustration with digital polish — rich saturated colors, confident playful shapes, soft painterly edges, contemporary bestseller picture-book energy. Bright and joyful, not muted or vintage. No harsh black outlines.
 
 Outfit: comfortable everyday clothes in warm tones — simple short-sleeve tee, simple play pants, plain sneakers. Nothing costumey.
 
@@ -157,6 +170,7 @@ export async function generatePage(params: {
   brief: string;
   textPosition: "top" | "bottom";
   heroFeatures?: string;
+  heroAge?: number | null;
 }): Promise<Buffer> {
   // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
   // the identity contract — passing the photo again just gives FLUX two
@@ -197,6 +211,8 @@ The first two reference images are the hero's APPROVED CHARACTER SHEET — the p
 ${featuresLine}
 Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face. Just paint THIS child, in THIS outfit, doing the scene described.
 
+AGE LOCK: The child is ${params.heroAge ?? 3} years old, rendered at ${proportionsForAge(params.heroAge)}. Paint them at this age on EVERY page. Do NOT age them up (no older-kid proportions) or down (no baby proportions). Height relative to scene props (doorways, fences, tables, the companion animal) must stay consistent with a ${params.heroAge ?? 3}-year-old across every page.
+
 COLOR LOCK (READ THIS — THIS IS WHERE YOU USUALLY FAIL):
 The hero's HAIR COLOR, SKIN TONE, and CLOTHING COLORS are fixed by the sheet. They do NOT change with scene lighting. If the sheet shows blonde hair and a yellow top, paint blonde hair and a yellow top EVEN IF the scene is lit in golden hour, blue twilight, green jungle shade, cool moonlight, or warm honey glow. You may render soft cast shadows and gentle rim-light across the hero from the scene's light source, but you must NEVER repaint the hero's actual hair color, skin tone, or clothing colors to harmonize with the scene palette. Yellow stays yellow. Blonde stays blonde. Do not tint, wash, or palette-shift the hero.
 
@@ -224,6 +240,7 @@ export async function generateCover(params: {
   heroName: string;
   companionName: string;
   heroFeatures?: string;
+  heroAge?: number | null;
 }): Promise<Buffer> {
   // Sheet is the identity contract post-approval — photo ref dropped.
   // Sheet is passed twice to double-weight (see generatePage for rationale).
@@ -252,6 +269,7 @@ The first two reference images are ${params.heroName}'s APPROVED CHARACTER SHEET
 ${params.heroFeatures ? `\n${params.heroName.toUpperCase()}'S EXACT FEATURES: ${params.heroFeatures}\n` : ""}
 Do NOT reinterpret, modernize, or "improve" the child. Paint THIS child, in THIS outfit, on the cover.
 
+AGE LOCK: ${params.heroName} is ${params.heroAge ?? 3} years old, rendered at ${proportionsForAge(params.heroAge)}. Render at that age on the cover.
 COLOR LOCK: ${params.heroName}'s hair color, skin tone, and clothing colors are fixed by the sheet and do NOT change with scene lighting. You may render soft cast shadows and gentle rim-light, but NEVER repaint the hero's actual colors to match the scene palette. If the sheet shows blonde hair and a yellow top, they stay blonde and yellow under any lighting.
 
 COMPANION LOCK: Match ${params.companionName}'s reference — species, colors, proportions, silhouette exactly.

@@ -8,8 +8,9 @@ type Props = {
   initialName?: string;
   initialPronouns?: Pronouns;
   initialEmail?: string;
+  initialAge?: number;
   submitting?: boolean;
-  onNext: (name: string, pronouns: Pronouns, email: string) => void;
+  onNext: (name: string, pronouns: Pronouns, email: string, age: number) => void;
   onBack: () => void;
 };
 
@@ -19,6 +20,7 @@ export function StepHero({
   initialName,
   initialPronouns,
   initialEmail,
+  initialAge,
   submitting,
   onNext,
   onBack,
@@ -26,19 +28,21 @@ export function StepHero({
   const [name, setName] = useState(initialName ?? "");
   const [pronouns, setPronouns] = useState<Pronouns>(initialPronouns ?? "she-her");
   const [email, setEmail] = useState(initialEmail ?? "");
+  const [age, setAge] = useState<number>(initialAge ?? 3);
   const [touched, setTouched] = useState(false);
 
   const trimmedName = name.trim();
   const trimmedEmail = email.trim();
   const nameValid = trimmedName.length >= 1 && trimmedName.length <= 24;
   const emailValid = EMAIL_RE.test(trimmedEmail);
-  const isValid = nameValid && emailValid;
+  const ageValid = Number.isFinite(age) && age >= 0 && age <= 12;
+  const isValid = nameValid && emailValid && ageValid;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setTouched(true);
     if (!isValid) return;
-    onNext(trimmedName, pronouns, trimmedEmail);
+    onNext(trimmedName, pronouns, trimmedEmail, age);
   }
 
   return (
@@ -135,6 +139,30 @@ export function StepHero({
             })}
           </div>
         </fieldset>
+
+        <div className="mt-8 fade-rise" data-delay="4">
+          <label
+            htmlFor="hero-age"
+            className="block font-display text-sm tracking-wide text-ink-soft mb-2"
+          >
+            How old are they?
+          </label>
+          <select
+            id="hero-age"
+            value={age}
+            onChange={(e) => setAge(parseInt(e.target.value, 10))}
+            className="input-pill"
+          >
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((a) => (
+              <option key={a} value={a}>
+                {a === 0 ? "Under 1 year" : `${a} year${a === 1 ? "" : "s"} old`}
+              </option>
+            ))}
+          </select>
+          <p className="mt-2 text-xs text-ink-muted font-body">
+            We paint them at their actual age so they look right on every page.
+          </p>
+        </div>
 
         <div className="mt-8 fade-rise" data-delay="4">
           <label

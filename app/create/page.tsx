@@ -19,6 +19,7 @@ type Phase = 1 | 2 | 3 | 4 | 5;
 type Draft = {
   photoDataUrl?: string;
   heroName?: string;
+  heroAge?: number;
   pronouns?: Pronouns;
   email?: string;
   orderId?: string;
@@ -40,7 +41,7 @@ export default function CreatePage() {
 
   /** Called after StepHero — create the order and kick off sheet rendering. */
   const startOrder = useCallback(
-    async (name: string, pronouns: Pronouns, email: string) => {
+    async (name: string, pronouns: Pronouns, email: string, age: number) => {
       if (!draft.photoDataUrl) {
         setSubmitError("We lost your photo — try the previous step again.");
         return;
@@ -54,6 +55,7 @@ export default function CreatePage() {
           body: JSON.stringify({
             email,
             heroName: name,
+            heroAge: age,
             pronouns,
             photoDataUrl: draft.photoDataUrl,
           }),
@@ -66,6 +68,7 @@ export default function CreatePage() {
         setDraft((d) => ({
           ...d,
           heroName: name,
+          heroAge: age,
           pronouns,
           email,
           orderId: body.orderId,
@@ -130,6 +133,7 @@ export default function CreatePage() {
             initialName={draft.heroName}
             initialPronouns={draft.pronouns}
             initialEmail={draft.email}
+            initialAge={draft.heroAge}
             submitting={submitting}
             onBack={goBack}
             onNext={startOrder}
