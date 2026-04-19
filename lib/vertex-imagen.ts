@@ -204,10 +204,15 @@ export async function generatePage(params: {
 }): Promise<Buffer> {
   const refs: ReferenceImage[] = [];
 
+  // Identity anchor: REAL PHOTO as the PERSON subject. The photo has concrete
+  // facial features the model can lock to. The painted sheet comes in below
+  // as a STYLE ref so the model paints the kid in-style without reinventing
+  // their face or hair.
+  const personRef = params.heroPhoto ?? params.heroSheet;
   refs.push({
     referenceType: "REFERENCE_TYPE_SUBJECT",
     referenceId: 1,
-    referenceImage: refToBase64(params.heroSheet),
+    referenceImage: refToBase64(personRef),
     subjectImageConfig: {
       subjectDescription: "the hero child",
       subjectType: "SUBJECT_TYPE_PERSON",
@@ -224,7 +229,21 @@ export async function generatePage(params: {
     },
   });
 
-  let nextId = 3;
+  // Painted character sheet as STYLE ref — locks the watercolor rendering
+  // style of this specific child without adding a second competing PERSON.
+  if (params.heroPhoto) {
+    refs.push({
+      referenceType: "REFERENCE_TYPE_STYLE",
+      referenceId: 3,
+      referenceImage: refToBase64(params.heroSheet),
+      styleImageConfig: {
+        styleDescription:
+          "the watercolor illustration style of the hero child — painted skin and hair, soft edges, warm palette",
+      },
+    });
+  }
+
+  let nextId = params.heroPhoto ? 4 : 3;
   for (const s of params.settingSheets) {
     refs.push({
       referenceType: "REFERENCE_TYPE_STYLE",
@@ -237,23 +256,21 @@ export async function generatePage(params: {
     });
   }
 
-  const refTokens = refs.map((r) => `[${r.referenceId}]`).join(" ");
-
   const textZone =
     params.textPosition === "bottom"
       ? "Keep all characters, faces, hands, and key action in the UPPER ~75% of the frame. Reserve the BOTTOM ~22% as a calm, gently-washed area (porch boards / grass / ground wash). No faces or critical detail in the bottom band."
       : "Keep all characters, faces, hands, and key action in the LOWER ~75% of the frame. Reserve the TOP ~22% as a calm, gently-washed area (sky / open wall / soft distant background). No faces or critical detail in the top band.";
 
   const prompt = `
-Render a single children's picture-book page illustration starring ${refTokens}.
+Render a single children's picture-book page illustration starring [1] and [2].
 
 SCENE BRIEF:
 ${params.brief}
 
 IDENTITY LOCK (ABSOLUTE):
-- [1] is the hero character sheet. The child on this page MUST match the sheet exactly: face shape, eye shape, eye color, nose, mouth, skin tone, hair (length, color, texture, or lack of hair). Render in the sheet's watercolor style. Do NOT add hair the sheet doesn't show, do NOT change face proportions, do NOT age the child up or down.
-- [2] is the companion reference. Match species, colors, proportions, silhouette, and distinguishing marks exactly.
-- The setting reference(s) lock the environment, architecture, and recurring props. Do NOT reinvent the house, porch, bedroom, meadow, clearing, or any recurring object. Camera angle, time of day, and weather may change per the brief, but setting geometry and identifying props are locked to the sheet(s).
+- [1] is the real-life reference photo of the hero child. The painted child on this page MUST be the exact same child: same face shape, same eye shape and color, same nose, same mouth, same skin tone, same hair (length, color, texture — or NO hair if the photo shows a bald baby). Do NOT add hair the photo doesn't show. Do NOT age the child up or down. Do NOT blend features with any other child. Render the child in the painted watercolor style shown in the style reference, but the identity is locked to the photo.
+- [2] is the companion animal reference. Match species, colors, proportions, silhouette, and distinguishing marks exactly.
+- Setting/style references lock environment and painted style. Do NOT reinvent recurring landmarks or props. Camera angle, time of day, and weather may change per the brief, but setting geometry and identifying props are locked.
 
 COMPOSITION:
 - ${textZone}
@@ -281,10 +298,11 @@ export async function generateCover(params: {
 }): Promise<Buffer> {
   const refs: ReferenceImage[] = [];
 
+  const personRef = params.heroPhoto ?? params.heroSheet;
   refs.push({
     referenceType: "REFERENCE_TYPE_SUBJECT",
     referenceId: 1,
-    referenceImage: refToBase64(params.heroSheet),
+    referenceImage: refToBase64(personRef),
     subjectImageConfig: {
       subjectDescription: `${params.heroName}, the hero child`,
       subjectType: "SUBJECT_TYPE_PERSON",
@@ -301,7 +319,19 @@ export async function generateCover(params: {
     },
   });
 
-  let nextId = 3;
+  if (params.heroPhoto) {
+    refs.push({
+      referenceType: "REFERENCE_TYPE_STYLE",
+      referenceId: 3,
+      referenceImage: refToBase64(params.heroSheet),
+      styleImageConfig: {
+        styleDescription:
+          "the watercolor illustration style of the hero child — painted skin and hair, soft edges, warm palette",
+      },
+    });
+  }
+
+  let nextId = params.heroPhoto ? 4 : 3;
   for (const s of params.settingSheets) {
     refs.push({
       referenceType: "REFERENCE_TYPE_STYLE",
@@ -323,7 +353,7 @@ COVER SCENE:
 ${params.coverBrief || fallbackBrief}
 
 IDENTITY LOCK:
-- [1] is the hero character sheet. The child on the cover MUST match the sheet exactly: face shape, eye shape, eye color, nose, mouth, skin tone, hair (length, color, texture, or lack of hair). Do NOT add hair the sheet doesn't show and do NOT change face proportions.
+- [1] is the real-life reference photo of ${params.heroName}. The painted child on the cover MUST be the exact same child: same face shape, eye shape and color, nose, mouth, skin tone, hair (length, color, texture, or NO hair if bald). Render in watercolor style per the style refs, but the identity is locked to this photo.
 - Match the companion's colors, proportions, and silhouette exactly.
 - The environment and recurring props must match the setting reference(s).
 

@@ -1,278 +1,289 @@
 ---
-title: The Long Way Home
-feeling: You already know more than you think you do.
+title: Down Where the Coral Dreams
+feeling: Adventure is fun.
 companion: interchangeable — any of 8
 total_pages: 10
 ---
 
+## ASSETS TO REGENERATE
+
+Two setting sheets replace the old meadow/cottage art. Do not reuse `meadow-oak.png` or `cottage.png` — they do not fit this story.
+
+- `settings/02-long-way-home/reef.png` — sunlit shallow coral reef (main adventure setting, pages 2–8)
+- `settings/02-long-way-home/garden.png` — glowing underwater garden hollow (climax + closing, pages 9–10)
+
 ## Emotional arc (3 sentences)
 
-The child begins inside an ordinary sunny moment that quietly tilts off-center, and a charming companion offers certainty exactly when certainty feels needed. Three confident shortcuts bend back on themselves, and the warmth of the day keeps glowing even as small worry gathers in the child's chest. Then a single familiar detail catches the child's eye, and the knowing that was already theirs rises up and walks them home.
+The child stands at the quiet edge of the sea, a little unsure about what hides beneath it, and a bright pearl of magic invites both child and companion into a world of soft color and drifting light. Page by page the unknown turns out to be friendly — a smiling sea turtle, a striped little fish, an octopus with shy wiggling arms — and delight steadily outgrows hesitation. By the time the coral garden lights up around them, the child has discovered that the big new place is not scary at all; it is simply the next part of a wonderful, gentle adventure.
 
 ## SETTING LOCK
 
-Pages 1–8 take place in the SAME sunny meadow. The anchor landmarks — the gnarled tall OAK with its long friendly arm-branch, the old MOSSY HOLLOW LOG with three orange mushrooms on its rim, the small arched STONE BRIDGE across the thin bright stream, the smooth GRAY HEART-SHAPED STONE at the stream's edge, the BENT WILLOW arcing like a soft arrow, the cluster of WHITE AND YELLOW WILDFLOWERS at the oak's base, the faint curl of distant CHIMNEY SMOKE on the horizon — are all LOCKED to `settings/02-long-way-home/meadow-oak.png`. The oak returns to the EXACT same position on every page it appears; the wildflower cluster and worn ground beside it are recurring recognition cues.
+Pages 2–8 take place in the SAME sunlit shallow reef. The anchor landmarks — the broad golden-orange BRAIN CORAL mound at center-left with its wavy folds, the tall purple SEA FAN leaning rightward, the three white SAND PATCHES between the coral, the curved archway of PINK CORAL forming a low natural doorway, the cluster of swaying green SEA GRASS where silver minnows dart, the bright sunbeam shafts slanting down from the surface, the scattered TINY BUBBLES rising in gentle columns — are all LOCKED to `settings/02-long-way-home/reef.png`. The brain coral returns to the EXACT same position on every page it appears; the pink archway and sea grass cluster are recurring recognition cues.
 
-Pages 9–10 reveal the COTTAGE: warm weathered wood, TURNED WOODEN RAILING with pale-white spindles, the specific SAGE-GREEN painted front door, brass handle, two small paned windows glowing faint yellow, stone chimney drawing a soft smoke ribbon, the round WOVEN WELCOME MAT in earth tones in front of the door, the terra-cotta POT of white and yellow wildflowers beside the door. All LOCKED to `settings/02-long-way-home/cottage.png`.
+Page 1 takes place on a small sunny TIDE-POOL BEACH at the edge of the reef — a narrow ribbon of pale golden sand, a single smooth DRIFTWOOD LOG bleached white, three round TIDE POOLS in the rocks with bright anemones, and the blue shallow water beginning a step beyond. This opening beach frame is described inside the reef setting sheet's upper edge.
 
-The only things that change across pages: camera angle, time-of-day tilting from late morning through golden hour into early honey-evening, the growing visibility of the chimney smoke on the horizon, and — critically — the child's pose and expression as worry grows and then resolves. Everything architectural or landmark-shaped is LOCKED to the setting sheets.
+Pages 9–10 reveal the GLOWING UNDERWATER GARDEN: a rounded coral hollow ringed by soft pastel ANEMONES that open like slow flowers, strands of pale blue-green LIGHT KELP that glow faintly from within, a flat sandy CLEARING at the hollow's floor where a friendly GRANDMOTHER SEA TURTLE rests, scattered GLOWING PEARLS tucked into the coral walls like tiny stars, and the domed ceiling of coral arching overhead. All LOCKED to `settings/02-long-way-home/garden.png`.
+
+The only things that change across pages: camera angle, the tilt of the sunlight from bright midday overhead into softer late-afternoon gold deeper in the reef, the slow brightening of the glowing pearls as the pair moves deeper, and — critically — the child's pose and expression as a small first-step hesitation opens into full delight. Everything architectural or landmark-shaped is LOCKED to the setting sheets.
+
+The magic that lets {HERO} and {COMPANION_NAME} breathe underwater: a friendly grandmother sea turtle gives each of them a small GLOWING PEARL that hums softly in the palm and wraps the holder in a gentle shimmering BUBBLE SHIELD. Inside the bubble, each of them can breathe and drift as if on a slow friendly current — no swimming strokes required, no species-specific motion. The bubble floats them wherever they lean. This mechanism is referenced consistently on pages 2–10 and works for any land companion.
 
 ## COVER
 
-Scene: the sunny meadow per SETTING LOCK at warm late-morning golden light. {HERO} and {COMPANION_NAME} stand together on the faint footpath in front of the tall anchor oak, facing the reader with warm, open, friendly expressions. The long arm-branch of the oak waves gently over them; the distant chimney smoke curls on the horizon behind, promising home.
+Scene: the sunlit shallow reef per SETTING LOCK at bright midday with sunbeams slanting through clear blue water. {HERO} and {COMPANION_NAME} float side by side inside their two shimmering bubble shields just above the brain coral, facing the reader with warm, open, wide-eyed smiles of wonder. A small striped fish and a smiling sea turtle hover nearby as friendly escorts. Tiny bubbles drift upward in gentle columns all around them.
 
-Camera: front-facing eye-level medium shot, both characters squarely readable, the oak and meadow visible around and behind them.
+Camera: front-facing eye-level medium shot, both characters squarely readable inside their bubbles, the reef and sunbeams visible around and behind them.
 
-Lighting: warm generous late-morning gold, high sun from upper-right, clear blue sky, soft cumulus, unworried and hopeful.
+Lighting: bright generous midday sun filtered through clear blue water, warm gold sunbeams slanting down from the upper-right, soft caustic light shapes wobbling across the sand, unworried and magical.
 
-Composition: hero and companion centered, oak rising behind and to the right as visual backdrop, the footpath curving gently away behind them into the meadow. Warm, inviting, adventurous "open-me" energy.
+Composition: hero and companion centered, brain coral rising just behind and to the left as visual backdrop, sea fan leaning in from the right, pink archway softly visible in the middle distance, inviting "open-me" energy.
 
 ---
 
 ### PAGE 1
 
 **TEXT:**
-The tall meadow grass hums in the warm summer breeze. Bees drift past {HERO}'s sunny knees. {HERO} stops on the path.
+The sea shines warm and bright along the sand. Little waves whisper hello at {HERO}'s toes. "What's down there?" {HERO} wonders softly.
 
 **ILLUSTRATION BRIEF:**
-- Setting: the meadow per SETTING LOCK — match the attached meadow setting sheet exactly (oak in its anchor position, wildflower cluster and worn spot at its base, faint chimney smoke on the far right horizon).
-- Action: The child stands still mid-stride on the footpath, looking around, noticing the quiet question of which way home.
-- Camera & POV: Eye-level with the child, wide shot. The meadow opens fully around them.
-- Spatial layout: Foreground lower-left is the wildflower cluster. Midground is the child, slightly left of center, on the faint footpath. Background upper-right is the tall oak. Far horizon upper-right has the faint chimney smoke curl. No bridge, no log, no hill yet.
-- Hero pose: Standing on the footpath, one hand brushing the tops of the grass blades, head turned gently to the right toward the oak, soft curious expression with lips slightly parted (match attached hero sheet exactly).
+- Setting: the tide-pool beach at the edge of the reef — match the upper-edge beach frame of the reef setting sheet exactly (pale golden sand, smooth white driftwood log, three round tide pools in the rocks with bright anemones, blue shallow water lapping beyond).
+- Action: The child stands at the wet edge of the sand, bare toes just touching a retreating wave, peering out over the bright water with gentle curious wonder.
+- Camera & POV: Eye-level with the child, wide shot. The beach opens left-to-right toward the horizon.
+- Spatial layout: Foreground lower-right is the smooth driftwood log. Midground is the child, slightly left of center, standing on the wet sand. Midground lower-left is one small tide pool with a pink anemone opening in it. Background upper-right is the wide blue sea with soft little whitecap crests. Horizon upper-middle is a pale gold hush where sky meets water. No companion yet on the beach.
+- Hero pose: Standing on the wet sand, one hand lifted to shade {HERO_OBJECT} eyes from the sun, weight tipped slightly forward toward the water, head tilted gently to the right, soft curious expression with lips slightly parted (match attached hero sheet exactly).
 - Companion ({COMPANION_NAME}): Not yet on page — completely absent from this spread.
-- Environment additions: two honeybees hovering over the wildflower cluster, one blue dragonfly passing at the child's shoulder height, soft dandelion seed fluff drifting left-to-right, a single cabbage-white butterfly in the upper-middle distance, wind visibly bending a long ribbon of grass behind the child.
-- Lighting: Warm late-morning gold leaning toward midday, high sun from the upper-right, long soft shadows falling to the lower-left.
-- Composition: Child lower-center-left on the bottom third line, oak anchoring right-middle third, sky upper third. Left-to-right reading flow from child toward oak toward chimney smoke.
-- Exclusions: no text, no letters, no numbers, no borders or frames, no extra people, no log or bridge or companion visible yet.
+- Environment additions: two gulls far upper-right at cloud height, a single tiny crab peeking out from behind the driftwood log, a twist of green seaweed on the sand near the child's foot, one small shell beside the tide pool.
+- Lighting: Bright generous midday sun from high overhead tilting slightly right, clear blue sky with a few soft cumulus, warm gold glare on the wet sand, soft shadow pooling under the driftwood.
+- Composition: Child lower-center-left along the bottom third, driftwood lower-right as anchor, sea opening across the upper two-thirds, reading flow left-to-right from child toward the open water.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no extra people, no companion yet, no underwater view yet, no boats.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero matches attached sheet; meadow matches attached setting sheet.
+- Continuity check: hero matches attached sheet; beach edge matches attached reef setting sheet.
 
 **PAGE TURN HOOK:**
-The child's stillness asks a question the reader wants answered — which way is home?
+The child's wondering question asks the reader — what is under the water?
 
 ---
 
 ### PAGE 2
 
 **TEXT:**
-"Which way is home?" {HERO} asks the quiet path. A small shape stirs softly in the tall grass beside {her}.
+A soft voice hums up from the waves. A glowing pearl floats gently to {HERO_OBJECT} palm. "Adventure?" {COMPANION_NAME} whispers close beside {HERO_SUBJECT}.
 
 **ILLUSTRATION BRIEF:**
-- Setting: meadow per SETTING LOCK, same spot. {COMPANION_NAME} emerges from the parted grass immediately to the child's left, first meeting.
-- Action: The child turns toward the companion at the moment of meeting; {COMPANION_NAME} emerges with a friendly welcoming pose.
-- Camera & POV: Worm's-eye, looking up slightly through the grass tips — grass tips arc softly across the lower edge as a natural proscenium.
-- Spatial layout: Foreground is arching grass tips and a tall seed-head. Midground left is {COMPANION_NAME} emerging from parted grass; midground right is the child turning toward them. Background upper-right shows the oak in its same position (softly blurred). Chimney smoke still on the far horizon.
-- Hero pose: Right side of frame, turning leftward, eyes wide with soft surprise, mouth small and open on the word "which" (match attached hero sheet exactly).
-- Companion ({COMPANION_NAME}): Left side of frame, upper body emerging from the parted tall grass, face lifted and tilted toward the child, kind eyes catching the warm light, gentle welcoming pose, friendly small smile.
-- Environment additions: one cabbage-white butterfly rising between the two figures at eye-level, seed heads nodding around {COMPANION_NAME}, two or three petals caught mid-air, a single honeybee hovering lower-left.
-- Lighting: Warm side light from the right, soft halo rim across {COMPANION_NAME}'s outline, gentle dapple on the child's cheek. Midday-warm daylight.
-- Composition: Child upper-right third, companion lower-left third, reading flow right-to-left to meet the new friend. (Worm's-eye angle is a deliberate change from page 1's eye-level wide.)
-- Exclusions: no text, no letters, no numbers, no borders or frames, no extra animals, no buildings, no log or bridge yet, no visible home.
+- Setting: the tide-pool beach transitioning toward the reef per SETTING LOCK. The beach behind the pair, the bright shallow sea ahead. Two glowing pearls hover just above the water's surface.
+- Action: The child turns with soft surprise; {COMPANION_NAME} has arrived beside {HERO_OBJECT}, and two small glowing pearls are floating out of the shallow water toward them — one settling gently into the child's open palm, one drifting toward {COMPANION_NAME}.
+- Camera & POV: Eye-level with the child, three-quarter angle, medium shot. The two figures are close together facing the water.
+- Spatial layout: Foreground lower-right is the wet sand edge and the small lapping wave. Midground center-left is the child, body half-turned toward the water with one palm open; just to the child's right is {COMPANION_NAME}, close and attentive. Midground center is the pair of glowing pearls hovering above the water with soft golden halos. Background upper-right is the bright blue sea stretching to the horizon; a faint curl of the friendly sea turtle's shell is just visible breaking the surface far out at shoulder-height in the water — quiet promise of who sent the pearls.
+- Hero pose: Standing at the water's edge, body half-turned toward the camera, left hand held out open-palm to receive the floating pearl, eyes wide with soft surprise, mouth small and open in a quiet "oh" (match attached hero sheet exactly).
+- Companion ({COMPANION_NAME}): Close beside the child on the child's right, body turned toward the water with the second pearl hovering just before {COMPANION_NAME}, head tilted up in gentle wonder, kind eyes lit from below by the pearl's glow, friendly small smile.
+- Environment additions: a scatter of tiny silver sparkles rising around each pearl, a single small wave curling white at the child's feet, one gull banking high upper-right, a quiet trail of bubbles hinting at the turtle below the surface.
+- Lighting: Warm midday sun from the upper-right, the two pearls adding gentle gold halos from below onto each face — the light pockets that make the magic feel safe and inviting.
+- Composition: Child midground-left, companion midground-right, pearls hovering between them as the visual center, sea opening behind.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no extra people, no underwater view yet (just the promise), no boats.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, and meadow all match attached sheets.
+- Continuity check: hero and companion match attached sheets; beach matches attached setting sheet.
 
 **PAGE TURN HOOK:**
-A new friend has appeared with a plan — the reader wants to know the plan.
+A glowing pearl and a whispered word — the reader has to know what happens when they step in.
 
 ---
 
 ### PAGE 3
 
 **TEXT:**
-"I know a wonderful shortcut!" {COMPANION_NAME} says brightly. Small footsteps crunch together across the grass toward an old mossy hollow log.
+Two shimmering bubbles bloom around them, soft and round. {HERO} giggles. Down, down they float into the blue.
 
 **ILLUSTRATION BRIEF:**
-- Setting: meadow per SETTING LOCK. The pair approaches the mossy hollow log (landmark from the setting sheet) — BEFORE-shortcut frame.
-- Action: {COMPANION_NAME} leads confidently toward the dark mossy mouth of the log; the child follows.
-- Camera & POV: Bird's-eye angled gently down at about 30°, wide shot. The log runs diagonally across the scene as the dominant framing element.
-- Spatial layout: Foreground lower-left is the pair — companion a step ahead, child a step behind. Log runs diagonally from lower-left (mouth) up to upper-right (far end). Background is open sunlit meadow. Oak visible upper-left background softly blurred, so the reader remembers where they started.
-- Hero pose: Behind {COMPANION_NAME} in mid-step, one hand out for balance, eyebrows lifted in curious trust, small expectant smile.
-- Companion ({COMPANION_NAME}): A pace ahead of the child, three-quarter front-facing angled toward the log mouth, chest lifted, head held high and proud, eyes gleaming with certainty, sure friendly smile.
-- Environment additions: a spiderweb strung between two twigs at the log's mouth with a single dewdrop glinting, a wind path in the grass bending toward the opening as if the meadow itself is pointing, two bees on the wildflowers, one dragonfly zipping past.
-- Lighting: Warm golden midday sun from the upper-left, log interior rendered as a gentle cool shadow that feels inviting rather than scary.
-- Composition: Figures lower-left third, log mouth center-right, oak upper-left background, diagonal reading flow lower-left to upper-right into the log mouth. (Bird's-eye is a deliberate change from page 2's worm's-eye.)
-- Exclusions: no text, no letters, no numbers, no borders or frames, no extra animals, no buildings, no bridge yet, no visible home.
+- Setting: the upper shallow reef per SETTING LOCK — the moment of descent. Surface of the sea is a bright rippling ceiling at the top of the frame with sunbeams slanting down. The anchor brain coral is softly visible far below.
+- Action: Both the child and {COMPANION_NAME} are now inside their shimmering bubble shields, gently sinking together through clear blue water a few feet below the surface. The bubbles are clearly visible as soft rainbow-rimmed spheres around each of them.
+- Camera & POV: Three-quarter side angle, medium shot, tilted slightly upward so the rippling bright surface shows along the top of the frame.
+- Spatial layout: Upper third is the bright wobbling surface of the sea with sunbeams piercing through. Midground center is the pair in their two bubbles, side by side, the child on the left and {COMPANION_NAME} on the right, each bubble softly touching the other. Lower third opens toward a soft-blurred glimpse of the reef below — a hint of the orange brain coral and purple sea fan, deliberately out of focus for now. A tiny school of silver minnows flashes past just above the bubbles.
+- Hero pose: Inside the left bubble, knees loose and lifted slightly in a drifting float, arms open wide in delighted surprise, head tipped back with a bright wide giggling smile, hair floating softly around the face.
+- Companion ({COMPANION_NAME}): Inside the right bubble, body turned softly toward the child, posture relaxed and floating, eyes bright with a wondering smile, one paw/limb lifted in a small wave toward the child through the shimmer of their shared bubbles.
+- Environment additions: slanting sunbeams with visible gold caustic shapes, a scatter of tiny free bubbles drifting up past the pair, two silver minnows flashing through the sunbeams, one soft jellyfish far upper-left at a gentle distance.
+- Lighting: Bright sunlit shallow water — warm gold slanting from upper-right through the surface, the bubbles catching the light as pale rainbow rims around each figure, soft blue overall with no dark shadows.
+- Composition: Figures centered, bubbles kissing at the middle, reading flow top-to-bottom as the pair sinks gently toward the reef below.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no extra creatures beyond the minnows and distant jellyfish, no boats or surface-world items, no scary dark depth.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, meadow all match attached sheets.
+- Continuity check: hero and companion match attached sheets; reef below matches attached setting sheet.
 
 **PAGE TURN HOOK:**
-The dark mouth of the log is a promise — the reader has to see the other side.
+The giggle and the drifting down — the reader wants to see the new world.
 
 ---
 
 ### PAGE 4
 
 **TEXT:**
-They pop out blinking into the bright sun. Same grass. Same tall oak. "Hmm, that's odd," {COMPANION_NAME} says, slowly.
+The reef opens up like a wide, bright garden. Orange coral waves gentle hellos. A striped little fish zips curious circles around {HERO}.
 
 **ILLUSTRATION BRIEF:**
-- Setting: meadow per SETTING LOCK. The AFTER-shortcut frame — the log's far end has dumped them back at the SAME starting spot from page 1. Oak in its exact original position.
-- Action: The pair has just emerged from the far end of the hollow log. Same wildflower cluster, same footpath, same everything. Recognition arriving on both faces.
-- Camera & POV: Eye-level with the child, medium shot. Log opening on the left side of the frame as a partial framing element — the pair has just stepped out.
-- Spatial layout: Foreground lower-left is the mouth of the log (the same log from page 3). Midground center-left is the child crouched coming out; just ahead and right of the child is {COMPANION_NAME}. Background right side is the tall oak in its page-1 position — same gnarled roots, same long branch arcing friendly. On the ground between child and oak, the same worn spot and wildflower cluster — visible recognition cues. Chimney smoke on the right horizon unchanged.
-- Hero pose: Left-center third, crouched low just emerging from the log mouth, hair a little tousled, brow lifting, mouth a small surprised line.
-- Companion ({COMPANION_NAME}): A step ahead of the child toward the right, caught mid-step with one foot raised, head tilted in puzzlement toward the oak, eyes wide but the friendly smile still holding.
-- Environment additions: the same cabbage-white butterfly from page 1 drifting past at upper-middle, one blue dragonfly looping back (the SAME dragonfly), the identical wildflower cluster at the oak's base, soft seed fluff still drifting, two bees working the same flowers.
-- Lighting: Same warm midday glow as page 1, a gentle sunbeam catching the oak trunk as if the meadow itself is quietly giggling at the loop.
-- Composition: Log opening lower-left third, child left of center, companion center, oak anchoring the right third. (Eye-level medium shot is a deliberate change from page 3's bird's-eye.)
-- Exclusions: no text, no letters, no numbers, no borders or frames, no extra animals, no buildings, no bridge, no visible home.
+- Setting: the shallow reef per SETTING LOCK — first full reveal of the setting sheet. The broad golden-orange brain coral in its anchor position, the purple sea fan leaning rightward, white sand patches, pink coral archway softly visible in the middle distance, green sea grass swaying.
+- Action: The pair has settled gently onto a soft sand patch at the foot of the brain coral. A bright yellow-and-black striped fish is zipping a playful loop around the child's bubble. The child's posture opens with delight.
+- Camera & POV: Eye-level with the child, wide shot. The reef opens fully across the frame.
+- Spatial layout: Foreground lower-left is a white sand patch with a small scattering of shells. Midground center-left is the child in their bubble, feet just above the sand, one hand extended toward the striped fish. Midground right is {COMPANION_NAME} in their bubble beside the child. Background upper-left is the orange brain coral in its anchor position. Background right is the purple sea fan. Background middle distance is the pink coral archway softly visible. Green sea grass sways at the lower-right. Bright sunbeams slant in from the upper-right.
+- Hero pose: Drifting upright inside the bubble, one hand extended playfully toward the circling striped fish, other hand loose at {HERO_OBJECT} side, head turned to follow the fish, mouth open in a bright delighted laugh, eyes wide with joy.
+- Companion ({COMPANION_NAME}): Inside the right bubble, body angled toward the child and fish, head tilted in amused wonder, a sure warm smile, watching the child's delight with soft shared excitement.
+- Environment additions: the single striped fish (bright yellow body with bold black stripes) mid-loop around the child's bubble, two smaller blue fish hovering near the brain coral, a translucent small shrimp on a coral fold, gentle drifting tiny bubbles, a starfish clinging to a rock on the lower-right.
+- Lighting: Bright midday sun filtered through the water from the upper-right, warm gold caustic shapes wobbling across the sand and coral, overall palette clear blue-green with warm orange and pink accents from the coral.
+- Composition: Child left-of-center midground, companion center-right, fish looping centrally between them as the visual hook, brain coral upper-left third, sea fan right third. (Eye-level wide is a deliberate change from page 3's three-quarter descent angle.)
+- Exclusions: no text, no letters, no numbers, no borders or frames, no extra people, no scary creatures, no surface-world items.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, meadow all match attached sheets.
+- Continuity check: hero, companion, and reef all match attached sheets.
 
 **PAGE TURN HOOK:**
-The loop has revealed itself — the reader wants to know if {COMPANION_NAME} tries again.
+A whole reef and a friendly fish — the reader wants to meet who else lives here.
 
 ---
 
 ### PAGE 5
 
 **TEXT:**
-"A new shortcut!" {COMPANION_NAME} says cheerfully. Under the little stone bridge they duck together. Smooth pebbles ping in the bright water.
+Eight shy arms wiggle out from a tucked-away crack. "Hello," {HERO} says kindly. The little octopus blushes pink, then purple, then gold.
 
 **ILLUSTRATION BRIEF:**
-- Setting: meadow per SETTING LOCK, now at the small arched stone bridge (landmark from the setting sheet). The INSIDE-shortcut frame of the bridge.
-- Action: {COMPANION_NAME} ducks under the arch first from the right bank; the child follows. Water catches sun in coins on the pebbled bed.
-- Camera & POV: Worm's-eye from inside the arch looking out, the stone arch framing the scene like a soft window.
-- Spatial layout: Foreground is the shadowed underside of the stone arch rim — mossy stones curving across the top of the frame. Midground: child bent forward under the arch on the right, {COMPANION_NAME} already further through on the left approaching the sunlit exit. Background through the arch opening is the sunlit opposite bank and a glimpse of meadow, with the oak tiny and softly blurred in the far upper-left background — the anchor is still nearby. Stream flows beneath in the foreground lower third. THE HEART-SHAPED STONE is clearly visible in the shallow water on the child's side (right side, foreground-lower).
-- Hero pose: On the right side of the arch, bent forward slightly to clear the low stone, one hand steady on the cool mossy arch wall, eyes bright with the game of it, small smile returning.
-- Companion ({COMPANION_NAME}): A step ahead on the left side of the arch, nearly through, glancing back over one shoulder toward the child, body angled in a confident lead.
-- Environment additions: smooth round pebbles on the streambed in varied creams and grays, three silver minnows flicking near the child's feet, forget-me-nots on the right bank, a single small green frog on a pebble on the left bank, one damselfly above the water.
-- Lighting: Warm dappled light through the arch, sunlit water throwing wobbling gold caustic shapes onto the underside of the stones, arch interior cool but not dark.
-- Composition: Arch framing the whole image top and sides, child lower-right third, companion center-left, reading flow left-to-right out into the sunlit opening. (Worm's-eye framed by arch is a deliberate change from page 4's eye-level medium.)
-- Exclusions: no text, no letters, no numbers, no borders or frames, no extra animals, no buildings, no log, no visible home.
+- Setting: reef per SETTING LOCK, at the base of the brain coral where a small dark nook hides between the folds. The brain coral is in its exact anchor position.
+- Action: A shy little octopus has peeked out of the nook, its eight arms wiggling in soft hello. The child has drifted close in their bubble and is waving kindly. The octopus is color-shifting through soft pastel pinks, purples, and golds.
+- Camera & POV: Intimate close-up at eye-level with the child and octopus, slight three-quarter angle, medium-close distance.
+- Spatial layout: Foreground center is the small octopus emerging from the nook in the brain coral fold (lower-left third). Midground center-right is the child in their bubble, drifting gently sideways, one hand raised in a small friendly wave. Midground upper-right is {COMPANION_NAME} in their bubble, a step back and slightly above the child, watching with a soft encouraging smile. Background is the warm orange folds of the brain coral filling the frame.
+- Hero pose: Drifting horizontally inside the bubble in a soft floating posture, body angled toward the octopus, one hand lifted in a small gentle wave at chest height, face lit up with a warm welcoming smile, eyes kind and soft.
+- Companion ({COMPANION_NAME}): Inside their bubble a step behind and slightly above the child, body angled toward the scene, paws/limbs tucked in a comfortable float, head tilted softly, watching the greeting with shared delight.
+- Environment additions: three tiny cleaner shrimp on the coral folds, a slow drifting scatter of tiny bubbles, one small purple snail on a nearby ridge, a gentle glow of color shifting across the octopus's skin (pink on its head, violet on its arms, soft gold at the tips).
+- Lighting: Warm filtered sunlight still overhead, with the color-shifting octopus adding a small soft bloom of pink-gold light across the child's cheek and bubble rim.
+- Composition: Octopus lower-left-center, child midground-right, companion upper-right, reading flow diagonal from octopus up through child to companion. (Close-up intimate is a deliberate change from page 4's wide shot.)
+- Exclusions: no text, no letters, no numbers, no borders or frames, no scary tentacled look — the octopus is round-headed, soft-eyed, and small, with a clearly friendly cartoon expression. No extra octopuses.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, meadow and bridge all match attached setting sheet.
+- Continuity check: hero, companion, and reef all match attached sheets.
 
 **PAGE TURN HOOK:**
-We go under — but where do we come out? The heart stone is quietly planted for later.
+A shy new friend has said hello — the reader wants to see what {HERO} discovers next.
 
 ---
 
 ### PAGE 6
 
 **TEXT:**
-Back in the bright sun. The same tall oak waves its same long, friendly arm. {HERO}'s small hand finds {her} pocket.
+{HERO} and {COMPANION_NAME} drift through a bright pink doorway. Silver minnows twirl around them like ribbons. "Look, look!" {HERO} laughs.
 
 **ILLUSTRATION BRIEF:**
-- Setting: meadow per SETTING LOCK. The AFTER-shortcut frame of the bridge — the oak is BACK, in its exact original position again.
-- Action: Pair has climbed up the far bank and arrived AGAIN at the oak's anchor spot. A small worry ripple begins in the child's chest.
-- Camera & POV: Eye-level with the oak, pulled back slightly wider than page 4, three-quarter angle.
-- Spatial layout: Foreground lower-left is the top edge of the stream bank they just climbed. Midground left is the child standing still; midground center is {COMPANION_NAME} settled beside the child. Background right third is the tall oak in its exact original position with its long friendly arm-branch bending in a breeze wave. The child's worn spot and wildflower cluster visible again at the oak's base. Chimney smoke on the right horizon now slightly more visible.
-- Hero pose: Left-of-center midground, standing still at the top of the bank, one hand tucked into their pocket for comfort, the other hanging loose, eyes a little wider than before, mouth soft and quiet.
-- Companion ({COMPANION_NAME}): Just to the right of the child in a quiet resting pose, shoulders lowered a notch, eyes flicking sideways toward the oak, smile thinner and a little uncertain.
-- Environment additions: a breeze bending the oak's one long branch in a friendly wave, petals lifting from the oak-base wildflowers, two bees still busy, the identical cabbage-white butterfly drifting upper-middle, chimney smoke curl slightly larger on the horizon.
-- Lighting: Warm daylight deepening toward honey late-afternoon gold, unworried sky, the whole landscape still hopeful even as the child's chest ripples.
-- Composition: Child left-of-center along the middle third, companion center, oak upper-right third. (Three-quarter angle is a deliberate change from page 5's worm's-eye-through-arch.)
-- Exclusions: no text, no letters, no numbers, no borders or frames, no extra animals, no buildings except the distant home suggested only by chimney smoke, no log, no bridge, no hill yet.
+- Setting: reef per SETTING LOCK, at the pink coral archway landmark from the setting sheet. The archway rises like a low natural doorway between two coral pillars.
+- Action: The pair drifts together through the pink coral archway. A swirling cloud of small silver minnows has surrounded them and is corkscrewing playfully around their bubbles like living ribbons.
+- Camera & POV: Worm's-eye-adjacent angle from just below the archway floor looking up through the arch, wide shot, the arch framing the scene as a natural proscenium.
+- Spatial layout: Foreground lower-edge is a sandy floor with scattered small shells. The bright pink coral archway curves across the top and sides of the frame as a framing element. Midground center-left is the child inside their bubble, drifting forward through the arch. Midground center-right is {COMPANION_NAME} inside their bubble, just behind and to the right of the child. The swirling silver minnows arc in spiraling ribbons around both bubbles, some catching the light like sequins. Background through the arch opening is a brighter sunlit reef beyond, with a tiny distant glimpse of the purple sea fan.
+- Hero pose: Drifting forward through the archway inside the bubble, arms spread wide in bright laughing surprise at the swirling minnows, head turned slightly up to follow one ribbon of fish, mouth open in a bright laugh, eyes shining.
+- Companion ({COMPANION_NAME}): Inside their bubble a half-step behind and to the right of the child, body tilted forward with the current, head turned to watch the minnows loop past, a happy open smile, paws/limbs held loose in the drift.
+- Environment additions: roughly forty small silver minnows corkscrewing around the pair, a single blue damselfish peeking from the side of the arch, a soft dusting of tiny free bubbles, one starfish clinging to the archway's inner curve, a drifting green ribbon of sea grass caught mid-current.
+- Lighting: Bright sunlit water, warm pink glow reflecting from the archway onto both faces, silver minnows catching the sunbeams in flickering flashes.
+- Composition: Arch framing the whole image top and sides, child center-left through the arch, companion center-right, minnows spiraling across the middle of the frame. (Worm's-eye-through-arch is a deliberate change from page 5's close-up.)
+- Exclusions: no text, no letters, no numbers, no borders or frames, no scary creatures, no surface-world items, no large predators.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, meadow all match attached sheets.
+- Continuity check: hero, companion, and reef archway all match attached setting sheet.
 
 **PAGE TURN HOOK:**
-The child is starting to feel it — will the next shortcut finally work?
+Through the doorway — what's on the other side?
 
 ---
 
 ### PAGE 7
 
 **TEXT:**
-{HERO} looks down at the soft brown earth. A small puddle. A small shoe print in the mud. {Her} own shoe print.
+A shadow slides slow and big across the bright sand. {HERO}'s small hand reaches for {COMPANION_NAME}'s paw through the bubble. They hold very still together.
 
 **ILLUSTRATION BRIEF:**
-- Setting: meadow per SETTING LOCK, a short way from the oak on the footpath. Close, quiet moment.
-- Action: The child stands at the edge of a small shallow puddle. Beside the puddle is a single clear child-sized shoe print in the mud, tread pattern matching the child's own shoe. Recognition arrives.
-- Camera & POV: Bird's-eye, close-up looking down over the child's shoulder toward the puddle and print.
-- Spatial layout: Foreground center-bottom is the puddle (small irregular oval about the size of a saucer, reflecting a blue patch of sky) and the single distinct shoe print beside it on its right edge. Midground is the child bent over it. Just past the puddle on the left is the HEART-SHAPED STONE from page 5 — now resting on the path. A bent willow branch points toward the horizon in the middle-right background, arcing like a soft arrow. Far upper-right: the chimney smoke curl, now slightly more distinct. The oak is out of frame this page — deliberate, to keep focus on the discovery.
-- Hero pose: Bent over the puddle center-frame, knees slightly bent, one hand hovering open-palmed just above the shoe print, mouth parted on a small silent "oh," eyes bright and still with recognition.
-- Companion ({COMPANION_NAME}): A step behind the child toward the upper-right, settled in a quiet attentive pose, head tilted softly, kind eyes resting on the child with gentle new attention, smile softened from confidence to wonder.
-- Environment additions: the puddle reflecting a small blue patch of sky and one drifting cloud, the heart-shaped stone clearly visible just past the puddle to the left, the bent willow branch pointing right toward the horizon, one blue dragonfly on a grass blade, a honeybee crossing the upper-right, three tiny wildflowers at the edge of the path.
-- Lighting: Low warm late-afternoon amber sun coming almost level from the right, lighting the puddle like a small gold mirror, the child's face half in honey light and half in soft shade.
-- Composition: Puddle and print bottom-center along the lower third, child center, companion upper-right third, reading flow pulls from the print upward and outward toward the bent willow and then the far chimney smoke — the child's own clues laying a path. (Bird's-eye close-up is a deliberate change from page 6's three-quarter.)
-- Exclusions: no text, no letters, no numbers, no borders or frames, no extra animals, no buildings except the chimney smoke curl, no log, no bridge in this frame.
+- Setting: reef per SETTING LOCK, in the wider open sand stretch between the brain coral and the sea grass. A large gentle shadow slides across the sandy floor from above.
+- Action: The pair has paused mid-drift on a wide white sand patch. A slow broad shadow is passing over them — not yet revealed to be friendly. The child's bubble has drifted a hair closer to {COMPANION_NAME}'s bubble; their hands meet where the two shimmers touch.
+- Camera & POV: Bird's-eye angled gently down at about 30°, medium-wide shot, looking down at the sand floor so the moving shadow is clearly readable.
+- Spatial layout: Foreground center is the pair in their two bubbles, side by side on the sand floor, bubbles softly touching. The shadow — a broad soft oval — slides across the sand just ahead of them from upper-left to lower-right, unmistakable but not yet showing its maker at the top of the frame. Background upper-right is a soft glimpse of the green sea grass cluster. Background upper-left is the orange brain coral in its anchor position, softly blurred. A few bubbles rise in gentle columns.
+- Hero pose: Inside the left bubble, body still and floating low, head tipped up toward the unseen shape above, one small hand pressed against the inside of the bubble wall reaching toward {COMPANION_NAME}, eyes wide with a small quiet question — not scared, but paused.
+- Companion ({COMPANION_NAME}): Inside the right bubble, body drifted close to the child's, one paw/limb pressed against the bubble wall matching the child's hand (the two bubbles kiss at the point of contact), head tilted up toward the same shape, eyes soft and steady, a reassuring small smile that says *I'm right here*.
+- Environment additions: the broad soft shadow across the sand, a single small hermit crab frozen mid-step on a pebble, two tiny bubbles rising slow, a hush in the water — no minnows flashing this page to let the shadow carry the moment.
+- Lighting: Warm sunlight still dominant but the passing shape dims a patch of sand into soft cool shade — the shaded patch is clearly temporary and defined, with bright sun all around the edges so the mood stays warm overall. No deep blue darkness.
+- Composition: Pair center-lower-third pressed together, shadow diagonal across middle third from upper-left to lower-right, reading flow pulls the eye upward toward the unseen maker of the shadow. (Bird's-eye is a deliberate change from page 6's worm's-eye.)
+- Exclusions: no text, no letters, no numbers, no borders or frames, no visible predator, NO SHARK silhouette, no scary teeth — the shadow must read as soft, broad, and rounded, clearly a gentle shape.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, meadow landmarks all match attached setting sheet.
+- Continuity check: hero, companion, and reef all match attached sheets.
 
 **PAGE TURN HOOK:**
-Something has clicked inside the child — the reader wants to see what happens next.
+A big shadow and a small held breath — the reader has to see what it is.
 
 ---
 
 ### PAGE 8
 
 **TEXT:**
-"This way," {HERO} says quietly, bravely. Small feet find the smooth heart-shaped stone. "And this way too," {she} says.
+A big smiling sea turtle glides slowly overhead. "Welcome, little ones," she hums warmly. {HERO}'s held breath turns into a laugh.
 
 **ILLUSTRATION BRIEF:**
-- Setting: meadow per SETTING LOCK. The child now leads, walking along the footpath past the SAME heart-shaped stone from pages 5 and 7.
-- Action: The child steps with new certainty; {COMPANION_NAME} follows close behind.
-- Camera & POV: Worm's-eye from low in the grass, wide shot, grass tips arcing softly along the lower edge.
-- Spatial layout: Foreground lower-third is the footpath and the heart-shaped stone just passed (lower-left, behind the child's trailing foot). Midground center: child leading, walking left-to-right. Midground slightly behind and to the child's left: {COMPANION_NAME}. Background middle-right is the BENT WILLOW BRANCH from page 7 clearly visible as an arrow. Further upper-left background is the stomped puddle from page 7 — the breadcrumb behind them. Further upper-right: the chimney smoke curl larger and more defined. Oak tiny in the far upper-left background, receding.
-- Hero pose: Leading center-frame, walking left-to-right, shoulders square, chin lifted, one arm loosely pointing forward toward the bent willow, small sure smile.
-- Companion ({COMPANION_NAME}): Walking a pace behind and to the left, relaxed and calm, head up, eyes resting on the child's back with soft admiration, gentle content smile.
-- Environment additions: the heart stone glowing in a patch of sun on the path (lower-left), the bent willow ahead on the right, the stomped puddle tiny in the upper-left background, bees around wildflowers, one cabbage-white butterfly, a dragonfly near the willow.
-- Lighting: Warm late-afternoon gold deepening, long friendly shadows stretching forward in the direction of home (to the right), the whole meadow tinted amber.
-- Composition: Heart stone lower-left third, child center, companion center-left just behind, bent willow middle-right, chimney smoke upper-right, reading flow strongly left-to-right like a line of breadcrumbs. (Worm's-eye wide is a deliberate change from page 7's bird's-eye close-up.)
-- Exclusions: no text, no letters, no numbers, no borders or frames, no extra animals, no buildings except the distant chimney smoke, no log in frame, no bridge in frame.
+- Setting: reef per SETTING LOCK, the same sand patch as page 7 — shadow now revealed. The brain coral, pink archway, and sea grass all visible in their anchor positions.
+- Action: The shadow-maker is revealed: a large friendly grandmother sea turtle gliding slowly over the pair, head tilted kindly down toward them with a warm smile. The child's body has unclenched; delight is replacing the pause.
+- Camera & POV: Low three-quarter angle looking up at the turtle from near the pair's level, wide shot, the turtle filling the upper third of the frame.
+- Spatial layout: Foreground lower third is the pair in their two bubbles on the sand, bubbles still softly touching. Midground-to-upper third is the grandmother sea turtle — a broad gentle silhouette with a patterned green-gold shell, wise warm eyes, a soft hum-smile — gliding across the top-left to top-right, slow flippers outspread. Background lower-right is the brain coral in its anchor position softly blurred; background upper-right is the pink archway in soft distance. Sunbeams slant through the turtle's silhouette making a warm halo around her shell.
+- Hero pose: Inside the left bubble, body unfurled from the still pause, head tipped all the way up to look at the turtle, one arm pointing up in delighted recognition, mouth open in a bright laughing "oh," eyes shining. The earlier pressed-hand is now relaxed open.
+- Companion ({COMPANION_NAME}): Inside the right bubble, body turned up toward the turtle, head tilted with soft wonder, a wide warm smile, paws/limbs loose and happy in the drift, clearly sharing the relief and delight.
+- Environment additions: a small blue-striped remora cruising alongside the turtle's shell, a scatter of small sparkles of sunlight caustic shapes on the turtle's back, two silver minnows returning to zip through the scene, a drift of tiny bubbles rising around the turtle's flippers.
+- Lighting: Bright warm midday sun filtered through water, turtle haloed with a gold rim from the sunbeam behind her shell, shaded sand patch from page 7 now blooming back into warm gold as the turtle glides on.
+- Composition: Turtle upper third spanning the width, pair lower third centered, reading flow vertical upward from the child's pointing arm to the turtle's kind face. (Low three-quarter looking up is a deliberate change from page 7's bird's-eye.)
+- Exclusions: no text, no letters, no numbers, no borders or frames, no scary creatures, no sharks, no dark depths.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, meadow landmarks all match attached setting sheet.
+- Continuity check: hero, companion, and reef all match attached sheets.
 
 **PAGE TURN HOOK:**
-The child is leading now — the reader wants to follow them all the way.
+The grandmother turtle has welcomed them — the reader wants to know where she leads them next.
 
 ---
 
 ### PAGE 9
 
 **TEXT:**
-"Lead the way," {COMPANION_NAME} whispers softly. A warm curl of chimney smoke rises ahead. {HERO} smiles wide. "I see it!"
+She leads them to a hidden coral hollow. Soft pearls glow warm like little tucked-in stars. "Oh," {HERO} breathes. "It's beautiful."
 
 **ILLUSTRATION BRIEF:**
-- Setting: meadow edge per SETTING LOCK transitioning into cottage reveal per SETTING LOCK. The pair crests a low grassy rise. Beyond the last band of tall grass, the COTTAGE appears as locked to the cottage setting sheet — sage-green door, turned wooden railing, welcome mat in front of door, terra-cotta wildflower pot beside door, two paned windows glowing faint yellow, stone chimney drawing a soft smoke ribbon.
-- Action: First full view of home. Recognition and relief on the child's face.
-- Camera & POV: Bird's-eye from slightly behind and above the pair looking forward and down toward the cottage, wide shot. Gentle over-the-shoulder angle.
-- Spatial layout: Foreground lower-left is the grassy crest with the pair silhouetted against the view. Midground is open meadow sloping gently down toward the house. Background upper-right third is the cottage per the cottage setting sheet. Oak visible small in the far upper-left background — the anchor tree seen for the last time from this distance. Footpath a gentle curve across the midground connecting foot-of-rise to porch.
-- Hero pose: Lower-left third on the crest, both hands lifted a little in recognition, face bright with a wide quiet smile, chin up, eyes locked on the cottage.
-- Companion ({COMPANION_NAME}): Just behind the child's heel on the crest, face tipped up toward the child, eyes soft, smile now warm and proud rather than sure.
-- Environment additions: fireflies just beginning to wake over the meadow even though the sky is still golden, a cabbage-white butterfly crossing mid-frame, two bees still busy at a wildflower patch.
-- Lighting: Full honeyed early-evening golden hour, long warm light spilling over the meadow toward the porch, the whole world tinted like tea, sky still warm with low sun, no cool blue.
-- Composition: Figures lower-left third, cottage upper-right third, reading flow strongly diagonal lower-left to upper-right along the path. Sky open and generous in the upper portion. (Bird's-eye from behind is a deliberate change from page 8's worm's-eye.)
-- Exclusions: no text, no letters, no numbers, no borders or frames, no extra people, no other buildings, no log, no bridge.
+- Setting: the glowing underwater garden per SETTING LOCK — match the attached garden setting sheet exactly. The rounded coral hollow ringed by pastel anemones that open like slow flowers, strands of pale blue-green light kelp glowing faintly from within, scattered glowing pearls tucked into the coral walls like tiny stars, flat sandy clearing at the hollow's floor, domed coral ceiling arching overhead.
+- Action: The grandmother sea turtle has gently led the pair into the hollow. They hover just inside the entrance, bubbles catching the soft pearl-light. The child gasps in quiet wonder.
+- Camera & POV: Medium-wide three-quarter angle from just inside the hollow's entrance, slightly behind and above the pair so the reader sees what they see.
+- Spatial layout: Foreground lower-left is the edge of the hollow's coral rim. Midground center-left is the child in their bubble, drifting into the hollow with both hands lifted slightly in wonder. Midground center-right is {COMPANION_NAME} in their bubble beside the child. Midground right is the grandmother turtle settled on the sandy clearing floor, facing toward the pair with a warm smile. Background is the hollow's interior: pastel anemones (soft pink, butter-yellow, pale coral) opening along the lower walls, pale blue-green light kelp strands rising like slow lanterns, glowing pearls scattered in the coral walls in warm gold clusters, the domed ceiling curving overhead.
+- Hero pose: Drifting forward inside the bubble, both hands lifted softly near the face in wonder, head turning slowly to take in the whole hollow, mouth open in a soft quiet "oh," eyes wide and full of light from the pearls.
+- Companion ({COMPANION_NAME}): Inside the bubble close beside the child, body turned forward into the hollow, head tipped in shared wonder, a soft full smile, paws/limbs relaxed and drifting, eyes lit warmly by the pearl-glow.
+- Environment additions: one small seahorse curled on a kelp strand (lower-right), two tiny jellyfish drifting pale-luminous in the upper hollow, a scatter of slow floating sparkles, the anemones swaying gently, a ribbon of small silver bubbles rising from the sand.
+- Lighting: Soft warm pearl-glow from the hollow walls as primary light source, blue-green kelp light as secondary, a single narrow sunbeam slipping through a gap in the coral ceiling and landing as a soft spotlight on the sandy clearing floor. Palette warm gold, soft pink, pale blue-green; no cold dark blue.
+- Composition: Pair midground-left and center, turtle midground-right, hollow's glowing walls wrapping the background, reading flow diagonal from pair into the hollow toward the turtle. (Medium-wide interior reveal is a deliberate change from page 8's upward shot.)
+- Exclusions: no text, no letters, no numbers, no borders or frames, no scary creatures, no dark depths, no predators, no surface-world items.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, meadow and cottage all match attached setting sheets.
+- Continuity check: hero, companion, and garden setting all match attached sheets.
 
 **PAGE TURN HOOK:**
-Home is finally in sight — the reader turns to arrive.
+A secret glowing garden — the reader wants to see them rest inside it.
 
 ---
 
 ### PAGE 10
 
 **TEXT:**
-The porch. The sage-green door. Warm meadow grass at {her} back. {COMPANION_NAME} curls up snug on the soft welcome mat.
+{HERO} and {COMPANION_NAME} float close, warm and happy, inside the glowing garden. "Come back anytime, little ones," the turtle hums. {HERO} smiles wide. "We will."
 
 **ILLUSTRATION BRIEF:**
-- Setting: cottage porch per SETTING LOCK — match the attached cottage setting sheet. Close-up arrival.
-- Action: The child stands on the wooden porch at their own front door, one hand on the brass handle. {COMPANION_NAME} has already settled into a soft content curl on the welcome mat.
-- Camera & POV: Eye-level with the child at the door, medium shot. The porch railing runs softly across the lower-right of the frame; the door frame on the left provides a soft vertical edge — no hard panels or borders.
-- Spatial layout: Foreground right is the welcome mat with {COMPANION_NAME} curled upon it, and a sliver of the porch railing behind. Midground left is the child half-turned, one hand on the sage-green door handle, the other gesture loose. Midground right past the railing opens to the meadow view. Background beyond the railing is the meadow with the tall oak small in the far distance — the anchor tree framing the closing echo of page 1. The potted wildflower sits to the right of the door on the porch boards.
-- Hero pose: Left-of-center on the porch, half-turned back toward the meadow, right hand resting on the sage-green door's brass handle, left hand loose at their side, a calm knowing smile with soft eyes.
-- Companion ({COMPANION_NAME}): Curled snug on the round welcome mat in the lower-right foreground, body tucked close in a soft content circle, eyes half-closed in contentment, smile soft and sleepy.
-- Environment additions: one cabbage-white butterfly drifting past the porch railing — the exact butterfly motif that appeared on page 2 — the tall sunny grass visible beyond the railing glowing the same warm gold as page 1, two fireflies softly glowing near the railing.
-- Lighting: Late golden hour settling into early honey-evening, porch lit warm from a low sun outside the frame on the right, meadow behind bathed in the same warm gold that opened the story. No cool blue.
-- Composition: Child left-of-center along the middle third, door frame behind child on the left, welcome mat and companion lower-right third, meadow view opening off to the right so the reader sees the whole path traveled. Reading flow left-to-right: door, child, companion, meadow. (Eye-level medium shot is a deliberate change from page 9's bird's-eye.)
-- Exclusions: no text, no letters, no numbers, no borders or frames, no extra people, no other buildings, no log, no bridge, no door color other than the sage-green from the setting sheet.
+- Setting: the glowing underwater garden per SETTING LOCK — match the attached garden setting sheet exactly. Same hollow, same anemones, same light kelp, same pearl clusters, same sandy clearing, same grandmother turtle.
+- Action: The pair has settled gently into the sandy clearing at the hollow's floor. The child floats cross-legged inside the bubble; {COMPANION_NAME} is curled close beside. The grandmother turtle rests a flipper-length away, humming a soft farewell promise. Adventure has arrived as the warm feeling at the center of everything.
+- Camera & POV: Eye-level with the pair at the hollow's floor, medium shot. The hollow wraps around them softly from all sides.
+- Spatial layout: Foreground right is a soft swaying anemone on the sand. Midground center-left is the child floating cross-legged inside the bubble, body relaxed, face turned softly toward the turtle. Midground center is {COMPANION_NAME} curled warmly beside the child in their own bubble, the two bubbles touching at the hip. Midground right is the grandmother turtle settled on the sand with her head tilted gently in farewell smile. Background fills with the hollow — glowing pearls tucked in the coral walls, pale blue-green light kelp rising behind, the domed coral ceiling arching above, the narrow sunbeam still landing softly on the sand between the pair and the turtle.
+- Hero pose: Floating cross-legged inside the bubble, body at ease, hands resting loose in the lap, head tilted softly toward the turtle, a calm full-hearted smile, eyes warm and bright with quiet joy.
+- Companion ({COMPANION_NAME}): Curled close beside the child inside the adjacent bubble, body tucked in a soft happy circle, head settled with eyes softly on the turtle, smile content and warm, paws/limbs relaxed — the posture of a friend who has shared a wonderful day.
+- Environment additions: a small striped fish from page 4 hovering near the hollow's entrance — a tiny visual rhyme — a drifting soft sparkle, a single small seahorse curled on the kelp, two pastel anemones in full slow open, gentle tiny bubbles rising from the sandy floor.
+- Lighting: Warm pearl-glow from the walls as primary, soft blue-green kelp accent, the narrow sunbeam now slightly tilted (late-afternoon surface light deepening slightly gold), casting a gentle warm halo on the sand between the pair and the turtle. Overall palette warm gold, soft pink, pale blue-green — unmistakably safe and happy. No cold blue.
+- Composition: Pair centered, turtle just to their right, hollow wrapping them from all sides, reading flow soft and circular — from child to companion to turtle and back. (Eye-level at rest is a deliberate change from page 9's reveal angle.)
+- Exclusions: no text, no letters, no numbers, no borders or frames, no scary creatures, no surface-world items, no predators, no way-home cottage — the story ends here inside the magic, not back at the beach.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, cottage all match attached setting sheets.
+- Continuity check: hero, companion, and garden all match attached sheets.
 
 **PAGE TURN HOOK:**
-END — echoes page 1 via the same tall sunny meadow, the drifting cabbage-white butterfly, and the distant oak now seen from the safety of the porch.
+END — echoes page 1 via the same bright sunlight (now filtered into pearl-glow) and the same curious child (now brave and smiling), with the striped fish from page 4 reappearing as a gentle callback to the first friend met on the reef.
