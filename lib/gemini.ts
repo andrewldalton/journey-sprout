@@ -91,10 +91,10 @@ You are producing a CHARACTER REFERENCE SHEET for a children's picture book.
 CRITICAL: Preserve the exact facial likeness of the child in the reference photo — face shape, eye color, eye spacing, nose, mouth, cheek shape, and hair color/texture must match the real child. Do NOT generic-ify the face. Readers must instantly recognize them.
 
 Render the child in the journeysprout illustration style:
-- Medium: warm watercolor with digital enhancement
-- Edges: soft, slightly blurred backgrounds with sharper foreground character
-- Palette: rich greens, warm golds, soft earth tones
-- Lighting: dappled golden-hour warmth
+- Medium: modern vibrant watercolor with digital polish (think Oliver Jeffers, Sam Usher, Christian Robinson at their most vivid — NOT muted, NOT vintage, NOT sepia)
+- Edges: soft painterly edges, no harsh black outlines, soft paper grain
+- Palette: rich saturated colors — bright and joyful, confident playful shapes
+- Lighting: warm vibrant daylight, punchy not muted
 - Proportions: classic picture-book toddler (large head ~3 heads tall, short limbs, rounded belly, sturdy legs)
 
 Outfit: comfortable everyday clothes in warm earth tones — soft short-sleeve tee, simple play pants, plain sneakers. Nothing costumey.
@@ -154,7 +154,7 @@ COMPOSITION CONSTRAINTS (CRITICAL):
 ${textZone}
 - Do NOT render any text, letters, numbers, speech bubbles, labels, captions, signatures, or watermarks anywhere on the image.
 - No borders, no frames, no panels drawn into the art.
-- Full-bleed illustration outside the reserved calm zone, rich warm watercolor palette.
+- Full-bleed illustration outside the reserved calm zone, modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy. Bright and joyful, not muted or vintage. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
   const refs: ImgRef[] = [heroSheet];
@@ -179,7 +179,7 @@ export async function generateCover(params: {
   const fallbackBrief = `${heroName} and ${companionName} stand together at the heart of the story's anchor setting in a welcoming inviting pose, warm open expression on ${heroName}'s face, ${companionName} close beside as friend, pose that makes a child want to open the book.`;
 
   const prompt = `
-Render a children's picture-book COVER illustration in warm watercolor style for the book titled "${storyTitle}".
+Render a children's picture-book COVER illustration in modern vibrant watercolor style for the book titled "${storyTitle}".
 
 COVER SCENE:
 ${coverBrief || fallbackBrief}
@@ -201,7 +201,7 @@ COMPOSITION CONSTRAINTS (CRITICAL):
 - Reserve the TOP ~38% of the image as a CALM, gently-washed area for the title typography.
 - Do NOT render any text, letters, numbers, speech bubbles, labels, captions, signatures, or watermarks anywhere on the image.
 - No borders, no frames, no panels drawn into the art.
-- Rich warm watercolor palette, painterly, inviting.
+- Modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy. Bright and joyful. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
   const refs: ImgRef[] = [heroSheet];

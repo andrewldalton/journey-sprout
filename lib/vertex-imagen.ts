@@ -168,7 +168,7 @@ Produce a CHARACTER REFERENCE SHEET for a children's picture book starring the c
 
 CRITICAL IDENTITY: Preserve the exact facial likeness of [1] — face shape, eye color, eye spacing, nose, mouth, cheek shape, and hair color/texture must match the real child. Do NOT generic-ify the face.
 
-Style: warm watercolor with digital enhancement, soft edges, rich greens, warm golds, soft earth tones, dappled golden-hour warmth. Classic picture-book toddler proportions (large head ~3 heads tall, short limbs, rounded belly, sturdy legs).
+Style: modern vibrant watercolor illustration with rich saturated colors, confident playful shapes, soft paper grain, and contemporary picture-book energy (think Oliver Jeffers, Sam Usher, Christian Robinson at their most vivid — NOT muted, NOT vintage, NOT sepia). Bright, joyful, warm but punchy. Soft edges, painterly, no harsh black outlines. Classic picture-book toddler proportions (large head ~3 heads tall, short limbs, rounded belly, sturdy legs).
 
 Outfit: comfortable everyday clothes in warm earth tones — soft short-sleeve tee, simple play pants, plain sneakers. Nothing costumey.
 
@@ -285,7 +285,7 @@ COMPOSITION:
 - ${textZone}
 - Do NOT render any text, letters, numbers, speech bubbles, labels, captions, signatures, or watermarks.
 - No borders, no frames, no panels.
-- Full-bleed watercolor with a rich warm palette.
+- Full-bleed modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary picture-book energy. Bright and joyful, not muted or vintage. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
   return predict({
@@ -356,7 +356,7 @@ export async function generateCover(params: {
   const fallbackBrief = `${params.heroName} and ${params.companionName} stand together at the heart of the story's anchor setting in a welcoming inviting pose, warm open expression on ${params.heroName}'s face, ${params.companionName} close beside as friend.`;
 
   const prompt = `
-Render a children's picture-book COVER illustration in warm watercolor style for the book titled "${params.storyTitle}".
+Render a children's picture-book COVER illustration in modern vibrant watercolor style for the book titled "${params.storyTitle}".
 
 COVER SCENE:
 ${params.coverBrief || fallbackBrief}
@@ -379,7 +379,7 @@ COMPOSITION:
 - Reserve the TOP ~38% as a calm, gently-washed area for title typography.
 - Do NOT render any text, letters, numbers, labels, captions, signatures, or watermarks.
 - No borders, no frames, no panels.
-- Rich warm watercolor palette, painterly, inviting.
+- Modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy. Bright and joyful. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
   return predict({

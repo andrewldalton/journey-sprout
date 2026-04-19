@@ -1,277 +1,287 @@
 ---
-title: "The Night the Stars Got Shy"
-feeling: "Brave isn't being unafraid. Brave is going anyway."
+title: "Moonbound"
+feeling: "Adventure is fun, and the universe is full of wonder."
 companion: "interchangeable — any of 8"
 total_pages: 10
 ---
 
+## ASSETS TO REGENERATE
+
+Two setting sheets replace the old bedroom/forest art. Do not reuse `bedroom.png` or `forest.png` — they do not fit this story.
+
+- `settings/01-night-stars/rocket-launch.png` — backyard twilight launchpad (opening + closing setting, pages 1–2 and 10)
+- `settings/01-night-stars/cosmos.png` — deep-space nebula adventure (main adventure setting, pages 3–9)
+
 ## Emotional arc (3 sentences)
 
-The child wakes into a hush of dark that feels too big and finds a small scared companion who is also afraid of the night. Page by page they gather fragile little lights and carry each other's fear through the forest, the night growing quieter and the hope growing warmer. When the companion falters, the child is the one who lifts their handful of lights into the dark — and watching that small brave moment, the companion finds their own courage too, and the sky answers back.
+The child steps out into a hush of twilight and finds a tiny rocket waiting with their companion, and a whispered "ready?" turns into a real and rumbling YES. Page by page the sky opens wider — moon dust underfoot, a polite meteor, a giggling moon sheep, a joke-collecting robot, a baby alien waving with all six hands — and what felt big and unknown turns out to be kind and curious and full of friends. By the time they loop home through a ribbon of stardust, the child has learned the very best thing about the universe: it is enormous, and it is friendly, and going anyway is where all the wonder lives.
 
 ## SETTING LOCK
 
-This story moves between TWO locked settings. Pages 1, 2, and 10 take place in the SAME bedroom — same wooden bed against the right wall, same single paned window on the left wall, same warm amber bedside lamp, same braided rug, same tipped stuffed bunny, same half-open storybook. Match `settings/01-night-stars/bedroom.png`.
+Pages 1, 2, and 10 take place at the SAME backyard twilight LAUNCHPAD. The anchor landmarks — a small kid-scale silver ROCKET with a round bubble-dome cockpit and two fin-stabilizers painted moss-green LEFT-CENTER, a patch of soft dewy GRASS beneath the rocket, a low wooden BACK-PORCH step LOWER-RIGHT with the warm yellow porch light spilling across the lawn, a crooked APPLE TREE on the far RIGHT with three small glowing lanterns strung in its branches, a ribbon of lavender-pink TWILIGHT SKY fading to deep violet overhead with the first three shy stars in a small triangle UPPER-LEFT, and one fat friendly YELLOW CRESCENT MOON peeking in UPPER-RIGHT — are all LOCKED to `settings/01-night-stars/rocket-launch.png`. Same rocket, same porch, same apple tree, same moon position on every page it appears.
 
-Pages 3–9 take place in the SAME enchanted nighttime forest — same low stone garden step at the edge of the house, same mossy fallen log, same gnarled tree root with its cluster of butter-gold glowing mushrooms, same low arching branch hung with three tulip-shaped lantern flowers (closed bud, fully open, half-wilted), same pair of tall birch trunks with the dew-beaded spiderweb caught between them, same moss-ring clearing with four small white night-blooming flowers. Match `settings/01-night-stars/forest.png`.
+Pages 3–9 take place in the SAME vivid COSMOS — match `settings/01-night-stars/cosmos.png`. The anchor landmarks: a big warm YELLOW MOON CENTER with a gentle smiling face and soft crater freckles, a turquoise RINGED PLANET LOWER-LEFT with pale mint rings tilted slightly, a candy-striped red-and-white COMET with a soft sparkle tail UPPER-RIGHT, three golden STARS in a small triangle MIDDLE-RIGHT, a rosy-pink NEBULA cloud puffing softly across the UPPER-LEFT background like cotton candy, a scatter of tiny silver STARS dusted throughout, and the small silver ROCKET from pages 1–2 drifting through it all. Same planets, same comet, same nebula position on every page.
 
-The only things that change across pages: time of night, the child's collection of gathered lights, the moth's position, and — beginning on page 8 — the slow emergence of stars in the sky. Architecture, props, and forest landmarks are LOCKED to the setting sheets.
+The only things that change across pages: camera angle, the rocket's position as it loops through the cosmos, which friendly creature is featured on each page, and the child's pose as curiosity blooms into full delight. Everything landmark-shaped is LOCKED to the setting sheets.
+
+The magic that lets {HERO} and {COMPANION_NAME} breathe and drift in space: the rocket's round bubble-dome cockpit seals shut with a soft click, and a pinch of silver STARDUST sprinkled over each of them wraps them in a shimmering BUBBLE HELMET whenever they step outside. Inside the helmet, each of them can breathe and float on a slow friendly current — no flapping, no paddling, no species-specific motion. They lean and the helmet drifts. This mechanism is introduced on page 3 and works for any land companion.
 
 ## COVER
 
-Scene: the enchanted forest per SETTING LOCK, at warm magical night with a full gentle scatter of silver-gold stars across the sky. {HERO} stands in the mossy clearing holding a small cupped handful of softly glowing gathered lights (firefly green + mushroom gold + lantern silver blended into one warm halo). {COMPANION_NAME} is pressed close beside {her}, both looking out toward the reader with warm, brave, inviting smiles.
+Scene: the cosmos per SETTING LOCK at bright friendly deep-space with the warm yellow smiling moon, the turquoise ringed planet, the candy-striped comet, and a scatter of golden stars. {HERO} and {COMPANION_NAME} float side by side inside their two shimmering bubble helmets just in front of the moon's soft smile, facing the reader with wide open wondering grins. The small silver rocket hovers just behind them. A little ribbon of stardust curls around their feet.
 
-Camera: front-facing eye-level medium shot, both characters squarely readable, the cupped handful of lights glowing between them at chest level as the visual hook.
+Camera: front-facing eye-level medium shot, both characters squarely readable inside their bubble helmets, cosmos wrapping softly behind them.
 
-Lighting: warm enchanted night — the cupped lights throw a gentle gold halo upward onto both faces; the sky above is rich warm ink-violet with a scatter of silver-gold stars. No cold blue.
+Lighting: warm friendly starlight — the moon throws a soft butter-gold glow onto both faces from the right, the ringed planet adds a gentle turquoise rim-light from the left, the nebula puffs rosy-pink across the upper background. No cold empty black; space here is warm and full.
 
-Composition: hero and companion centered, the gathered lights as a small visual anchor at the bottom of their chests, stars softly scattered above them. Warm, magical, welcoming, "open-me" energy.
+Composition: hero and companion centered, moon softly behind them as visual anchor, ringed planet lower-left, comet upper-right, rocket mid-distance behind. Warm, magical, "open-me" energy.
 
 ---
 
 ### PAGE 1
 
 **TEXT:**
-The window is black and completely empty. Not a single star in the whole sky. Something tiny and brave taps once at the glass.
+The porch light glows warm and the grass is cool and the sky is turning lavender. A tiny silver rocket hums on the lawn. "Ready?" {COMPANION_NAME} whispers.
 
 **ILLUSTRATION BRIEF:**
-- Setting: the bedroom per SETTING LOCK — match the attached bedroom setting sheet exactly.
-- Action: The child sits up in bed, quilt pooled across the lap, head turning toward a single tiny tapping silhouette pressed against the outside of the window glass.
-- Camera & POV: Eye-level with the hero from inside the bedroom, three-quarter angle, wide intimate framing showing both the bed on the right and the window on the left.
-- Spatial layout: INTERIOR bedroom fills the entire frame. Bed, nightstand, rug, lamp, and child all INSIDE the room. The window is the only opening to the EXTERIOR; the sky beyond it is flat velvet black. No part of any bed or furniture may appear outside the window.
-- Hero pose: Seated upright on the mattress, legs under the quilt, torso turned toward the window, head tilted in curious surprise, eyes wide, one small hand resting on the quilt, soft cotton pajamas (match attached hero sheet exactly).
-- Companion ({COMPANION_NAME}): Not yet revealed — only a tiny silhouette with two small hopeful eyes pressed against the OUTSIDE of the glass, lower-left of the pane, barely readable against the starless dark.
-- Lighting: Interior lit by the single warm amber bedside lamp in lower-right, pooling gold across quilt, cheek, and floor. Exterior window flat velvet black — no moon, no stars — so the tiny silhouette is the only thing worth looking at outside. Amber, honey, deep umber; absolutely no cold blue.
-- Composition: Hero right-half middle third; window left-half upper-middle third; lamp in lower-right as warm anchor.
-- Exclusions: no text, no letters, no numbers, no borders or frames, no stars, no moon, no daylight, no bed or furniture outside the window, no other animals inside the room.
+- Setting: the backyard launchpad per SETTING LOCK — match the attached rocket-launch setting sheet exactly. Twilight, lavender-pink sky fading to violet, three shy stars in their triangle upper-left, crescent moon upper-right.
+- Action: The child stands barefoot on the dewy grass, pajamas rumpled, one small hand resting on the smooth side of the little silver rocket. {COMPANION_NAME} is perched beside the rocket's open hatch, looking up at the child with hopeful shining eyes.
+- Camera & POV: Eye-level with the hero, three-quarter angle, wide intimate framing so the rocket, the child, the porch glow, and the first stars all read in one sweep.
+- Spatial layout: EXTERIOR backyard. Rocket left-center with its open hatch facing the child. Hero center, bare feet on dewy grass, hand on the rocket. {COMPANION_NAME} at the hatch lower-left. Porch step and warm yellow porch light lower-right. Apple tree with its three little lanterns far right. Sky filling the upper two-thirds, three shy stars upper-left and crescent moon upper-right.
+- Hero pose: Standing in soft pajamas, bare feet planted on the grass, head tilted gently toward the rocket, one small hand resting flat on its silver side, the other hand loose at the side, mouth parted in a small wondering half-smile, eyes wide and curious (match attached hero sheet exactly).
+- Companion ({COMPANION_NAME}): Perched at the open hatch of the rocket, body angled toward the hero, head lifted up with big shining hopeful eyes, a soft encouraging smile, one paw/limb resting on the hatch edge — clearly inviting the child in.
+- Environment addition for this page: a firefly pulse near the apple tree, a curl of soft white rocket-steam drifting up from the rocket's base, a dusting of silver glitter on the grass around the fins, one crumpled paper star-map tucked in the grass near the hero's foot.
+- Lighting: Warm amber porch light from lower-right spilling across the lawn, a soft cool lavender wash from the twilight sky above, the rocket's silver catching both — warm porch gold on its right side, cool twilight lavender on its left. Palette: lavender-pink sky, warm amber porch, dewy green grass, silver rocket. No cold blue dominance.
+- Composition: Hero center, rocket left-center, companion at hatch lower-left, porch glow lower-right, sky opening above — reading flow draws the eye from porch across to rocket and up to stars.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no full night yet, no daytime sun, no other people.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor with digital polish, soft edges, paper grain, rich warm palette, no harsh black outlines.
-- Continuity check: hero matches attached sheet; companion matches attached sheet; bedroom matches attached setting sheet.
+- Continuity check: hero matches attached sheet; companion matches attached sheet; launchpad matches attached setting sheet.
 
 **PAGE TURN HOOK:**
-"No stars" plus a tap on the glass — the reader needs to know who is out there.
+"Ready?" and a hum and an open hatch — the reader has to see them climb in.
 
 ---
 
 ### PAGE 2
 
 **TEXT:**
-Two wet eyes, one small friend, huddled on the outside sill. "I'm scared of the dark too," {COMPANION_NAME} whispered soft.
+{HERO} climbs in. The dome clicks shut, soft and snug. "Three, two, one," {HERO} whispers — and WHOOSH.
 
 **ILLUSTRATION BRIEF:**
-- Setting: same bedroom per SETTING LOCK, but the single window on the left wall is now pushed open.
-- Action: The child kneels on the mattress just inside the window; {COMPANION_NAME} is perched on the exterior wooden sill outside, body tucked small, looking up through the open pane.
-- Camera & POV: Intimate close-up from inside the bedroom toward the window, three-quarter angle on both characters. The open window frames the two faces.
-- Spatial layout: Hero INTERIOR — kneeling on the mattress, weight staying on the bed. {COMPANION_NAME} EXTERIOR — planted on the OUTSIDE wooden sill. The sill is the clear boundary between inside (right/foreground) and outside (left/midground). No furniture appears outside.
-- Hero pose: Kneeling on the mattress, leaning forward on both hands toward the sill, mouth slightly open in soft wonder, pajamas rumpled, hair mussed from sleep.
-- Companion ({COMPANION_NAME}): Crouched low on the exterior sill, body drawn in small, limbs pulled close, head tilted up with big wet hopeful eyes, posture of quiet worry. A dusting of pine needles and one acorn beside it on the sill.
-- Environment addition for this page: gauze curtains stirring inward, a moth dust-silhouette near the lampshade, a distant porch light far across the garden with one moth circling it, a curl of breeze moving a low leafy branch just past the sill.
-- Lighting: Warm amber bedroom lamp glow from interior right, spilling across the sill and catching the companion's face from the inside out. A single firefly hovers just past the sill adding a pulse of warm green. Palette night-warm: amber, honey, moss-green accent, warm silver; no cold blue.
-- Composition: Hero upper-right leaning toward lower-left; companion lower-left on sill looking up-right; eye-contact line crosses the open window diagonally.
-- Exclusions: no text, no letters, no numbers, no borders or frames, no stars yet, no daylight, no furniture outside, no extra animals on the sill beyond the single distant moth at the porch light.
+- Setting: same launchpad per SETTING LOCK — the rocket is now lifting off. The apple tree, porch, crescent moon, and three shy stars remain in their locked positions; the rocket has risen a few feet above the lawn.
+- Action: The rocket has just left the ground with a burst of warm golden rocket-flame. The child and {COMPANION_NAME} are tucked inside the round bubble-dome cockpit, faces pressed to the glass, grinning. The lawn falls away below.
+- Camera & POV: Three-quarter angle from slightly lower-right, medium-wide, tilted slightly upward so the rocket rises impressively out of the frame. The launchpad recedes beneath.
+- Spatial layout: Rocket center-left of frame, lifting, with its warm gold flame plume trailing down to the lawn below. Hero and {COMPANION_NAME} visible inside the clear bubble-dome cockpit, pressed close shoulder-to-shoulder, lit warmly from inside. Lawn, porch (lower-right), apple tree (far right) all recede in the lower third. Twilight sky filling the upper two-thirds, the first stars upper-left, crescent moon upper-right growing closer.
+- Hero pose: Inside the dome, body leaning forward, both hands pressed flat to the glass, eyes huge with delight, mouth open in a bright delighted laugh-shout, hair lifting slightly from the lift-off. Pajamas still on.
+- Companion ({COMPANION_NAME}): Inside the dome close beside the hero, body turned toward the glass, head tilted up in shared excitement, a wide open grin, paws/limbs braced lightly on the dome's inside wall.
+- Environment addition for this page: a warm golden rocket-flame plume, a gentle swirl of lifted dewdrops and grass sparkles in the wake, the three apple-tree lanterns swaying in the lift-off breeze, one surprised firefly spiraling away.
+- Lighting: Rocket flame throws warm gold glow up onto the dome and into both faces. Twilight sky pours cool lavender-violet wash down from above. Porch glow still warm lower-right but small now. No cold blue dominance; everything is warm motion.
+- Composition: Rocket rising diagonally from lower-left to upper-right, flame trail anchoring the lower-left, dome and faces at exact center — the visual lift of the page.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no daytime, no other people, no other aircraft.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, and bedroom all match attached sheets.
+- Continuity check: hero, companion, and launchpad all match attached sheets.
 
 **PAGE TURN HOOK:**
-{COMPANION_NAME} has confessed fear — the reader wants to know what the child will do with that.
+WHOOSH — the reader has to turn to see where they land.
 
 ---
 
 ### PAGE 3
 
 **TEXT:**
-The grass is cold between {HERO}'s bare toes. The dark outside the house is loud and full. "Come on," {she} says.
+Space opens up like a giant warm picture book. A pinch of stardust, and two bubble helmets bloom. {HERO} giggles and floats.
 
 **ILLUSTRATION BRIEF:**
-- Setting: the forest per SETTING LOCK — match the attached forest setting sheet. The child has left the house and stands barefoot on dewy grass at the back edge of the garden where the lawn meets the first trees.
-- Action: The hero, mid-step onto dewy grass, glances back and reaches a hand out low to coax the hesitant companion off the low flat stone garden step.
-- Camera & POV: Wide three-quarter angle from the garden side, slightly low so the dark tree line rises impressively.
-- Spatial layout: Entire scene EXTERIOR. Hero lower-center, mid-step. {COMPANION_NAME} lower-left on the garden step. Forest rises in the right two-thirds. House is OFF-FRAME left — only its warm window-light spills in from the left edge as a soft amber wash. Bedroom NOT visible.
-- Hero pose: Three-quarter toward camera, head glancing back over the left shoulder, one bare foot forward, free hand held out low and open to coax the companion, chin lifted with small determination, still wearing pajamas with bare feet on grass.
-- Companion ({COMPANION_NAME}): Perched on the low flat garden stone step just behind the hero (lower-left), one small step lifted in hesitation, body held close and small, eyes huge and worried, looking up at the child's outstretched hand.
-- Environment addition for this page: a crooked garden path of three flat pale stones leading from lower-left toward the tree line, a watchful owl shape barely readable on a high right-side branch, a single fat silver-winged moth drifting mid-air, a curl of mist low along the grass.
-- Lighting: Warm amber window glow from off-frame left (the house behind them) fades into deeper warm-brown forest shadow on the right. A single firefly pulse hovers at mid-height as a visual breadcrumb inviting them in. Amber, umber, moss, honey-silver; no blue.
-- Composition: Hero center-left stepping right; {COMPANION_NAME} lower-left on step looking up-right; forest opens on the right to invite the page turn.
-- Exclusions: no text, no letters, no numbers, no borders or frames, no stars, no moon, no visible house walls or window, no other people, no daylight.
+- Setting: the cosmos per SETTING LOCK — full first reveal of the setting sheet. Warm yellow smiling moon CENTER, turquoise ringed planet LOWER-LEFT, candy-striped comet UPPER-RIGHT, three golden stars MIDDLE-RIGHT, rosy-pink nebula UPPER-LEFT, silver stars dusted throughout.
+- Action: The bubble-dome cockpit has opened, and the child and {COMPANION_NAME} are drifting just outside the rocket, each wrapped in a shimmering bubble helmet. A curl of silver stardust is still spiraling around their feet from the little jar tucked under the child's arm. The pair float with arms loose, delighted.
+- Camera & POV: Eye-level with the hero, wide three-quarter angle, medium shot. The cosmos opens fully across the frame.
+- Spatial layout: Midground center is the child in their bubble helmet, drifting upright. Beside and slightly right is {COMPANION_NAME} also in a bubble helmet. The silver rocket hovers just behind them with its dome partly open. Background: the warm smiling yellow moon center, ringed planet lower-left, comet upper-right, rosy nebula upper-left, triangle of golden stars middle-right, silver stars scattered.
+- Hero pose: Drifting upright in the bubble helmet, pajamas still on, arms floating loose at chest-height, one knee slightly lifted in delighted weightlessness, head tipped back in a bright laughing smile, eyes wide and shining, a little jar of stardust tucked under one arm.
+- Companion ({COMPANION_NAME}): Inside their bubble helmet drifting just right of the child, body turned softly toward the hero, head tilted in amused wonder, a warm wide grin, paws/limbs floating loose.
+- Environment addition for this page: a curl of silver stardust still spiraling around their feet, a scatter of tiny sparkle-flecks catching on the bubble helmets, the little jar of stardust (a small clear glass jar with a cork stopper), a soft drift of rosy nebula dust curling in from upper-left.
+- Lighting: The warm yellow moon throws butter-gold light from center onto both faces, the rosy nebula adds a soft pink wash from upper-left, the ringed planet adds a gentle turquoise rim-light from lower-left. Palette warm butter-gold, rosy pink, soft turquoise, silver-white stars. No cold empty black — space here is warm and full.
+- Composition: Hero center-left, companion center-right, moon softly behind them as anchor, rocket just behind-right, reading flow opens outward into the cosmos.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no scary dark void, no cold blue-black, no unfriendly creatures.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, and forest landmarks all match attached sheets.
+- Continuity check: hero, companion, and cosmos match attached sheets.
 
 **PAGE TURN HOOK:**
-The child has said "come on" — the forest is wide open and the reader is pulled in with them.
+A whole warm cosmos and a first giggle — the reader wants to meet who lives here.
 
 ---
 
 ### PAGE 4
 
 **TEXT:**
-Something blinks, small and gold. "Look!" {HERO} whispers softly. A tiny firefly floats down and lands on {her} warm thumb.
+A very polite meteor sweeps past and bows low. "Pardon me," it says in a whoosh. {HERO} bows right back, giggling in the stardust.
 
 **ILLUSTRATION BRIEF:**
-- Setting: same forest per SETTING LOCK, now at the mossy fallen log among waist-high ferns.
-- Action: The child crouches on pine needles and cups both hands close to the face, gazing at a single glowing firefly that has just settled on one thumb. {COMPANION_NAME} leans over from the mossy log just behind.
-- Camera & POV: Intimate close-up eye-level with the hero's cupped hands, slight over-the-shoulder angle from the companion's side.
-- Spatial layout: Forest floor foreground. Hero center-left foreground kneeling on pine needles among ferns. {COMPANION_NAME} on the mossy fallen log just behind and slightly above the hero's right shoulder (upper-right midground). Ferns foreground, trees blurred behind.
-- Hero pose: Crouched low on both knees pressed into pine needles, both hands cupped softly near the face, eyes almost crossed in delight at the tiny light on the thumb, mouth shaped around a soundless whisper, pajamas dew-dampened at the cuffs.
-- Companion ({COMPANION_NAME}): Standing on the mossy log just behind and slightly above the hero's right shoulder, body lifted and leaning in with excitement, small paws braced on the log, mouth open in a soft "oh," posture brightening out of worry.
-- Environment addition for this page: curling wood-sorrel leaves along the bottom edge, a sleeping snail on a shiny leaf (lower-right), one round beetle on a fern frond, drifting specks of pollen, hint of more firefly pulses deeper in the background.
-- Lighting: The firefly is the hero light — a tight warm green-gold pulse on the child's face and cupped hands, spilling warm light onto {COMPANION_NAME}'s face. Surrounding forest warm brown, deep forest green, whisper of amber; never blue.
-- Composition: Hero center-left crouched low; {COMPANION_NAME} upper-right leaning down from log; firefly is the exact visual center pulling eye between the two faces.
-- Exclusions: no text, no letters, no numbers, no borders or frames, no stars yet, no moon in frame, no interior elements, no extra fireflies crowding the foreground (the single hero firefly must clearly be "the" firefly).
+- Setting: cosmos per SETTING LOCK — the pair are drifting near the three golden stars MIDDLE-RIGHT. Moon, ringed planet, comet, and nebula all in their anchor positions.
+- Action: A round friendly-faced little METEOR (warm orange-brown with a short glittering tail, soft kind eyes, a small mustache of sparkle-fuzz) has zipped past and paused mid-arc to bow politely to the child, tilting its whole body forward in a courtly little bow. The child, delighted, bows right back.
+- Camera & POV: Eye-level with the hero, three-quarter angle, medium-close intimate distance. A deliberate change from page 3's wide reveal.
+- Spatial layout: Midground center is the meteor, paused in its bow, tail arcing behind it. Midground left is the child in their bubble helmet, body bent forward in a matching bow. Midground right is {COMPANION_NAME} drifting just behind the hero, watching with shared delight. Background: the three golden stars upper-right in their locked triangle, moon peeking in from the right edge, a hint of ringed planet lower-left.
+- Hero pose: Drifting upright in the bubble helmet, upper body bent forward in a playful courtly bow, one arm swept out to the side in a mock-flourish, face turned toward the meteor with a bright laughing grin.
+- Companion ({COMPANION_NAME}): In their bubble helmet just behind the child, body turned toward the scene, head tilted in amused wonder, a soft happy smile, one paw/limb lifted in a tiny matching wave.
+- Environment addition for this page: the polite meteor's short sparkling tail curving behind it, a drift of tiny glitter left in its wake, one small silver bubble-star flickering nearby, a faint second meteor streaking softly past in the far distance.
+- Lighting: Warm moonlight from the right, gentle pink nebula wash from upper-left, the meteor itself glowing warm amber from within — adding a small bright highlight to the hero's cheek. Palette stays warm butter-gold, rosy pink, amber.
+- Composition: Meteor center of frame as the featured quirk, hero left mirroring its bow, companion right as witness, reading flow echoes between the two bowing figures.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no scary fiery crashing meteor — this one is small, round-faced, and courtly.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, and forest landmarks all match attached sheets.
+- Continuity check: hero, companion, and cosmos match attached sheets.
 
 **PAGE TURN HOOK:**
-One tiny light in a huge dark — the reader needs to know if it's enough.
+A bowing meteor and a giggling child — the reader wants to see who else is out here.
 
 ---
 
 ### PAGE 5
 
 **TEXT:**
-"One more?" {COMPANION_NAME} asks softly. A small mushroom hums at the tree roots. It glows like warm breakfast butter.
+On a soft grey moon, a woolly sheep looks up. {HERO} laughs — and the sheep's wool bursts into glowing gold. "Oh!" {COMPANION_NAME} gasps.
 
 **ILLUSTRATION BRIEF:**
-- Setting: same forest per SETTING LOCK, at the base of the enormous gnarled tree root where the cluster of butter-gold glowing mushrooms grows.
-- Action: The child kneels on one knee and reaches down carefully to pluck the biggest mushroom; the other hand still cradles the captured firefly from page 4 near the chest. {COMPANION_NAME} presses close beside the hero's knee, watching.
-- Camera & POV: Slight worm's-eye angle looking up and inward so the gnarled root rises monumental behind.
-- Spatial layout: Forest floor. Hero kneels center-right on moss and fallen birch leaves. Mushroom cluster lower-center growing from the roots. {COMPANION_NAME} stands tight against the hero's bent knee in lower-left foreground. Giant tree-root trunk fills the right background. The captured firefly is visibly cupped gently in the hero's left hand against the chest so the reader can tally: 1 firefly so far.
-- Hero pose: Kneeling on one knee, leaning down, right hand open and lowering slowly toward the biggest mushroom, left hand curled protectively around the glowing firefly at the chest, tongue peeking in concentration, eyes fixed on the mushroom.
-- Companion ({COMPANION_NAME}): Standing beside the hero's bent knee in lower-left foreground, leaning forward toward the mushrooms with big hopeful eyes, weight tipped up on the very edge of excitement, small paws almost clapping.
-- Environment addition for this page: a curious cricket perched on the largest cap, fallen birch leaves curling at the edges, a tiny snail trail catching the light on a stone (lower-right).
-- Lighting: The mushrooms themselves are the hero light — warm butter-gold radiance pooling upward into the hero's face, lifting {COMPANION_NAME}'s cheek, spilling across nearest moss. Firefly in hero's left hand adds a secondary small green-gold pulse. Surrounding forest warm brown and deep forest green; no blue. Tree-root in warm umber shadow.
-- Composition: Hero upper-right leaning down-left; {COMPANION_NAME} lower-left at the hero's knee; mushrooms lower-center forming a bright triangle pulling the eye down and to the next page.
-- Exclusions: no text, no letters, no numbers, no borders or frames, no stars, no daylight, no interior, no extra creatures beyond the single cricket and distant fauna hinted.
+- Setting: cosmos per SETTING LOCK — the pair have drifted to the warm yellow smiling moon CENTER. They are standing lightly on its soft crater-dusted surface. Ringed planet still lower-left, comet upper-right, nebula upper-left, golden stars middle-right.
+- Action: A plump round MOON SHEEP stands on the moon's surface — body made of soft grey woolly clouds, small black-bean eyes, a tiny pink nose. The child has just laughed at something, and in response the sheep's entire wool has just burst into a warm glowing gold like a small sun. The sheep blinks in delighted surprise at its own glow.
+- Camera & POV: Low three-quarter angle from the moon's surface, looking across at the sheep with the pair standing to its side. Medium shot. A deliberate change from page 4's eye-level intimate.
+- Spatial layout: Foreground is the powdery pale moon surface with soft round crater dimples. Midground center is the moon sheep, wool bursting gold. Midground left is the child in their bubble helmet, body bent forward mid-laugh, hands clapped to the face in delight. Midground right is {COMPANION_NAME} in their bubble helmet, one paw/limb lifted to a soft open mouth in a gasp. Background: a soft drop-off of the moon's curve into the cosmos, with the ringed planet lower-left, nebula upper-left, and a scatter of silver stars.
+- Hero pose: Standing lightly on the moon dust, body bent forward at the waist mid-laugh, both hands clapped to the cheeks in delighted surprise, eyes scrunched in a bright wide laugh, shoulders lifted.
+- Companion ({COMPANION_NAME}): Standing just right of the hero on the moon dust, body turned toward the sheep, head tipped in awe, one paw/limb lifted to a small open mouth in a soft "oh" gasp, eyes huge.
+- Environment addition for this page: a puff of soft moon-dust around their feet, the sheep's wool glowing warm gold with tiny star-sparkles embedded in the fluff, three tiny round lunar pebbles near the sheep's feet, one more tiny background sheep grazing far behind (not glowing — the child's laugh hasn't reached it).
+- Lighting: The sheep's glowing gold wool is now the hero light, throwing warm butter-gold up onto both faces and across the moon dust. Warm yellow moon glow from below as secondary (the whole moon is faintly warm). Rosy nebula still softly pink from upper-left. Palette warm butter-gold, rosy pink, soft pale-lunar grey. No cold blue.
+- Composition: Sheep center as featured quirk, hero left in laugh-pose, companion right in gasp, reading flow circles the glowing wool.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no scary creatures, no dark void, no cold moonscape.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, forest all match attached sheets.
+- Continuity check: hero, companion, and cosmos match attached sheets; moon is still the locked smiling yellow moon from the setting sheet — the surface close-up reads as the top of its cheek.
 
 **PAGE TURN HOOK:**
-Two lights, one dark to go — the gathering has started, and the reader is hunting the next glow.
+A laugh turns wool into gold — the reader wants to know what else the cosmos does back.
 
 ---
 
 ### PAGE 6
 
 **TEXT:**
-A sleepy flower wakes slowly above them. Warm silver light pours down into {HERO}'s small cupped hands. "My turn," {she} says.
+A little robot floats by with a big jar of silly jokes. "What do planets read?" it beeps. "Comet books!" {HERO} snort-giggles.
 
 **ILLUSTRATION BRIEF:**
-- Setting: same forest per SETTING LOCK, at the low arching branch with the three lantern flowers. The middle flower (fully open on the setting sheet) is just waking and pouring silver-warm light straight down.
-- Action: The hero stands on tiptoe and cups both hands beneath the opening flower to catch the silver. {COMPANION_NAME} is balanced on the branch beside the open flower. The growing collection (firefly + glowing mushroom) is visibly clustered in the hero's right palm while the left palm catches the new silver.
-- Camera & POV: Bird's-eye-adjacent angle looking slightly down from the opening flower toward the hero below, then pulling the eye upward along the silver spill.
-- Spatial layout: Exterior. Hero lower-center on tiptoe. The arching branch crosses the upper third from left to right. Middle lantern flower upper-center. {COMPANION_NAME} upper-left, crouched on the branch close to the flower's stem.
-- Hero pose: On tiptoe, both arms raised and cupped together directly beneath the opening flower, head tilted up, mouth in a small wondering smile, eyes catching the silver light, captured firefly and mushroom nestled softly in the right palm while the left palm angles to receive new silver.
-- Companion ({COMPANION_NAME}): Nestled on the low branch just left of the flower, balanced close to the stem, leaning gently toward a petal with soft awe, peeking down at the hero's cupped hands.
-- Environment addition for this page: a sleepy bumblebee nesting inside the closed bud, hanging strands of pale moss, a drift of dandelion fluff, a small curled leaf spiraling down beside the hero.
-- Lighting: The lantern flower is the hero light — soft silver-warm like moonlight with honey mixed in, spilling straight down as a visible gentle column of glow. Firefly in right hand casts warm amber counter-light on chin; mushroom in same palm adds butter-gold underglow. Palette stays warm-silver, amber, honey-gold; no cold blue.
-- Composition: Hero lower-center reaching up; companion upper-left on branch; lantern flower upper-center — strong vertical spine of light.
-- Exclusions: no text, no letters, no numbers, no borders or frames, no stars yet, no full moon disc (the flower carries the silver), no extra flowers beyond the three established in the setting sheet.
+- Setting: cosmos per SETTING LOCK — the pair have drifted back out into open space near the candy-striped comet UPPER-RIGHT. Moon center, ringed planet lower-left, nebula upper-left, three golden stars middle-right.
+- Action: A small round STARGAZING ROBOT is drifting alongside the pair. It has a round dome-head with two soft blue lens-eyes, a friendly antenna with a tiny star on top, rosy-cheek circles painted on its metal face, and it is holding a big clear glass JOKE JAR overflowing with folded paper joke-slips. It has just read one aloud. The child is mid-snort-giggle.
+- Camera & POV: Eye-level three-quarter angle, medium-close intimate shot. A deliberate change from page 5's low moon angle.
+- Spatial layout: Midground center-right is the robot, drifting, jar held out. Midground left is the child in bubble helmet, head thrown back mid-laugh. Midground upper-right is {COMPANION_NAME} drifting just above, watching with bright amusement. Background: the candy-striped comet upper-right in its anchor position, a trail of silver stars, warm moon glow from the left edge.
+- Hero pose: Drifting upright in the bubble helmet, head thrown back mid-laugh, both hands clasped to the stomach, shoulders shaking, eyes scrunched, mouth wide open in a snort-giggle.
+- Companion ({COMPANION_NAME}): In bubble helmet drifting just above and right of the hero, body turned toward the robot, head tipped in bright amusement, a wide open grin, one paw/limb lifted in a small clap.
+- Environment addition for this page: the joke jar overflowing with folded paper slips (some with tiny scribbled star and planet doodles visible), a single joke-paper escaping the jar and drifting mid-air, one small silver pencil tucked behind the robot's antenna, a soft sparkle at the robot's antenna-star.
+- Lighting: Warm moon glow from left, candy-striped comet adding a soft pink-and-white wash from upper-right, robot's lens-eyes giving off a gentle friendly soft-blue pulse — the one small cool accent on the whole page, surrounded by warmth. Palette warm butter-gold, rosy pink, soft silver, tiny friendly blue lens-glow.
+- Composition: Robot center-right as featured quirk, hero left mid-laugh, companion upper-right, joke jar as visual hook between robot and hero.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no scary mechanical look, no sharp edges — the robot is round, soft, friendly, like a tin lantern with a kind face. No written jokes legibly visible (doodles only, no readable text on slips).
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, forest all match attached sheets.
+- Continuity check: hero, companion, and cosmos match attached sheets.
 
 **PAGE TURN HOOK:**
-"My turn" — the child is claiming the gathering as theirs; the reader wants to see what they do next.
+A jar full of jokes — the reader wants to see the next silly wonder.
 
 ---
 
 ### PAGE 7
 
 **TEXT:**
-A spiderweb holds a shining secret between two birch trees. Moonlight, caught and trembling. The tall trees lean a little closer.
+On a turquoise planet, a baby alien waves with all six hands. {HERO} waves back with two. {COMPANION_NAME} waves with one.
 
 **ILLUSTRATION BRIEF:**
-- Setting: same forest per SETTING LOCK, at the narrow passage between the two slender birch trunks with the huge dew-beaded spiderweb stretched between.
-- Action: A single coin-bright moonbeam is caught glowing within the web like liquid silver. The hero stands in profile, carefully pinching two fingers to lift the moonbeam free. {COMPANION_NAME} is pressed close against the hero's side for the first time, braver now. The growing bundle (firefly + mushroom + lantern silver) glows softly in the crook of the hero's other arm against the chest.
-- Camera & POV: Eye-level profile three-quarter framing, medium-close intimate distance. The two birch trunks act as a frame-within-a-frame.
-- Spatial layout: Hero right-center in profile facing left. Spiderweb upper-left-center strung between the two trunks. {COMPANION_NAME} tucked against the hero's right leg/hip, slightly behind, lower-right-center. Forest floor of pine needles and curled ferns underfoot.
-- Hero pose: In profile, left foot forward, face close to the web in deep concentration, right hand cradling the softly glowing bundle against the chest, left hand extended with two fingers pinched to lift the moonbeam free, brow furrowed in careful focus.
-- Companion ({COMPANION_NAME}): Pressed close against the hero's right side for the first time, head tucked near the hero's arm/hip, watching the moonbeam with big held-breath eyes, posture steady and trusting rather than scared.
-- Environment addition for this page: a patient spider tucked high out of the way at the top-left corner of the web watching, a curled fiddlehead fern at the hero's forward foot, one falling birch leaf passing through the frame mid-right, dew droplets beading every strand, thin drift of forest mist low.
-- Lighting: The silver moonbeam in the web is the hero light — a tight cool-warm silver coin on the hero's fingertips and face. Bundle at chest throws secondary warm gold-green wash upward. Background deep warm forest green-brown; never blue-dominant. Silver, amber, moss-gold.
-- Composition: Hero right-center in profile facing left toward the web; web upper-left with the moonbeam the exact focal point; companion lower-right as counterweight; upper third negative space implies trees leaning inward.
-- Exclusions: no text, no letters, no numbers, no borders or frames, no stars yet, no visible moon disc (the beam is the story), no other spiders, no daytime hues.
+- Setting: cosmos per SETTING LOCK — the pair have drifted down to the turquoise ringed planet LOWER-LEFT. They are standing lightly on its mint-green surface just inside its pale ring. Moon still warm center-right, comet upper-right, nebula upper-left.
+- Action: A small round BABY ALIEN (plump, friendly, pastel-lavender skin, three soft round eyes in a gentle triangle, a little fuzzy antenna with a tiny bell on top, six short chubby arms) is sitting on the planet's surface, waving with all six hands at once. The child is waving back with both hands. {COMPANION_NAME} lifts one paw/limb in a small friendly wave.
+- Camera & POV: Eye-level with the baby alien and the pair, three-quarter wide angle. The mint rings of the ringed planet curve across the background as a framing element. A deliberate change from page 6's intimate close-up.
+- Spatial layout: Foreground is the soft mint-turquoise surface of the ringed planet. Midground left is the child in bubble helmet, bent slightly forward, both hands up in a wave. Midground center is the baby alien sitting on the ground, six arms spread wide in a full-body wave. Midground right is {COMPANION_NAME} in bubble helmet just behind the hero, lifting one paw/limb in a small wave. Background: the pale mint rings of the planet arcing across upper-left-to-upper-right, warm moon glow from upper-right, rosy nebula upper-left, a scatter of silver stars.
+- Hero pose: Standing lightly on the mint turquoise surface, body bent slightly forward in a friendly posture, both arms raised at shoulder-height waving wide, face lit up in a warm welcoming laugh-smile, eyes kind and bright.
+- Companion ({COMPANION_NAME}): Standing just behind and right of the hero on the mint surface, body turned toward the alien, one paw/limb lifted in a small polite wave, head tilted in a soft smiling hello.
+- Environment addition for this page: a small fuzzy ALIEN PET curled beside the baby alien (a round purple puffball with tiny horns, also waving with a tail), a pale-mint pebble tucked near the alien's foot, three tiny floating bubble-blossoms drifting up from the planet's surface, the ringed planet's ring catching soft silver star-glints.
+- Lighting: The ringed planet glows gently from within with a soft turquoise-mint wash, the warm moon adds butter-gold rim-light from upper-right, the nebula adds rosy pink from upper-left. Palette turquoise-mint as the page's accent, plus warm butter-gold and rosy pink. Still no cold blue.
+- Composition: Baby alien center as featured quirk, hero left in two-handed wave, companion right in one-paw wave, rings framing the whole scene.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no scary alien, no sharp or predatory design — the alien is plump, round-faced, pastel, and clearly a baby with a bib-shape on its tummy. No other grown-up aliens.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, forest all match attached sheets.
+- Continuity check: hero, companion, and cosmos match attached sheets — ringed planet is the locked landmark from the setting sheet, close-up reads as standing on its surface.
 
 **PAGE TURN HOOK:**
-"The trees lean closer" — something is about to happen; the reader must turn.
+A six-handed wave — the reader wants to see what else this universe holds.
 
 ---
 
 ### PAGE 8
 
 **TEXT:**
-{COMPANION_NAME} tries and tries. Nothing glows. "I can't," {COMPANION_NAME} whispers, small and sad. {HERO} lifts {her} own hands higher toward the sky.
+A long ribbon of stardust swirls past, soft and singing. {HERO} reaches out and a handful sparkles onto their palm. {COMPANION_NAME} tilts their head, listening.
 
 **ILLUSTRATION BRIEF:**
-- Setting: same forest per SETTING LOCK, now at the small round moss-ringed opening (moss ring with four small white night-blooming flowers, established on the setting sheet).
-- Action: {COMPANION_NAME} stands small at lower-left, head lowered in a faltered attempt at being brave. The hero steps to the center of the clearing and lifts the full cupped handful of gathered lights (firefly green + mushroom gold + lantern silver + moonbeam white — four distinct glow notes blended together) high above the head toward the empty black dome of sky visible through the canopy opening.
-- Camera & POV: Worm's-eye angle, low and looking up past the hero toward the open sky. Tall vertical composition narrowing upward into the sky aperture.
-- Spatial layout: Hero dead center, standing upright, lower-middle third, arms stretched fully upward so the cupped hands reach the upper-middle third. {COMPANION_NAME} lower-left on the mossy ground, small. Moss ring and white night-blooming flowers at their feet. Tall silhouetted trees ring the edges; they open overhead into a huge empty black circle of sky filling the upper third. No stars yet.
-- Hero pose: Standing straight-backed at the very center of the clearing, arms stretched up to full reach, both hands cupped together holding the collected glow (four blended notes clearly readable), chin high, eyes wide and determined, a small fear-tremor visible in the shoulders but feet firmly planted.
-- Companion ({COMPANION_NAME}): Lower-left on the mossy ground, head dipped, body curled small in a moment of "I couldn't," eyes lifting hesitantly toward the hero's raised hands in dawning awe — pivoting from shame to hope mid-gesture.
-- Environment addition for this page: one patient moth circling near the hero's raised hands, a fine drift of pollen and dust rising into the halo of light.
-- Lighting: The hero's cupped bundle is the ONLY light source on the whole page — warm mixed gold-green-silver halo radiating outward from the hands, pouring down onto the hero's upturned face, spilling across moss, catching most strongly on {COMPANION_NAME}'s hopeful face across the clearing. Deep warm-brown vignette at edges; overhead sky pure velvet ink-black, absolutely no stars, no blue wash.
-- Composition: Hero vertical and tall dead center; companion low-left looking up-right toward hero's hands; sky overhead a huge dark dome waiting to be filled — strong negative space pulling upward.
-- Exclusions: no text, no letters, no numbers, no borders or frames, NO STARS ON THIS PAGE, no moon, no daylight, no other animals besides the single moth, no cold blue.
+- Setting: cosmos per SETTING LOCK — the pair are drifting in open space between the rosy nebula UPPER-LEFT and the warm smiling moon CENTER. A long shimmering ribbon of STARDUST is curling through the frame like a scarf of liquid light.
+- Action: The pair have drifted up from the turquoise planet; the rocket hovers patiently nearby. A long silver-pink-gold ribbon of stardust has swirled through them, and the child has caught a handful in one open palm — it sparkles and pulses softly. {COMPANION_NAME} tilts their head toward the ribbon, listening to the soft humming song it makes as it drifts.
+- Camera & POV: Medium shot eye-level three-quarter angle, the stardust ribbon arcing diagonally across the frame as the hero compositional element. A deliberate change from page 7's wide planet-surface shot.
+- Spatial layout: Midground center is the child in bubble helmet, one palm out and open with a pool of stardust glowing in it. Midground right is {COMPANION_NAME} in bubble helmet drifting close beside the hero, head tipped in soft listening. The stardust ribbon arcs from upper-left (from the direction of the rosy nebula) down through the midground and out lower-right, curling softly around both figures. Background: rosy nebula puffing upper-left, warm moon softly glowing right edge, silver stars scattered, the small silver rocket hovering at a patient distance upper-right.
+- Hero pose: Drifting upright in the bubble helmet, one palm held out flat with the stardust glowing on it, the other hand lifted softly near the face, head tipped down in soft wonder at the glowing palm, mouth in a small quiet "oh" smile, eyes luminous.
+- Companion ({COMPANION_NAME}): In bubble helmet drifting close beside and slightly behind the hero, body turned softly toward the stardust ribbon, head tilted to the side in a listening pose, eyes half-closed in soft delight, a gentle smile.
+- Environment addition for this page: the stardust ribbon itself — a swirl of silver, warm gold, and rosy pink sparkle with soft visible musical-note-shaped twinkles embedded in it (not literal notation, just suggestion), a single tiny sparkle-fleck drifting free and landing on {COMPANION_NAME}'s helmet, a soft echo of the ribbon curling through the distance.
+- Lighting: The stardust ribbon is the hero light for this page — a warm mixed silver-pink-gold glow pouring onto the child's palm and face, catching on {COMPANION_NAME}'s fur/scales, curling warmth across the whole frame. Moon and nebula provide soft secondary warmth. Palette silver-pink-gold glowing ribbon plus warm butter-gold and rosy pink background.
+- Composition: Stardust ribbon as diagonal spine of the page, hero at its center catching, companion beside listening — soft, quiet, luminous beat before the climax.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no dark void, no cold silver, no scary creatures.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, forest all match attached sheets.
+- Continuity check: hero, companion, and cosmos match attached sheets.
 
 **PAGE TURN HOOK:**
-{COMPANION_NAME} just faltered and the child just rose — the reader has to see what the sky does next.
+A ribbon of singing stardust — the reader wants to see what happens when they follow it.
 
 ---
 
 ### PAGE 9
 
 **TEXT:**
-{COMPANION_NAME} takes one small brave step forward. The sky blinks back. A spark appears. Then another. Then another.
+The whole sky tips bright. Stars wink hello, planets hum back, and everything is friendly. "The universe is SO big," {HERO} whispers. "And we're part of it."
 
 **ILLUSTRATION BRIEF:**
-- Setting: same forest clearing per SETTING LOCK, the moment after page 8. First shy stars begin to appear across the sky above the canopy opening — first a single pinprick, then another, then a gentle scatter.
-- Action: {COMPANION_NAME} finally takes one small step forward out of the shadow and into the halo of the hero's lifted lights.
-- Camera & POV: Slightly lower than eye-level looking up into the opening sky, wide composition but less steep than page 8.
-- Spatial layout: Hero center-left, arms lowering slightly from the fully raised page-8 pose, face tilted upward. {COMPANION_NAME} lower-right, mid-step forward into the halo, one small foot lifted off the moss. Moss ring and night-blooming flowers underfoot. Trees soften. Upper two-thirds is sky, newly scattering with stars.
-- Hero pose: Near center, arms lowering in soft astonishment, face tilted up, mouth parted as the first stars appear, the collected lights in the cupped hands going quieter as the sky itself takes over the glowing.
-- Companion ({COMPANION_NAME}): Lower-right, one small foot lifted mid-step forward, head raised for the first time all night, eyes brimming and wide in quiet wonder at themselves having moved, body posture unfurling from small to standing taller.
-- Environment addition for this page: night-blooming flowers turning their faces up around the ring, the patient moth now circling happily overhead within the halo, a soft breeze lifting the hero's hair, one or two tiny pollen sparkles drifting up.
-- Lighting: The sky becomes secondary light source. First stars appear as faint silver pinpricks upper-right where scatter is densest, then progressively fewer toward lower-left. Hero's cupped handful still casts warm halo. Palette: deep warm ink-violet sky warming to gold near horizon, warm amber halo below; no harsh cold blue.
-- Composition: Hero center-left looking up; companion lower-right stepping in; new stars scattered across upper two-thirds, densest upper-right inviting the reader's eye to the page turn.
-- Exclusions: no text, no letters, no numbers, no borders or frames, no full moon disc, no daylight, no cold blue dominance, no other animals besides the single moth.
+- Setting: cosmos per SETTING LOCK — the climax wide view. All anchor landmarks visible at once: warm yellow smiling moon CENTER, turquoise ringed planet LOWER-LEFT, candy-striped comet UPPER-RIGHT, three golden stars MIDDLE-RIGHT, rosy nebula UPPER-LEFT, silver stars dusted everywhere. The polite meteor, moon sheep (glowing), joke-robot, and baby alien are all softly visible in the distance in their respective anchor spots, waving toward the pair.
+- Action: The child has lifted both arms wide in pure full-hearted awe at the whole cosmos. {COMPANION_NAME} drifts close beside, also looking out. All the friends from pages 4–7 are visible in soft distance, waving back. The singing stardust ribbon loops through the scene as a soft connective gesture.
+- Camera & POV: Wide worm's-eye-adjacent angle, looking up and outward at the whole cosmos opening. The hero is centered in the frame with the cosmos spreading in every direction.
+- Spatial layout: Midground center is the hero in bubble helmet, arms spread wide. Midground left is {COMPANION_NAME} in bubble helmet close beside, also looking out. Background fills with the cosmos: moon center with its soft smile, ringed planet lower-left with the baby alien waving tiny from its surface, comet upper-right with the polite meteor tipping a small bow from beside it, moon sheep glowing tiny gold on the moon's cheek, joke-robot drifting mid-distance upper-right waving its jar. The stardust ribbon curls softly through the whole scene as a ribbon of connective warmth.
+- Hero pose: Drifting upright in the bubble helmet, both arms spread wide in open full-hearted awe, head tipped back, mouth open in a soft wonder-whisper, eyes luminous and wide, whole body postured in "yes."
+- Companion ({COMPANION_NAME}): In bubble helmet drifting close beside the hero, body turned softly outward to share the view, head tipped up, a warm full smile, paws/limbs loose in soft drift.
+- Environment addition for this page: soft distant figures of all four featured friends in their anchor spots (polite meteor near comet, moon sheep glowing on the moon, joke robot mid-distance, baby alien on the ringed planet), all softly waving — tiny and readable but not crowding. The stardust ribbon curling through the cosmos as a soft connective spine. A gentle rain of silver sparkle-flecks drifting.
+- Lighting: The whole cosmos is lit — warm moon butter-gold from center, rosy nebula pink from upper-left, turquoise planet mint from lower-left, gold stars from middle-right, candy-comet soft pink-white from upper-right. Every direction is warm; the hero is bathed in the mixed light of everything at once. Palette full spectrum warm — butter-gold, rosy pink, mint turquoise, silver — no cold empty dark.
+- Composition: Hero dead center arms-wide, companion left, cosmos wrapping full 360° in the frame, all four friends at their anchor positions waving inward toward the pair — the biggest visual moment of the book, a full open embrace of wonder.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no dark scary void, no cold blue dominance, no unfriendly creatures.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, forest all match attached sheets.
+- Continuity check: hero, companion, and cosmos match attached sheets; all featured friends from pages 4–7 appear softly in their locked anchor spots.
 
 **PAGE TURN HOOK:**
-The stars are back and {COMPANION_NAME} has stepped into the light — but the reader still wants to know: what now, what home, what next?
+The universe said yes — the reader still wants to know: what happens when they go home?
 
 ---
 
 ### PAGE 10
 
 **TEXT:**
-The window is gold and warm again. One small friend curled safe on the sill. A whole sky full of quiet stars.
+The grass is cool and the porch light is warm and the sky is full of quiet stars. {HERO} smiles sleepy and {COMPANION_NAME} smiles too. "Again tomorrow?" {HERO} whispers.
 
 **ILLUSTRATION BRIEF:**
-- Setting: the bedroom per SETTING LOCK, mirroring page 1. Same bed, same nightstand, same lamp, same window. The exterior sky beyond the window is now thick with a full gentle scatter of warm silver-gold stars.
-- Action: The hero is tucked into the bed half-asleep and smiling, blanket drawn up. {COMPANION_NAME} is curled in a peaceful circle on the EXTERIOR windowsill outside the glass.
-- Camera & POV: Eye-level with the pillow from inside the bedroom, three-quarter intimate framing. Window serves as frame-within-a-frame for the exterior stars. Mirrors page 1 but inverts the emotional content.
-- Spatial layout: Hero, bed, nightstand, lamp, stuffed bunny, jar with mushroom, rug are ALL INSIDE the room. {COMPANION_NAME} is EXTERIOR — curled on the outside sill. The glass is the boundary. Starry sky is strictly OUTSIDE. Collection items from the journey are now gently arranged inside: firefly on the lampshade, lantern-flower petal on the pillow, glowing mushroom in a glass jar on the nightstand, moonbeam lingering as a soft silver wash on the quilt.
-- Hero pose: Lying on the side in bed (matching page 1 bed position), one cheek on the pillow, eyes mostly closed in a soft sleepy smile, one small hand resting open on the quilt toward the window, pajamas the same as page 1.
-- Companion ({COMPANION_NAME}): Curled in a tight happy circle on the exterior windowsill outside the glass, body tucked close and warm, head settled with eyes gently closed in quiet contentment, one eye cracked open toward the sleeping child inside.
-- Environment addition for this page: the stuffed bunny from page 1 now sitting upright beside the pillow, the storybook closed, the rescued firefly on the lampshade giving off a warm pulse, a lantern-flower petal tucked behind the child's ear on the pillow, a single glowing mushroom in a small glass jar on the nightstand, a curl of hair catching the lamp glow. Exterior sill clean with a single dried pine needle and an acorn beside {COMPANION_NAME}.
-- Lighting: Warm amber bedside lamp from lower-right (mirroring page 1), spilling across quilt and pillow. Firefly on lampshade adds warm green-gold pulse. Through the window, a full gentle scatter of silver-gold stars casts a soft warm-silver accent onto {COMPANION_NAME} and onto the far side of the quilt. Amber, honey, warm silver, moss-green firefly accent; no cold blue.
-- Composition: Hero lower-right in bed (mirror of page 1's hero placement); {COMPANION_NAME} upper-left on the exterior sill (inverting page 1's lonely silhouette); the window between them filled with stars — the emotional inverse of page 1's empty black window.
-- Exclusions: no text, no letters, no numbers, no borders or frames, no daylight, no empty starless sky, no furniture outside, no other animals inside.
+- Setting: the backyard launchpad per SETTING LOCK, mirroring page 1. Same kid-scale silver rocket (now back on the grass, a little curl of warm steam rising from its base), same back-porch step, same crooked apple tree with three little lanterns, same crescent moon upper-right. The sky is now deep indigo-violet with a full generous scatter of warm silver-gold stars — the "three shy stars" from page 1 are now joined by hundreds more.
+- Action: The pair are back on the dewy lawn. The child sits cross-legged beside the rocket, head tipped back to look up at the stars with sleepy full-hearted joy. {COMPANION_NAME} is curled close against the child's side, also looking up. The rocket's dome is open again, peaceful.
+- Camera & POV: Eye-level with the pair, three-quarter angle, medium-wide intimate shot. Mirrors page 1's framing but inverts the emotional content — empty-ish twilight sky becomes full starry night, standing becomes sitting, "ready?" becomes "again tomorrow?"
+- Spatial layout: Foreground lower-center is the dewy grass. Midground center is the hero sitting cross-legged on the grass, looking up. Midground left is {COMPANION_NAME} curled close against the hero's side. Midground lower-left is the silver rocket resting on the grass, dome open. Midground right is the porch step with its warm yellow light pooling outward. Far right is the apple tree with its three glowing lanterns. Background upper two-thirds is the deep-indigo-violet night sky filled with a generous scatter of warm silver-gold stars, the crescent moon upper-right, and — as a tiny visual callback — a faint curl of the stardust ribbon low on the horizon, still humming home.
+- Hero pose: Sitting cross-legged on the dewy grass, head tipped back and slightly to the side in soft sleepy wonder, one small hand resting open on the grass toward the rocket, the other arm draped gently around {COMPANION_NAME}, eyes half-closed in a peaceful smile, pajamas the same as page 1.
+- Companion ({COMPANION_NAME}): Curled close against the hero's side in a soft happy circle, body tucked warm, head also tipped up to the stars, eyes half-closed, a content full smile.
+- Environment addition for this page: the little stardust jar from page 3 now tucked safely in the grass beside the hero with just a pinch of glitter left inside, one of the apple-tree lanterns blinking gently, a firefly circling the rocket's fin, the three shy stars from page 1 now embedded in the full sky as a tiny visual rhyme (positioned upper-left exactly where they were on page 1).
+- Lighting: Warm yellow porch light from lower-right, warm amber rocket-steam glow from lower-left, silver-gold stars casting a soft gentle wash across the whole scene from above. Palette warm amber, soft silver-gold, deep-indigo-violet sky; never cold empty blue.
+- Composition: Hero center seated, companion curled at left against the hero, rocket lower-left at rest, porch glow lower-right, apple tree far right, stars spanning the upper two-thirds — mirror of page 1 but fuller, softer, safer, the emotional inverse of the opening twilight hush.
+- Exclusions: no text, no letters, no numbers, no borders or frames, no daylight, no empty sky, no other people, no aircraft.
 - Bottom-text safe zone: bottom ~22%.
 - Art style: warm watercolor.
-- Continuity check: hero, companion, bedroom all match attached sheets.
+- Continuity check: hero, companion, and launchpad all match attached sheets; the three shy stars from page 1 are visually preserved in the new full starfield as a callback.
 
 **PAGE TURN HOOK:**
-END — echoes page 1 via the identical bedside lamp, same bed, same window — but now the window is full of stars and {COMPANION_NAME} is curled on the sill where only a scared silhouette used to be.
+END — echoes page 1 via the identical rocket, porch, apple tree, and moon — but now the sky is full and the pair are home and safe and already dreaming of tomorrow's adventure.
