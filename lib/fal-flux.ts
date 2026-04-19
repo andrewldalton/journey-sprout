@@ -19,6 +19,7 @@
 import { fal } from "@fal-ai/client";
 import fs from "node:fs";
 import path from "node:path";
+import sharp from "sharp";
 import { parseHeroFeatures, heroFeaturesToString } from "./gemini";
 
 const MODEL_SINGLE = "fal-ai/flux-pro/kontext";
@@ -73,6 +74,31 @@ async function fetchBytes(url: string): Promise<Buffer> {
   }
 }
 
+/**
+ * FLUX's Pixtral output-integrity filter returns a pure-black image with
+ * HTTP 200 when a prompt + references trip the CSAM/NCII layer (fires
+ * regardless of safety_tolerance). Detect those silently-blocked frames
+ * and throw so the caller's retry/fallback path kicks in instead of
+ * shipping a black page to the customer.
+ */
+async function rejectIfSafetyBlocked(buf: Buffer, model: string): Promise<Buffer> {
+  try {
+    const { channels } = await sharp(buf).stats();
+    if (channels.length >= 3) {
+      const meanLuma = (channels[0].mean + channels[1].mean + channels[2].mean) / 3;
+      if (meanLuma < 8) {
+        throw new Error(
+          `Fal Kontext ${model}: output is safety-blocked (mean luminance ${meanLuma.toFixed(1)}/255 — Pixtral integrity filter trip). Revise brief or let the router fall back.`
+        );
+      }
+    }
+  } catch (err) {
+    if (err instanceof Error && err.message.startsWith("Fal Kontext")) throw err;
+    // sharp probe failed for some other reason — don't block the render on a stats failure.
+  }
+  return buf;
+}
+
 type FalKontextResult = {
   images?: { url?: string; content_type?: string; width?: number; height?: number }[];
   data?: { images?: { url?: string }[] };
@@ -120,7 +146,7 @@ async function runSingle(params: {
   const images = result.data?.images ?? result.images;
   const url = images?.[0]?.url;
   if (!url) throw new Error(`Fal Kontext: no image in response (${JSON.stringify(result).slice(0, 300)})`);
-  return fetchBytes(url);
+  return rejectIfSafetyBlocked(await fetchBytes(url), MODEL_SINGLE);
 }
 
 async function runMulti(params: {
@@ -149,7 +175,7 @@ async function runMulti(params: {
   const images = result.data?.images ?? result.images;
   const url = images?.[0]?.url;
   if (!url) throw new Error(`Fal Kontext Multi: no image in response (${JSON.stringify(result).slice(0, 300)})`);
-  return fetchBytes(url);
+  return rejectIfSafetyBlocked(await fetchBytes(url), MODEL_MULTI);
 }
 
 function proportionsForAge(age: number | null | undefined): string {
