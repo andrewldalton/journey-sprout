@@ -202,17 +202,21 @@ export async function generatePage(params: {
   brief: string;
   textPosition: "top" | "bottom";
 }): Promise<Buffer> {
+  // NB: heroPhoto is intentionally unused here. Post-approval, the painted
+  // character sheet IS the identity contract — it becomes the PERSON subject
+  // ref (id=1). Passing the photo in as well gives Imagen two references to
+  // reconcile and causes drift.
+  void params.heroPhoto;
+
   const refs: ReferenceImage[] = [];
 
-  // Identity anchor: REAL PHOTO as the PERSON subject. The photo has concrete
-  // facial features the model can lock to. The painted sheet comes in below
-  // as a STYLE ref so the model paints the kid in-style without reinventing
-  // their face or hair.
-  const personRef = params.heroPhoto ?? params.heroSheet;
+  // Identity anchor: APPROVED CHARACTER SHEET as the PERSON subject. The
+  // customer has signed off on this painted portrait — it is the canonical
+  // likeness. No second photo reference.
   refs.push({
     referenceType: "REFERENCE_TYPE_SUBJECT",
     referenceId: 1,
-    referenceImage: refToBase64(personRef),
+    referenceImage: refToBase64(params.heroSheet),
     subjectImageConfig: {
       subjectDescription: "the hero child",
       subjectType: "SUBJECT_TYPE_PERSON",
@@ -229,21 +233,7 @@ export async function generatePage(params: {
     },
   });
 
-  // Painted character sheet as STYLE ref — locks the watercolor rendering
-  // style of this specific child without adding a second competing PERSON.
-  if (params.heroPhoto) {
-    refs.push({
-      referenceType: "REFERENCE_TYPE_STYLE",
-      referenceId: 3,
-      referenceImage: refToBase64(params.heroSheet),
-      styleImageConfig: {
-        styleDescription:
-          "the watercolor illustration style of the hero child — painted skin and hair, soft edges, warm palette",
-      },
-    });
-  }
-
-  let nextId = params.heroPhoto ? 4 : 3;
+  let nextId = 3;
   for (const s of params.settingSheets) {
     refs.push({
       referenceType: "REFERENCE_TYPE_STYLE",
@@ -267,15 +257,8 @@ Render a single children's picture-book page illustration starring [1] and [2].
 SCENE BRIEF:
 ${params.brief}
 
-HERO IDENTITY LOCK (READ BEFORE PAINTING — THIS IS THE MOST IMPORTANT RULE):
-[1] is the real-life reference photo of the hero child. Study this photo like a portrait painter studies a sitter. Before you paint anything, commit to these exact features and DO NOT vary them across pages:
-
-  • HAIR: match the photo's hair EXACTLY — same length (buzzed / short / shoulder / long), same color (fair / blonde / light-brown / medium-brown / dark-brown / black / red — whichever the photo shows), same texture (fine straight / wavy / curly / coily), same hairline. If the photo shows a bald or near-bald baby, paint them bald with only the faintest suggestion of fuzz. If the photo shows short hair, do NOT grow it out into waves or curls. If the photo shows long hair, do NOT trim it short. Hair is the single most drifted feature across pages — freeze it.
-  • EYES: same eye shape, same iris color, same eye spacing, same brow shape as the photo.
-  • FACE: same face shape (round / oval / heart / square), same cheek fullness, same jawline, same nose shape, same mouth shape, same skin tone.
-  • AGE: same apparent age. Do not render an older or younger child.
-
-Render the child in painted watercolor style (see the style reference), but treat the photo as a binding likeness contract — the painted kid must be instantly recognizable as this exact real child to their own parent.
+HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
+[1] is the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.
 
 OTHER LOCKS:
 - [2] is the companion animal reference. Match species, colors, proportions, silhouette, and distinguishing marks exactly.
@@ -305,13 +288,15 @@ export async function generateCover(params: {
   heroName: string;
   companionName: string;
 }): Promise<Buffer> {
+  // Sheet is the identity contract post-approval — photo ref dropped.
+  void params.heroPhoto;
+
   const refs: ReferenceImage[] = [];
 
-  const personRef = params.heroPhoto ?? params.heroSheet;
   refs.push({
     referenceType: "REFERENCE_TYPE_SUBJECT",
     referenceId: 1,
-    referenceImage: refToBase64(personRef),
+    referenceImage: refToBase64(params.heroSheet),
     subjectImageConfig: {
       subjectDescription: `${params.heroName}, the hero child`,
       subjectType: "SUBJECT_TYPE_PERSON",
@@ -328,19 +313,7 @@ export async function generateCover(params: {
     },
   });
 
-  if (params.heroPhoto) {
-    refs.push({
-      referenceType: "REFERENCE_TYPE_STYLE",
-      referenceId: 3,
-      referenceImage: refToBase64(params.heroSheet),
-      styleImageConfig: {
-        styleDescription:
-          "the watercolor illustration style of the hero child — painted skin and hair, soft edges, warm palette",
-      },
-    });
-  }
-
-  let nextId = params.heroPhoto ? 4 : 3;
+  let nextId = 3;
   for (const s of params.settingSheets) {
     refs.push({
       referenceType: "REFERENCE_TYPE_STYLE",
@@ -361,14 +334,8 @@ Render a children's picture-book COVER illustration in modern vibrant watercolor
 COVER SCENE:
 ${params.coverBrief || fallbackBrief}
 
-HERO IDENTITY LOCK (READ BEFORE PAINTING):
-[1] is the real-life reference photo of ${params.heroName}. Study it like a portrait painter studies a sitter. The painted child on the cover MUST be instantly recognizable as this exact real child to their own parent.
-  • HAIR: match the photo's hair EXACTLY — same length, color, texture, hairline. If bald or near-bald, paint bald. If short, keep short. If long, keep long. Do NOT invent hair the photo doesn't show, do NOT grow or trim it.
-  • EYES: same shape, iris color, spacing, brow shape.
-  • FACE: same face shape, cheek fullness, jawline, nose, mouth, skin tone.
-  • AGE: same apparent age.
-
-Render in watercolor style per the style refs, but identity is a binding contract to this photo.
+HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
+[1] is ${params.heroName}'s APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on the cover MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.
 
 OTHER LOCKS:
 - Match the companion's colors, proportions, and silhouette exactly.

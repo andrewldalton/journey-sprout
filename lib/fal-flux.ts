@@ -157,9 +157,15 @@ export async function generatePage(params: {
   brief: string;
   textPosition: "top" | "bottom";
 }): Promise<Buffer> {
-  const refs: ImgRef[] = [params.heroSheet];
-  if (params.heroPhoto) refs.push(params.heroPhoto);
-  refs.push(params.companionSheet, ...params.settingSheets);
+  // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
+  // the identity contract — passing the photo again just gives FLUX two
+  // references to reconcile and causes drift. Sheet + companion + settings.
+  void params.heroPhoto;
+  const refs: ImgRef[] = [
+    params.heroSheet,
+    params.companionSheet,
+    ...params.settingSheets,
+  ];
 
   const textZone =
     params.textPosition === "bottom"
@@ -172,7 +178,13 @@ Render a single children's picture-book page illustration.
 SCENE BRIEF:
 ${params.brief}
 
-HERO IDENTITY LOCK (BINDING): The attached reference images include the hero child — both a painted character sheet and the real-life reference photo of the same child. Treat the photo as the identity contract. The painted child on this page MUST be the exact same child: same face shape, eye shape and color, nose, mouth, skin tone, and hair (length, color, texture, hairline — or NO hair if bald). Do NOT add hair the photo doesn't show, do NOT age the child up or down, do NOT blend features with any other child.
+HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
+The first reference image is the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet:
+- SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone.
+- SAME hair — exact length, color, texture, hairline.
+- SAME outfit — same top, same bottoms, same shoes.
+- SAME apparent age.
+Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face. Just paint THIS child, in THIS outfit, doing the scene described.
 
 COMPANION LOCK: Match the companion animal reference exactly — species, colors, proportions, silhouette, distinguishing marks.
 
@@ -198,9 +210,13 @@ export async function generateCover(params: {
   heroName: string;
   companionName: string;
 }): Promise<Buffer> {
-  const refs: ImgRef[] = [params.heroSheet];
-  if (params.heroPhoto) refs.push(params.heroPhoto);
-  refs.push(params.companionSheet, ...params.settingSheets);
+  // Sheet is the identity contract post-approval — photo ref dropped.
+  void params.heroPhoto;
+  const refs: ImgRef[] = [
+    params.heroSheet,
+    params.companionSheet,
+    ...params.settingSheets,
+  ];
 
   const fallbackBrief = `${params.heroName} and ${params.companionName} stand together at the heart of the story's anchor setting in a welcoming inviting pose, warm open expression on ${params.heroName}'s face, ${params.companionName} close beside as friend.`;
 
@@ -210,7 +226,13 @@ Render a children's picture-book COVER illustration in modern vibrant watercolor
 COVER SCENE:
 ${params.coverBrief || fallbackBrief}
 
-HERO IDENTITY LOCK (BINDING): The attached references include ${params.heroName}'s painted sheet and real-life photo. Treat the photo as an identity contract. The painted child on the cover MUST be the exact same child: same hair (length, color, texture, hairline), same eyes, same face shape, same skin tone. Do NOT invent hair the photo doesn't show.
+HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
+The first reference image is ${params.heroName}'s APPROVED CHARACTER SHEET. The child on the cover MUST BE IDENTICAL to the sheet:
+- SAME face shape, eye shape, eye color, nose, mouth, skin tone, cheek fullness.
+- SAME hair — exact length, color, texture, hairline.
+- SAME outfit — same top, same bottoms, same shoes.
+- SAME apparent age.
+Do NOT reinterpret, modernize, or "improve" the child. Paint THIS child, in THIS outfit, on the cover.
 
 COMPANION LOCK: Match ${params.companionName}'s reference — species, colors, proportions, silhouette exactly.
 

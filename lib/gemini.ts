@@ -118,8 +118,11 @@ export async function generatePage(params: {
   brief: string;
   textPosition: "top" | "bottom";
 }): Promise<Buffer> {
-  const { heroSheet, heroPhoto, companionSheet, settingSheets, brief, textPosition } =
-    params;
+  const { heroSheet, companionSheet, settingSheets, brief, textPosition } = params;
+  // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
+  // the identity contract — passing the photo again just gives Gemini two
+  // references to reconcile and causes drift.
+  void params.heroPhoto;
   const settingLockBlock = settingSheets.length
     ? `
 SETTING LOCK (CRITICAL):
@@ -141,11 +144,10 @@ Render a single children's picture-book page illustration following this brief e
 
 ${brief}
 
-IDENTITY LOCK (ABSOLUTE — DO NOT DEVIATE):
-- The FIRST attached image is the HERO CHARACTER SHEET — the painted watercolor reference for this child in this story's style.
-- The SECOND attached image is the REAL PHOTO of the same child. Use it to double-check facial likeness: eye shape, eye color, eye spacing, nose shape, mouth, cheek shape, jawline, hair color, hair texture, hair length, skin tone. The painted hero on every page must read as this exact real child, not a similar child.
-- Render in the watercolor style of the HERO SHEET. Do NOT photo-realistically copy the photo — use it only as a facial likeness anchor. Outfit and body stay on-model per the sheet.
-- The THIRD attached image is the COMPANION SHEET. Match the companion's species, colors, proportions, silhouette, and distinguishing marks exactly.
+IDENTITY LOCK (THE SHEET IS THE CONTRACT):
+The FIRST attached image is the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.
+
+- The SECOND attached image is the COMPANION SHEET. Match the companion's species, colors, proportions, silhouette, and distinguishing marks exactly.
 - If the brief below describes hero or companion features differently than the sheets, the sheets WIN. The brief is for scene and action only.
 
 ${settingLockBlock}
@@ -157,9 +159,7 @@ ${textZone}
 - Full-bleed illustration outside the reserved calm zone, modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy. Bright and joyful, not muted or vintage. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
-  const refs: ImgRef[] = [heroSheet];
-  if (heroPhoto) refs.push(heroPhoto);
-  refs.push(companionSheet, ...settingSheets);
+  const refs: ImgRef[] = [heroSheet, companionSheet, ...settingSheets];
   return generateImage(refs, prompt);
 }
 
@@ -173,8 +173,9 @@ export async function generateCover(params: {
   heroName: string;
   companionName: string;
 }): Promise<Buffer> {
-  const { heroSheet, heroPhoto, companionSheet, settingSheets, coverBrief, storyTitle, heroName, companionName } =
-    params;
+  const { heroSheet, companionSheet, settingSheets, coverBrief, storyTitle, heroName, companionName } = params;
+  // Sheet is the identity contract post-approval — photo ref dropped.
+  void params.heroPhoto;
 
   const fallbackBrief = `${heroName} and ${companionName} stand together at the heart of the story's anchor setting in a welcoming inviting pose, warm open expression on ${heroName}'s face, ${companionName} close beside as friend, pose that makes a child want to open the book.`;
 
@@ -184,10 +185,10 @@ Render a children's picture-book COVER illustration in modern vibrant watercolor
 COVER SCENE:
 ${coverBrief || fallbackBrief}
 
-IDENTITY LOCKS:
-- The FIRST attached image is the hero CHARACTER SHEET — the painted watercolor reference.
-- The SECOND attached image is the REAL PHOTO of the same child. Use it to anchor facial likeness (eyes, nose, mouth, hair, skin tone). Render in the sheet's watercolor style, not photo-realistically.
-- The THIRD attached image is the COMPANION SHEET — match colors, proportions, silhouette exactly.
+IDENTITY LOCK (THE SHEET IS THE CONTRACT):
+The FIRST attached image is ${heroName}'s APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on the cover MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.
+
+- The SECOND attached image is the COMPANION SHEET — match colors, proportions, silhouette exactly.
 
 ${
   settingSheets.length
@@ -204,8 +205,6 @@ COMPOSITION CONSTRAINTS (CRITICAL):
 - Modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy. Bright and joyful. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
-  const refs: ImgRef[] = [heroSheet];
-  if (heroPhoto) refs.push(heroPhoto);
-  refs.push(companionSheet, ...settingSheets);
+  const refs: ImgRef[] = [heroSheet, companionSheet, ...settingSheets];
   return generateImage(refs, prompt);
 }
