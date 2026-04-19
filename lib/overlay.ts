@@ -4,6 +4,41 @@
  * server-side pipeline produces identical output to the local script.
  */
 import sharp from "sharp";
+import fs from "node:fs";
+import path from "node:path";
+
+// --- Font embedding ---
+// Vercel's Linux serverless runtime lacks the picture-book fonts we rely on,
+// and librsvg's fallback renders garbled glyphs. Solution: bundle the TTF
+// files (see content/fonts/) and inline them as base64 @font-face blocks in
+// every SVG so librsvg resolves them deterministically.
+
+const FONTS_DIR = path.join(process.cwd(), "content", "fonts");
+let fontFaceCss: string | null = null;
+
+function loadFontFaceCss(): string {
+  if (fontFaceCss !== null) return fontFaceCss;
+  const load = (file: string) => {
+    const p = path.join(FONTS_DIR, file);
+    if (!fs.existsSync(p)) return null;
+    return fs.readFileSync(p).toString("base64");
+  };
+  const nunito = load("Nunito-Regular.ttf");
+  const fraunces = load("Fraunces-Italic.ttf");
+  const css: string[] = [];
+  if (nunito) {
+    css.push(
+      `@font-face{font-family:'JSSans';src:url(data:font/ttf;base64,${nunito}) format('truetype');font-weight:400;font-style:normal;}`
+    );
+  }
+  if (fraunces) {
+    css.push(
+      `@font-face{font-family:'JSSerif';src:url(data:font/ttf;base64,${fraunces}) format('truetype');font-weight:400;font-style:italic;}`
+    );
+  }
+  fontFaceCss = css.join("\n");
+  return fontFaceCss;
+}
 
 // --- Shared ---
 
@@ -107,7 +142,7 @@ export async function composePageBubble(params: {
     .map((line, i) => {
       const x = i === 0 ? lineXFirst : lineXRest;
       const y = firstTextBaseline + i * lineHeight;
-      return `<text x="${x}" y="${y}" font-family="sans-serif"
+      return `<text x="${x}" y="${y}" font-family="JSSans, DejaVu Sans, sans-serif"
               font-size="${fontSize}" font-weight="600" fill="#2d1b0f" xml:space="preserve">${escapeXml(
         line
       )}</text>`;
@@ -119,6 +154,7 @@ export async function composePageBubble(params: {
   const svg = `
 <svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <style>${loadFontFaceCss()}</style>
     <filter id="bubbleShadow" x="-10%" y="-10%" width="120%" height="140%">
       <feGaussianBlur in="SourceAlpha" stdDeviation="${Math.round(W * 0.004)}"/>
       <feOffset dx="0" dy="${Math.round(W * 0.003)}"/>
@@ -131,7 +167,7 @@ export async function composePageBubble(params: {
         fill="rgba(253, 245, 224, 0.94)"
         stroke="rgba(175, 140, 80, 0.45)" stroke-width="1.5"
         filter="url(#bubbleShadow)"/>
-  <text x="${dropX}" y="${dropY}" font-family="sans-serif"
+  <text x="${dropX}" y="${dropY}" font-family="JSSans, DejaVu Sans, sans-serif"
         font-size="${dropSize}" font-weight="800" fill="${companionAccent}" xml:space="preserve">${escapeXml(
     firstChar
   )}</text>
@@ -157,8 +193,8 @@ export async function composeCoverTypography(params: {
   const W = meta.width ?? 1024;
   const H = meta.height ?? 1024;
 
-  const SERIF = "serif";
-  const SANS = "sans-serif";
+  const SERIF = "JSSerif, DejaVu Serif, serif";
+  const SANS = "JSSans, DejaVu Sans, sans-serif";
 
   const eyebrowText = `${heroName.toUpperCase()} AND ${companionName.toUpperCase()} IN`;
   const seriesLabel = "A JOURNEYSPROUT STORY";
@@ -247,6 +283,7 @@ export async function composeCoverTypography(params: {
   const svg = `
 <svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <style>${loadFontFaceCss()}</style>
     <filter id="titleShadow" x="-10%" y="-10%" width="120%" height="140%">
       <feGaussianBlur in="SourceAlpha" stdDeviation="${Math.max(1, Math.round(W * 0.002))}"/>
       <feOffset dx="0" dy="${Math.round(W * 0.0015)}"/>
