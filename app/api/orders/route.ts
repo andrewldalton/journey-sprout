@@ -142,21 +142,75 @@ async function fireNotifyEmail(
   const resend = new Resend(apiKey);
   const from = process.env.RESEND_FROM ?? "journeysprout <onboarding@resend.dev>";
   const to = process.env.NOTIFY_EMAIL ?? "andrewldalton@gmail.com";
+
+  const ts = new Date().toLocaleString("en-US", {
+    timeZone: "America/Chicago",
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f3e7c4;font-family:Georgia,'Times New Roman',serif;color:#2d1b0f;-webkit-font-smoothing:antialiased;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f3e7c4;">
+  <tr><td align="center" style="padding:32px 16px 8px 16px;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560" style="max-width:560px;background:#fdf5e0;border-radius:20px;overflow:hidden;border:1px solid #d9c9a7;">
+      <tr><td align="center" style="padding:28px 24px 4px 24px;">
+        <div style="font-family:Georgia,serif;font-size:12px;letter-spacing:0.32em;color:#b26a6a;text-transform:uppercase;">New order</div>
+      </td></tr>
+      <tr><td style="padding:10px 36px 0 36px;">
+        <h1 style="margin:0 0 6px 0;font-family:Georgia,serif;font-style:italic;font-weight:700;color:#2d1b0f;font-size:26px;line-height:1.2;">
+          A new journeysprout book is in the oven.
+        </h1>
+        <div style="margin:4px 0 20px 0;">
+          <span style="display:inline-block;width:5px;height:5px;border-radius:3px;background:#c9672a;margin-right:6px;vertical-align:middle;"></span>
+          <span style="display:inline-block;width:5px;height:5px;border-radius:3px;background:#c9672a;margin-right:6px;vertical-align:middle;"></span>
+          <span style="display:inline-block;width:5px;height:5px;border-radius:3px;background:#c9672a;vertical-align:middle;"></span>
+        </div>
+        <p style="margin:0 0 20px 0;font-family:Georgia,serif;font-size:15px;line-height:1.55;color:#4a3220;">
+          An order just landed. The pipeline is painting now — you'll get a copy of the customer's delivery email when it's ready (usually in under ten minutes).
+        </p>
+      </td></tr>
+      <tr><td style="padding:0 36px 12px 36px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f7edd0;border:1px solid #d9c9a7;border-radius:14px;">
+          <tr><td style="padding:16px 20px;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#2d1b0f;line-height:1.7;">
+            <div style="color:#6e4a22;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;font-weight:700;margin-bottom:8px;">The order</div>
+            <div><strong>Hero:</strong> ${escape(heroName)}</div>
+            <div><strong>Story:</strong> ${escape(storySlug)}</div>
+            <div><strong>Companion:</strong> ${escape(companionSlug)}</div>
+            <div><strong>Customer:</strong> ${escape(email)}</div>
+            <div><strong>Submitted:</strong> ${escape(ts)} CT</div>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="padding:4px 36px 24px 36px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+          <tr><td style="padding:12px 16px;background:#ebdcb1;border-radius:12px;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#4a3220;">
+            <strong style="color:#2d1b0f;">Order ID</strong>
+            <div style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;margin-top:4px;letter-spacing:0.02em;">${escape(orderId)}</div>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="padding:4px 36px 28px 36px;">
+        <a href="https://journey-sprout.vercel.app/book/${escape(orderId)}" style="display:inline-block;background:#c9672a;color:#fdf5e0;font-family:Georgia,serif;font-weight:600;font-size:15px;text-decoration:none;padding:12px 22px;border-radius:999px;">
+          Follow the render →
+        </a>
+      </td></tr>
+      <tr><td style="padding:16px 36px 26px 36px;border-top:1px solid #d9c9a7;">
+        <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:11px;color:#9a7a44;line-height:1.55;">
+          <strong style="color:#2d1b0f;">journeysprout</strong> · Internal operations notice · Omaha, Nebraska
+        </p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+
   await resend.emails.send({
     from,
     to,
-    subject: `New journeysprout order: ${heroName} + ${companionSlug}`,
-    html: `<div style="font-family: system-ui, sans-serif; color: #2d1b0f;">
-      <h2 style="font-family: Georgia, serif;">New journeysprout order</h2>
-      <p><strong>${orderId}</strong></p>
-      <ul>
-        <li>Hero: <strong>${escape(heroName)}</strong></li>
-        <li>Story: ${escape(storySlug)}</li>
-        <li>Companion: ${escape(companionSlug)}</li>
-        <li>Customer email: ${escape(email)}</li>
-      </ul>
-      <p style="color: #6e4a22; font-size: 13px;">Pipeline is running now. You'll get the customer-facing email (copied to you? no) when it finishes.</p>
-    </div>`,
+    subject: `New journeysprout order — ${heroName} · ${storySlug}`,
+    html,
   });
 }
 
