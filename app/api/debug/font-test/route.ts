@@ -30,7 +30,7 @@ export async function GET() {
   const nunitoBytes = Buffer.from(NUNITO_REGULAR_B64, "base64").length;
   const frauncessBytes = Buffer.from(FRAUNCES_ITALIC_B64, "base64").length;
 
-  return new Response(png, {
+  return new Response(new Uint8Array(png), {
     headers: {
       "Content-Type": "image/png",
       "Cache-Control": "no-store",
