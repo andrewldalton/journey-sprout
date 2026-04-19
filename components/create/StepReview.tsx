@@ -123,7 +123,7 @@ export function StepReview({
             <img
               src={draft.photoDataUrl}
               alt={`Reference photo of ${draft.heroName}`}
-              className="w-full aspect-square object-cover rounded-[20px] bg-paper-deep"
+              className="w-full h-auto max-h-[480px] object-contain rounded-[20px] bg-paper-deep mx-auto"
               style={{
                 boxShadow:
                   "0 18px 40px -22px rgba(45,27,15,0.35), inset 0 0 0 1px rgba(217,201,167,0.6)",
