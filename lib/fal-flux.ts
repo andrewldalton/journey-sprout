@@ -80,6 +80,20 @@ type FalKontextResult = {
 
 type AspectRatio = "1:1" | "21:9" | "16:9" | "4:3" | "3:2" | "2:3" | "3:4" | "9:16" | "9:21";
 
+// FAL's SDK wraps HTTP errors and surfaces only the status text by default.
+// For 422s we need the actual validation body ("too many images", safety
+// filter trip, prompt too long, etc.) to know what to fix — pull it from
+// any of the shapes the SDK has used across versions.
+function explainFalError(err: unknown, ctx: { model: string; promptLen: number; refCount: number }): Error {
+  const e = err as { status?: number; body?: unknown; response?: { body?: unknown; status?: number }; responseBody?: unknown; message?: string };
+  const body = e.body ?? e.response?.body ?? e.responseBody;
+  const status = e.status ?? e.response?.status;
+  const bodyStr = typeof body === "string" ? body : body ? JSON.stringify(body) : "";
+  const baseMsg = e.message ?? "Fal Kontext error";
+  const enriched = `${baseMsg} [model=${ctx.model} status=${status ?? "?"} promptLen=${ctx.promptLen} refCount=${ctx.refCount}]${bodyStr ? ` body=${bodyStr.slice(0, 500)}` : ""}`;
+  return new Error(enriched);
+}
+
 async function runSingle(params: {
   prompt: string;
   imageRef: ImgRef;
@@ -87,16 +101,21 @@ async function runSingle(params: {
 }): Promise<Buffer> {
   ensureConfigured();
   const imageUrl = await uploadRef(params.imageRef);
-  const result = (await fal.subscribe(MODEL_SINGLE, {
-    input: {
-      prompt: params.prompt,
-      image_url: imageUrl,
-      aspect_ratio: params.aspectRatio ?? "1:1",
-      output_format: "png",
-      safety_tolerance: "6",
-    },
-    logs: false,
-  })) as { data?: FalKontextResult } & FalKontextResult;
+  let result: { data?: FalKontextResult } & FalKontextResult;
+  try {
+    result = (await fal.subscribe(MODEL_SINGLE, {
+      input: {
+        prompt: params.prompt,
+        image_url: imageUrl,
+        aspect_ratio: params.aspectRatio ?? "1:1",
+        output_format: "png",
+        safety_tolerance: "6",
+      },
+      logs: false,
+    })) as { data?: FalKontextResult } & FalKontextResult;
+  } catch (err) {
+    throw explainFalError(err, { model: MODEL_SINGLE, promptLen: params.prompt.length, refCount: 1 });
+  }
 
   const images = result.data?.images ?? result.images;
   const url = images?.[0]?.url;
@@ -111,16 +130,21 @@ async function runMulti(params: {
 }): Promise<Buffer> {
   ensureConfigured();
   const imageUrls = await Promise.all(params.imageRefs.map(uploadRef));
-  const result = (await fal.subscribe(MODEL_MULTI, {
-    input: {
-      prompt: params.prompt,
-      image_urls: imageUrls,
-      aspect_ratio: params.aspectRatio ?? "1:1",
-      output_format: "png",
-      safety_tolerance: "6",
-    },
-    logs: false,
-  })) as { data?: FalKontextResult } & FalKontextResult;
+  let result: { data?: FalKontextResult } & FalKontextResult;
+  try {
+    result = (await fal.subscribe(MODEL_MULTI, {
+      input: {
+        prompt: params.prompt,
+        image_urls: imageUrls,
+        aspect_ratio: params.aspectRatio ?? "1:1",
+        output_format: "png",
+        safety_tolerance: "6",
+      },
+      logs: false,
+    })) as { data?: FalKontextResult } & FalKontextResult;
+  } catch (err) {
+    throw explainFalError(err, { model: MODEL_MULTI, promptLen: params.prompt.length, refCount: params.imageRefs.length });
+  }
 
   const images = result.data?.images ?? result.images;
   const url = images?.[0]?.url;
