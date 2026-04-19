@@ -24,6 +24,7 @@ import {
 } from "./manuscripts";
 import { COMPANIONS } from "./catalog";
 import { pickOutfit } from "./outfits";
+import { sanitizeBrief } from "./brief-sanitizer";
 
 export type RenderContext = {
   orderId: string;
@@ -139,6 +140,14 @@ export async function runPageStep(
     ? { ...parsedFeaturesRaw, outfit: outfit.description }
     : parsedFeaturesRaw;
 
+  // Strip FLUX-safety-filter trigger words from the brief before it reaches
+  // the image provider. Logs what was rewritten so story authors can see
+  // patterns and update manuscripts upstream.
+  const { sanitized: cleanBrief, changes: briefChanges } = sanitizeBrief(page.brief);
+  if (briefChanges.length > 0) {
+    console.log(`[sanitizer] order ${ctx.orderId} page ${page.num}: ${briefChanges.join(", ")}`);
+  }
+
   // Pre-ship QA loop: render, Vision-check against the sheet, retry up to
   // 2 more times if the hero drifts. Silent fix — customer never sees a
   // bad page if the re-render succeeds.
@@ -151,7 +160,7 @@ export async function runPageStep(
         heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
         companionSheet: { type: "file", path: companionSheetFile },
         settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
-        brief: page.brief,
+        brief: cleanBrief,
         textPosition: page.textPosition,
         heroFeatures: heroFeatures ?? undefined,
         heroAge: ctx.heroAge,
@@ -214,6 +223,11 @@ export async function runCoverStep(
     ? { ...parsedFeaturesRaw, outfit: outfit.description }
     : parsedFeaturesRaw;
 
+  const { sanitized: cleanCoverBrief, changes: coverBriefChanges } = sanitizeBrief(manuscript.coverBrief ?? "");
+  if (coverBriefChanges.length > 0) {
+    console.log(`[sanitizer] order ${ctx.orderId} cover: ${coverBriefChanges.join(", ")}`);
+  }
+
   const MAX_ATTEMPTS = 3;
   let raw!: Buffer;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
@@ -223,7 +237,7 @@ export async function runCoverStep(
         heroPhoto: { type: "buffer", bytes: photoBytes, mimeType: "image/jpeg" },
         companionSheet: { type: "file", path: companionSheetFile },
         settingSheets: settingSheetFiles.map((p) => ({ type: "file" as const, path: p })),
-        coverBrief: manuscript.coverBrief ?? "",
+        coverBrief: cleanCoverBrief,
         storyTitle: manuscript.title,
         heroName: ctx.heroName,
         companionName: companion.name,
