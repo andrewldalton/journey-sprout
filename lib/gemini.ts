@@ -140,9 +140,11 @@ Render a single children's picture-book page illustration following this brief e
 
 ${brief}
 
-IDENTITY LOCKS:
-- The child (hero) must match the attached hero character sheet exactly. Do NOT redesign the face. Same facial likeness, same hair, same eye color, same proportions.
-- The companion must match the attached companion sheet exactly. Same colors, same proportions, same silhouette.
+IDENTITY LOCK (ABSOLUTE — DO NOT DEVIATE):
+- The FIRST attached image is the HERO CHARACTER SHEET. This is the child. You are illustrating THIS EXACT CHILD, not a similar child. Match every facial feature precisely: eye shape, eye color, eye spacing, nose shape, mouth, cheek shape, jawline, hair color, hair texture, hair length, skin tone. Do NOT average, generic-ify, or reinterpret the face. Same face, every time.
+- The outfit on the hero sheet (clothing, shoes) is also locked — do not redesign clothes.
+- The SECOND attached image is the COMPANION SHEET. Match the companion's species, colors, proportions, silhouette, and distinguishing marks exactly.
+- If the brief below describes hero or companion features differently than the sheets, the sheets WIN. The brief is for scene and action only.
 
 ${settingLockBlock}
 

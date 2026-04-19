@@ -107,7 +107,7 @@ export async function composePageBubble(params: {
     .map((line, i) => {
       const x = i === 0 ? lineXFirst : lineXRest;
       const y = firstTextBaseline + i * lineHeight;
-      return `<text x="${x}" y="${y}" font-family="Nunito, 'Helvetica Neue', Helvetica, Arial, sans-serif"
+      return `<text x="${x}" y="${y}" font-family="sans-serif"
               font-size="${fontSize}" font-weight="600" fill="#2d1b0f" xml:space="preserve">${escapeXml(
         line
       )}</text>`;
@@ -131,7 +131,7 @@ export async function composePageBubble(params: {
         fill="rgba(253, 245, 224, 0.94)"
         stroke="rgba(175, 140, 80, 0.45)" stroke-width="1.5"
         filter="url(#bubbleShadow)"/>
-  <text x="${dropX}" y="${dropY}" font-family="Nunito, 'Helvetica Neue', Helvetica, Arial, sans-serif"
+  <text x="${dropX}" y="${dropY}" font-family="sans-serif"
         font-size="${dropSize}" font-weight="800" fill="${companionAccent}" xml:space="preserve">${escapeXml(
     firstChar
   )}</text>
@@ -157,8 +157,8 @@ export async function composeCoverTypography(params: {
   const W = meta.width ?? 1024;
   const H = meta.height ?? 1024;
 
-  const SERIF = "Georgia, 'Times New Roman', 'Book Antiqua', serif";
-  const SANS = "Nunito, 'Helvetica Neue', Helvetica, Arial, sans-serif";
+  const SERIF = "serif";
+  const SANS = "sans-serif";
 
   const eyebrowText = `${heroName.toUpperCase()} AND ${companionName.toUpperCase()} IN`;
   const seriesLabel = "A JOURNEYSPROUT STORY";
