@@ -337,7 +337,7 @@ COMPOSITION:
 - Modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy. Bright and joyful, not muted or vintage. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
-  return runMulti({ prompt, imageRefs: refs, aspectRatio: "4:3" });
+  return runMulti({ prompt, imageRefs: refs, aspectRatio: "1:1" });
 }
 
 export async function generateCover(params: {

@@ -255,13 +255,10 @@ export async function generatePage(params: {
   });
 
   // Vertex Imagen 3 capability-001 caps at 2 reference images for
-  // non-square aspect ratios (pages render at 4:3). Keep the hero +
-  // companion subject refs (those are load-bearing for identity) and
-  // drop the style refs on pages — the brief + identity locks still
-  // carry the setting.
+  // non-square aspect ratios. We render pages at 1:1 (board-book
+  // square), so the cap doesn't apply — settings can come along.
   let nextId = 3;
   for (const s of params.settingSheets) {
-    if (refs.length >= 2) break;
     refs.push({
       referenceType: "REFERENCE_TYPE_STYLE",
       referenceId: nextId++,
@@ -303,7 +300,7 @@ COMPOSITION:
 
   return predict({
     prompt,
-    aspectRatio: "4:3",
+    aspectRatio: "1:1",
     referenceImages: refs,
   });
 }
@@ -391,7 +388,7 @@ COMPOSITION:
 
   return predict({
     prompt,
-    aspectRatio: "4:3",
+    aspectRatio: "1:1",
     referenceImages: refs,
   });
 }
