@@ -103,6 +103,8 @@ You are producing a CHARACTER REFERENCE SHEET for a children's picture book.
 
 CRITICAL: Preserve the exact facial likeness of the child in the reference photo — face shape, eye color, eye spacing, nose shape, mouth shape, lip fullness, chin shape, cheek fullness, eyebrow color + shape, skin tone, and hair color + texture + length must match the real child. Do NOT generic-ify. Readers must instantly recognize them.
 
+ALSO PRESERVE (only if visibly present in the reference photo — do NOT invent these if absent): freckles, dimples, moles, birthmarks, ear shape and ear position, cowlicks or distinctive hair growth patterns, gap teeth or other tooth features when the mouth is open, eyelash length/thickness, lazy eye or other small asymmetries. These small details are what make a child specifically them — if the photo shows them, paint them; if the photo does not show them, do NOT add them.
+
 AGE: The child is about ${age ?? 3} years old. Render them at ${proportionsForAge(age)}. Do NOT paint them older or younger than their actual age.
 
 Render the child in the journeysprout illustration style:
