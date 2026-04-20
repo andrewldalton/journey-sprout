@@ -230,9 +230,13 @@ export async function generatePage(params: {
   heroFeatures?: string;
   heroAge?: number | null;
   heroName?: string;
+  companionName?: string;
+  companionSpecies?: string;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
   const name = params.heroName ?? "the hero";
+  const compName = params.companionName ?? "the companion";
+  const compSpecies = params.companionSpecies ?? "animal";
   // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
   // the identity contract — passing the photo again just gives FLUX two
   // references to reconcile and causes drift. Sheet + companion + settings.
@@ -306,8 +310,14 @@ Render a single children's picture-book page illustration starring ${name}.
 ${topFeatureLines}SCENE BRIEF:
 ${params.brief}
 
+REFERENCE IMAGE ROSTER (read carefully — each image is a DIFFERENT subject):
+- Image 1 = ${name}'s APPROVED CHARACTER SHEET (a human child).
+- Image 2 = ${compName} the ${compSpecies} — the companion animal sheet. ${compName} is an ANIMAL, not a second child. Do NOT treat Image 2 as another human; it is a painted ${compSpecies}.
+- Image 3+ = setting reference sheets (environment only — not characters).
+Paint the scene with EXACTLY ONE ${name} (human child) and EXACTLY ONE ${compName} (the ${compSpecies}). Two people in frame means you painted ${name} twice and you must not do that.
+
 ${name.toUpperCase()} IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-The FIRST reference image is ${name}'s APPROVED CHARACTER SHEET — the painted canonical portrait of ${name} that the customer has signed off on. ${name} on this page MUST BE IDENTICAL to the sheet:
+Image 1 is ${name}'s APPROVED CHARACTER SHEET — the painted canonical portrait of ${name} that the customer has signed off on. ${name} on this page MUST BE IDENTICAL to the sheet:
 - SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone.
 - SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline. If the sheet shows tight ringlet curls, do NOT render looser waves. If the sheet shows short hair, do NOT grow it out.
 - SAME outfit — same top, same bottoms, same shoes.
@@ -320,9 +330,10 @@ AGE LOCK (RIGID): ${name} is EXACTLY ${params.heroAge ?? 3} years old on EVERY p
 COLOR LOCK (READ THIS — THIS IS WHERE YOU USUALLY FAIL):
 ${name}'s HAIR COLOR, SKIN TONE, and CLOTHING COLORS are fixed by the sheet. They do NOT change with scene lighting. If the sheet shows blonde hair and a yellow top, paint blonde hair and a yellow top EVEN IF the scene is lit in golden hour, blue twilight, green jungle shade, cool moonlight, or warm honey glow. You may render soft cast shadows and gentle rim-light across ${name} from the scene's light source, but you must NEVER repaint ${name}'s actual hair color, skin tone, or clothing colors to harmonize with the scene palette. Yellow stays yellow. Blonde stays blonde. Do not tint, wash, or palette-shift ${name}.
 
-COMPANION LOCK: Match the companion animal reference exactly — species, colors, proportions, silhouette, distinguishing marks. CRITICAL: the companion's SIZE relative to ${name} stays constant on every page. A small fox stays small; a large dinosaur stays large; the companion does NOT grow or shrink between pages. If the companion sheet shows a knee-height animal, it is knee-height on every page. If it shows a child-sized animal, it stays child-sized.
+COMPANION LOCK: Match Image 2 (${compName} the ${compSpecies}) exactly — species, colors, proportions, silhouette, distinguishing marks. ${compName} is a ${compSpecies}, NOT a human child. Paint ${compName} as the painted ${compSpecies} shown in Image 2. ${compName}'s SIZE relative to ${name} stays constant on every page — a small fox stays small, a dinosaur stays dinosaur-sized; the companion does NOT grow or shrink between pages.
 
-CAST LOCK: The ONLY characters in this illustration are ${name} and the companion animal. Do NOT paint any other people (no friends, no siblings, no parents, no background adults, no onlookers, no strangers), no other animals, and no additional creatures — unless the scene brief above EXPLICITLY introduces them by name on this specific page. Empty the background of humans; crowd scenes become quiet scenes.
+CAST LOCK (READ THIS — THIS IS WHERE YOU USUALLY FAIL):
+The scene contains EXACTLY TWO characters: one ${name} (the human child from Image 1) and one ${compName} (the ${compSpecies} from Image 2). Not two children. Not two ${compSpecies}s. Not extra background kids. If you paint a second child with similar hair/outfit, that is a failure — the second figure must be the ${compSpecies}, painted as Image 2 shows. Do NOT paint any other people (no friends, no siblings, no parents, no background adults, no onlookers, no strangers), no other animals, and no additional creatures — unless the scene brief above EXPLICITLY introduces them by name on this specific page. Empty the background of humans; crowd scenes become quiet scenes.
 
 SETTING LOCK: Match the environment references — architecture, props, palette, and painted surfaces. Do NOT reinvent recurring landmarks. Camera angle, time of day, and weather may change per the brief, but setting geometry and identifying props are locked.
 

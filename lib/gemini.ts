@@ -332,10 +332,14 @@ export async function generatePage(params: {
   heroFeatures?: string;
   heroAge?: number | null;
   heroName?: string;
+  companionName?: string;
+  companionSpecies?: string;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
   const { heroSheet, companionSheet, settingSheets, brief, textPosition, heroFeatures, heroAge, canonicalOutfit } = params;
   void params.heroName;
+  void params.companionName;
+  void params.companionSpecies;
   // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
   // the identity contract — passing the photo again just gives Gemini two
   // references to reconcile and causes drift.

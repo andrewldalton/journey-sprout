@@ -165,6 +165,8 @@ export async function runPageStep(
         heroFeatures: heroFeatures ?? undefined,
         heroAge: ctx.heroAge,
         heroName: ctx.heroName,
+        companionName: companion.name,
+        companionSpecies: companion.species,
         canonicalOutfit: outfit.description,
       },
       { orderId: ctx.orderId }

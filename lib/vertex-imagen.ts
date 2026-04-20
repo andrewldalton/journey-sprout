@@ -214,11 +214,15 @@ export async function generatePage(params: {
   heroFeatures?: string;
   heroAge?: number | null;
   heroName?: string;
+  companionName?: string;
+  companionSpecies?: string;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
   void params.heroFeatures; // signature-only for router compatibility
   void params.heroAge;
   void params.heroName;
+  void params.companionName;
+  void params.companionSpecies;
   // NB: heroPhoto is intentionally unused here. Post-approval, the painted
   // character sheet IS the identity contract — it becomes the PERSON subject
   // ref (id=1). Passing the photo in as well gives Imagen two references to
