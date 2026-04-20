@@ -11,7 +11,7 @@ import postgres from "postgres";
 type Sql = ReturnType<typeof postgres>;
 
 export type CostProvider = "gemini" | "vertex" | "flux";
-export type CostKind = "sheet" | "page" | "cover";
+export type CostKind = "sheet" | "page" | "cover" | "faceswap";
 
 export type CostEvent = {
   id: number;
@@ -31,9 +31,9 @@ export type CostEvent = {
 // kind (sheet/page/cover) for all three providers today — keyed by kind
 // anyway so we can diverge later without reshaping the table.
 const PRICE_USD: Record<CostProvider, Record<CostKind, number>> = {
-  gemini: { sheet: 0.039, page: 0.039, cover: 0.039 },
-  vertex: { sheet: 0.04, page: 0.04, cover: 0.04 },
-  flux:   { sheet: 0.04, page: 0.04, cover: 0.04 },
+  gemini: { sheet: 0.039, page: 0.039, cover: 0.039, faceswap: 0 },
+  vertex: { sheet: 0.04,  page: 0.04,  cover: 0.04,  faceswap: 0 },
+  flux:   { sheet: 0.04,  page: 0.04,  cover: 0.04,  faceswap: 0.005 },
 };
 
 export function priceFor(provider: CostProvider, kind: CostKind): number {

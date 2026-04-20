@@ -25,6 +25,8 @@ import {
 import { COMPANIONS } from "./catalog";
 import { pickOutfit } from "./outfits";
 import { sanitizeBrief } from "./brief-sanitizer";
+import { faceSwapEnabled, faceSwapFromSheet, faceSwapModel } from "./fal-faceswap";
+import { logCostEvent } from "./cost";
 
 export type RenderContext = {
   orderId: string;
@@ -40,6 +42,54 @@ function companionFromSlug(slug: string) {
   const c = COMPANIONS.find((x) => x.slug === slug);
   if (!c) throw new Error(`Unknown companion slug: ${slug}`);
   return c;
+}
+
+/**
+ * Face-restoration pass wrapper used by both page and cover steps.
+ * If FACE_SWAP_ENABLED is false (default), returns the raw render
+ * unchanged. If enabled, attempts the swap and logs a cost event;
+ * on any failure it logs a warning and returns the raw render so
+ * the order still ships without a broken page.
+ */
+async function maybeFaceSwap(params: {
+  sheetBytes: Buffer;
+  raw: Buffer;
+  orderId: string;
+  label: string;
+}): Promise<Buffer> {
+  if (!faceSwapEnabled()) return params.raw;
+  const startedAt = Date.now();
+  try {
+    const swapped = await faceSwapFromSheet({
+      sheetBytes: params.sheetBytes,
+      targetBytes: params.raw,
+    });
+    void logCostEvent({
+      orderId: params.orderId,
+      kind: "faceswap",
+      provider: "flux",
+      model: faceSwapModel(),
+      durationMs: Date.now() - startedAt,
+      status: "success",
+    });
+    console.log(`[faceswap] order ${params.orderId} ${params.label} swapped`);
+    return swapped;
+  } catch (err) {
+    void logCostEvent({
+      orderId: params.orderId,
+      kind: "faceswap",
+      provider: "flux",
+      model: faceSwapModel(),
+      durationMs: Date.now() - startedAt,
+      status: "failed",
+      errorMessage: (err as Error).message,
+    });
+    console.warn(
+      `[faceswap] order ${params.orderId} ${params.label} failed — shipping unswapped:`,
+      (err as Error).message
+    );
+    return params.raw;
+  }
 }
 
 function tokensFor(ctx: RenderContext, companionName: string): TokenContext {
@@ -188,8 +238,20 @@ export async function runPageStep(
     }
   }
 
+  // Face-restoration pass: stamp the approved sheet's face onto the
+  // rendered page so subtle identity details (freckles, glasses, gap
+  // teeth, dimples) come from the sheet rather than FLUX's interpretation.
+  // Non-critical — fall back to the raw render on any error so the
+  // page still ships.
+  const faceFinal = await maybeFaceSwap({
+    sheetBytes,
+    raw,
+    orderId: ctx.orderId,
+    label: `page ${page.num}`,
+  });
+
   const composed = await composePageBubble({
-    rawImage: raw,
+    rawImage: faceFinal,
     text: page.text,
     textPosition: page.textPosition,
     companionAccent: companion.accent,
@@ -267,8 +329,15 @@ export async function runCoverStep(
     }
   }
 
+  const faceFinal = await maybeFaceSwap({
+    sheetBytes,
+    raw,
+    orderId: ctx.orderId,
+    label: "cover",
+  });
+
   const composed = await composeCoverTypography({
-    rawImage: raw,
+    rawImage: faceFinal,
     storyTitle: manuscript.title,
     heroName: ctx.heroName,
     companionName: companion.name,

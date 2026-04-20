@@ -41,19 +41,22 @@ type ImageProvider = {
 // provider actually hit based on the `kind`.
 const MODEL_ID: Record<Provider, Record<CostKind, string>> = {
   gemini: {
-    sheet: "gemini-2.5-flash-image",
-    page:  "gemini-2.5-flash-image",
-    cover: "gemini-2.5-flash-image",
+    sheet:    "gemini-2.5-flash-image",
+    page:     "gemini-2.5-flash-image",
+    cover:    "gemini-2.5-flash-image",
+    faceswap: "n/a",
   },
   vertex: {
-    sheet: "imagen-3.0-capability-001",
-    page:  "imagen-3.0-capability-001",
-    cover: "imagen-3.0-capability-001",
+    sheet:    "imagen-3.0-capability-001",
+    page:     "imagen-3.0-capability-001",
+    cover:    "imagen-3.0-capability-001",
+    faceswap: "n/a",
   },
   flux: {
-    sheet: "fal-ai/flux-pro/kontext",
-    page:  "fal-ai/flux-pro/kontext/multi",
-    cover: "fal-ai/flux-pro/kontext/multi",
+    sheet:    "fal-ai/flux-pro/kontext",
+    page:     "fal-ai/flux-pro/kontext/multi",
+    cover:    "fal-ai/flux-pro/kontext/multi",
+    faceswap: "fal-ai/face-swap",
   },
 };
 
