@@ -80,7 +80,7 @@ The child's wondering question asks the reader — what is under the water?
 ### PAGE 2
 
 **TEXT:**
-A soft voice hums up from the waves. A glowing pearl floats gently to {HERO_OBJECT} palm. "Adventure?" {COMPANION_NAME} whispers close beside {HERO_SUBJECT}.
+A soft voice hums up from the waves. A glowing pearl floats gently to {HERO}'s palm. "Adventure?" {COMPANION_NAME} whispers close beside {HERO_OBJECT}.
 
 **ILLUSTRATION BRIEF:**
 - Setting: the tide-pool beach transitioning toward the reef per SETTING LOCK. The beach behind the pair, the bright shallow sea ahead. Two glowing pearls hover just above the water's surface, each ringed by tiny gold sparkle motes. Small whitecaps curl far out, translucent ripples spread outward from beneath each pearl as if the water itself is humming, and a gentle breeze carries a whispery sound across the sand.
@@ -188,7 +188,7 @@ A shy new friend has said hello — the reader wants to see what {HERO} discover
 ### PAGE 6
 
 **TEXT:**
-{HERO} and {COMPANION_NAME} drift through a bright pink doorway. Silver minnows twirl around them like ribbons. "Look, look!" {HERO} laughs.
+{HERO} and {COMPANION_NAME} drift through a bright pink doorway. Silver little fish twirl around them like ribbons. "Look, look!" {HERO} laughs.
 
 **ILLUSTRATION BRIEF:**
 - Setting: reef per SETTING LOCK, at the pink coral archway landmark from the setting sheet. The archway rises like a low natural doorway between two coral pillars, its inner curve glowing warm coral-pink where the sun hits it. The open sandy corridor beneath the arch is painted with shifting caustic nets, slow columns of tiny bubbles rise from the pillars' bases, plankton motes drift through the warm gold beams slanting through the arch opening, and the water on the far side of the arch glows a brighter sunlit turquoise — an "into the next garden" portal feeling.

@@ -170,7 +170,7 @@ A laugh turns wool into gold — the reader wants to know what else the cosmos d
 ### PAGE 6
 
 **TEXT:**
-A little robot floats by with a big jar of silly jokes. "What do planets read?" it beeps. "Comet books!" {HERO} snort-giggles.
+A little robot floats by with a big jar of silly jokes. "What do planets read?" it beeps. "STAR-y books!" {HERO} snort-giggles.
 
 **ILLUSTRATION BRIEF:**
 - Setting: cosmos per SETTING LOCK — the pair have drifted back out into open space near the candy-striped comet UPPER-RIGHT. Moon center, ringed planet lower-left, nebula upper-left, three golden stars middle-right. Atmospheric life: the candy-striped comet's sparkle tail spills soft pink-and-white streaks from upper-right, stardust motes drift lazily through the pocket of space between the robot and {HERO}, paper joke-slips tumble slowly in zero-g like confetti caught in honey, the robot's antenna-star gives off a tiny twinkling pulse that ripples outward.
@@ -245,7 +245,7 @@ A ribbon of singing stardust and a handful of glow in {HERO}'s palm — the read
 ### PAGE 9
 
 **TEXT:**
-The whole sky tips bright. Stars wink hello, planets hum back, and everything is friendly. "The universe is SO big," {HERO} whispers. "And we're part of it."
+The whole sky lights up bright. Stars wink hello, planets hum back, and everything is friendly. "The universe is SO big," {HERO} whispers. "And we're part of it."
 
 **ILLUSTRATION BRIEF:**
 - Setting: cosmos per SETTING LOCK — the climax wide view. All anchor landmarks visible at once: warm yellow smiling moon CENTER, turquoise ringed planet LOWER-LEFT, candy-striped comet UPPER-RIGHT, three golden stars MIDDLE-RIGHT, rosy nebula UPPER-LEFT, silver stars dusted everywhere. The polite meteor, moon sheep (glowing gold), joke-robot, and baby alien are all softly visible in the distance in their respective anchor spots, waving toward the pair. Atmospheric life: every direction alive — nebula breathes slow pink, the moon's butter-gold pulses warm, the comet's sparkle-tail streaks pink-white, the ringed planet's mint-turquoise glow rises from below, stardust showers gently through the whole scene, the connective stardust ribbon loops like a ribbon of sung light.
@@ -271,7 +271,7 @@ The universe said yes — the reader still wants to know: what happens when they
 ### PAGE 10
 
 **TEXT:**
-The grass is cool and the porch light is warm and the sky is full of quiet stars. {HERO} smiles sleepy and {COMPANION_NAME} smiles too. "Again tomorrow?" {HERO} whispers.
+The grass is cool and the porch light is warm and the sky is full of quiet stars. {HERO} smiles sleepily and {COMPANION_NAME} smiles too. "Again tomorrow?" {HERO} whispers.
 
 **ILLUSTRATION BRIEF:**
 - Setting: the backyard launchpad per SETTING LOCK, mirroring page 1. Same kid-scale silver rocket (now back on the grass, a little curl of warm steam rising from its base), same back-porch step, same crooked apple tree with three little lanterns, same crescent moon upper-right. The sky is now deep indigo-violet with a full generous scatter of warm silver-gold stars — the "three shy stars" from page 1 are now joined by hundreds more. Atmospheric life: warm amber rocket-steam still curling slowly upward from the rocket's base catching the porch glow, the apple-tree lanterns breathing a soft honey-gold pulse, a single firefly circling slow around the rocket's fin, the dewy grass glimmering with tiny silver catchlights, a faint curl of the stardust ribbon low on the horizon still humming home.
