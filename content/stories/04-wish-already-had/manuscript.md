@@ -153,7 +153,7 @@ A humming frog — the reader wants to meet more.
 ### PAGE 5
 
 **TEXT:**
-*Click-click-clack!* A bright toucan taps his beak like castanets. {HERO} claps along. The clearing fills with a tiny, happy band.
+*Click-click-clack!* A bright toucan taps his beak like little clacking sticks. {HERO} claps along. The clearing fills with a tiny, happy band.
 
 **ILLUSTRATION BRIEF:**
 - Setting: jungle clearing per SETTING LOCK, looking upward into the arching fern canopy toward a low branch above the bromeliad patch. Waterfall and pool visible below in the lower-frame. Warm green-gold light filters down in broad shafts through the canopy; the fern fronds at the top of the frame sway in a soft breeze; pollen and a few tiny white petals drift slowly through the beams; the red-orange bromeliad blooms glow softly as little lanterns against the green; a faint bioluminescent shimmer hums in the mossy joins where the branch meets the trunk.
@@ -261,7 +261,7 @@ The jungle has gathered — the reader feels the warmth swell. What happens as t
 ### PAGE 9
 
 **TEXT:**
-{HERO} and {COMPANION_NAME} walk the path home slow. Pockets full of wonder. Heads full of green.
+{HERO} and {COMPANION_NAME} walk the path home slow. Pockets full of wonder. Hearts full of jungle.
 
 **ILLUSTRATION BRIEF:**
 - Setting: jungle-path entrance per SETTING LOCK — the return walk. Match the attached jungle-path setting sheet exactly. Late afternoon now, light shifted warmer and longer; honey-gold shafts slant in from the upper-right and pool long on the dirt path; pollen motes drift through the beams; a few tiny pale petals and a drifting leaf or two float on the soft breeze; the morning-glory vines on the arch sway gently; a soft bioluminescent fleck glows on the mossy arch stones as the light starts to cool.
