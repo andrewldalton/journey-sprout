@@ -342,10 +342,14 @@ export async function generateCover(params: {
   storyTitle: string;
   heroName: string;
   companionName: string;
+  companionSpecies?: string;
   heroFeatures?: string;
   heroAge?: number | null;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
+  const name = params.heroName;
+  const compName = params.companionName;
+  const compSpecies = params.companionSpecies ?? "animal";
   // Sheet is the identity contract post-approval — photo ref dropped.
   // FLUX Kontext Multi caps at 4 refs; sheet duplication used to push us
   // over on 2-setting stories. See generatePage for rationale.
@@ -358,25 +362,13 @@ export async function generateCover(params: {
 
   const fallbackBrief = `${params.heroName} and ${params.companionName} stand together at the heart of the story's anchor setting in a welcoming inviting pose, warm open expression on ${params.heroName}'s face, ${params.companionName} close beside as friend.`;
 
-  const prompt = `
-Render a children's picture-book COVER illustration in modern vibrant watercolor style for the book titled "${params.storyTitle}".
-
-COVER SCENE:
-${params.coverBrief || fallbackBrief}
-
-HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-The FIRST reference image is ${params.heroName}'s APPROVED CHARACTER SHEET. The child on the cover MUST BE IDENTICAL to the sheet:
-- SAME face shape, eye shape, eye color, nose, mouth, skin tone, cheek fullness.
-- SAME hair — exact length, color, texture (straight / wavy / curly / ringlet), hairline. If the sheet shows tight curls, keep tight curls.
-- SAME outfit — same top, same bottoms, same shoes.
-- SAME apparent age.
-${(() => {
-  const parsedRaw = parseHeroFeatures(params.heroFeatures);
-  const parsed = parsedRaw && params.canonicalOutfit
-    ? { ...parsedRaw, outfit: params.canonicalOutfit }
-    : parsedRaw;
-  if (parsed) {
-    return `\n${params.heroName.toUpperCase()}'S EXACT FEATURES (weight heavily):
+  const featuresBlock = (() => {
+    const parsedRaw = parseHeroFeatures(params.heroFeatures);
+    const parsed = parsedRaw && params.canonicalOutfit
+      ? { ...parsedRaw, outfit: params.canonicalOutfit }
+      : parsedRaw;
+    if (parsed) {
+      return `\n${name.toUpperCase()}'S EXACT FEATURES (weight heavily):
 - FACE: ${parsed.face}
 - EYES: ${parsed.eyes}
 - HAIR (length + color + texture + EXACT HAIRSTYLE — bun stays bun, ponytail stays ponytail): ${parsed.hair}
@@ -386,25 +378,32 @@ ${(() => {
 - SKIN: ${parsed.skin}
 - BUILD/SIZE: ${parsed.build}
 - OUTFIT (identical to every page): ${parsed.outfit}
+`;
+    }
+    return params.heroFeatures ? `\n${name.toUpperCase()}'S EXACT FEATURES: ${params.heroFeatures}\n` : "";
+  })();
 
-HAIRSTYLE LOCK: If HAIR says the style is up (bun/ponytail/braid/pigtails), it stays UP on the cover — do NOT render it down or loose.
-ACCESSORIES LOCK: Glasses, headbands, clips, bows listed above MUST be on the hero on the cover — do NOT remove them.\n`;
-  }
-  return params.heroFeatures ? `\n${params.heroName.toUpperCase()}'S EXACT FEATURES: ${params.heroFeatures}\n` : "";
-})()}
-Do NOT reinterpret, modernize, or "improve" the child. Paint THIS child, in THIS outfit, on the cover.
+  const prompt = `
+Render a children's picture-book COVER illustration in modern vibrant watercolor style for the book titled "${params.storyTitle}". The cover has EXACTLY TWO characters: ${name} (a ${params.heroAge ?? 3}-year-old human child) and ${compName} (a small ${compSpecies}). They are two completely different beings — one human, one ${compSpecies}. Painting two children would be wrong; ${compName} must look like a ${compSpecies}.
 
-AGE LOCK (RIGID): ${params.heroName} is EXACTLY ${params.heroAge ?? 3} years old. Same head-to-body ratio, same face roundness, same limb length as the sheet. Do NOT age them up or down on the cover — the cover must show the same apparent age as every interior page.
-COLOR LOCK: ${params.heroName}'s hair color, skin tone, and clothing colors are fixed by the sheet and do NOT change with scene lighting. You may render soft cast shadows and gentle rim-light, but NEVER repaint the hero's actual colors to match the scene palette. If the sheet shows blonde hair and a yellow top, they stay blonde and yellow under any lighting.
+COVER SCENE:
+${params.coverBrief || fallbackBrief}
 
-COMPANION LOCK: Match ${params.companionName}'s reference — species, colors, proportions, silhouette exactly. ${params.companionName}'s SIZE relative to ${params.heroName} must match the proportions shown in the companion reference (same relative size as on the interior pages — cover must NOT grow or shrink ${params.companionName}).
+CHARACTER SHEETS:
+The attached references are the approved painted character sheets — one showing ${name} (the human child) and one showing ${compName} (the ${compSpecies}). Match both exactly in face, features, colors, proportions, and silhouette. ${compName} keeps the same body size relative to ${name} as on every interior page — the ${compSpecies} does NOT grow or shrink for the cover.
 
-CAST LOCK: The ONLY characters on this cover are ${params.heroName} and ${params.companionName}. Do NOT paint any other people or animals in the scene.
+${name.toUpperCase()} IDENTITY LOCK: ${name} must be IDENTICAL to the painted hero sheet — same face, same hair (length, color, texture, hairline, exact hairstyle), same outfit (top, bottoms, shoes), same apparent age. Treat the sheet as a portrait contract. ${name}'s hair color, skin tone, and clothing colors are FIXED by the sheet — they do NOT shift with cover lighting.
+${featuresBlock}
+${compName.toUpperCase()} IDENTITY LOCK: ${compName} must be IDENTICAL to the painted companion sheet — same ${compSpecies} species, same colors, same proportions, same silhouette, same distinguishing marks. ${compName} is an ANIMAL, not a human. Render ${compName} exactly as painted in the companion sheet, at the same relative size to ${name} as on every interior page.
+
+AGE LOCK: ${name} is EXACTLY ${params.heroAge ?? 3} years old — same head-to-body ratio, same face roundness, same limb length as the sheet. The cover must show the same apparent age as every interior page.
+
+CAST LOCK (important — this is where cover errors happen): The cover contains EXACTLY ONE ${name} AND EXACTLY ONE ${compName}. Never two humans. Never two ${compSpecies}s. If you ever find yourself about to paint a second child with similar hair or outfit, STOP — the second figure is ${compName} the ${compSpecies}, not another ${name}. No other people, no other animals, no additional creatures.
 
 SETTING LOCK: Environment and recurring props must match the setting reference(s).
 
 COMPOSITION:
-- Hero and companion both clearly visible, warmly lit, inviting pose.
+- ${name} and ${compName} both clearly visible, warmly lit, inviting pose.
 - Reserve the TOP ~38% as a calm, gently-washed area for title typography.
 - NO text, letters, numbers, labels, captions, signatures, or watermarks.
 - No borders, frames, or panels.

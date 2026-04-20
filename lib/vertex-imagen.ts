@@ -317,10 +317,12 @@ export async function generateCover(params: {
   storyTitle: string;
   heroName: string;
   companionName: string;
+  companionSpecies?: string;
   heroFeatures?: string;
   heroAge?: number | null;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
+  void params.companionSpecies;
   // Sheet is the identity contract post-approval — photo ref dropped.
   void params.heroPhoto;
   void params.heroFeatures; // signature-only for router compatibility

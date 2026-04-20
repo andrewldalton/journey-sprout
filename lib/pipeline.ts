@@ -243,6 +243,7 @@ export async function runCoverStep(
         storyTitle: manuscript.title,
         heroName: ctx.heroName,
         companionName: companion.name,
+        companionSpecies: companion.species,
         heroFeatures: heroFeatures ?? undefined,
         heroAge: ctx.heroAge,
         canonicalOutfit: outfit.description,
