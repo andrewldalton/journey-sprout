@@ -129,7 +129,11 @@ async function predict(params: {
       sampleCount: params.sampleCount ?? 1,
       aspectRatio: params.aspectRatio ?? "1:1",
       safetySetting: "block_only_high",
-      personGeneration: "allow_adult",
+      // Required to render minors — our hero is a child (typically 2-10).
+      // Vertex blocks "allow_adult" on any image containing a minor.
+      // Note: project may need allowlist approval in GCP for this value;
+      // if it 400s with a different message we'll see it in logs.
+      personGeneration: "allow_all",
     },
   };
 
