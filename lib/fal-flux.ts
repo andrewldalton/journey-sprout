@@ -323,6 +323,13 @@ CAST LOCK (important — this is where errors happen): The scene contains EXACTL
 
 SETTING LOCK: Match the attached setting references — architecture, recurring props, painted surfaces. Camera angle, time of day, and weather may change per the brief, but setting geometry and landmarks are locked.
 
+ILLUSTRATION CRAFT (make this a living scene, not a character pasted on a backdrop):
+- LIGHT INTEGRATION: ${name} and ${compName} are lit by the SAME light source as the scene. Golden hour = warm rim-light on one side of their faces, cool shadow on the other. Twilight = cool cast on skin, warm pockets near lamps. Jungle shade = dappled leaf-shadow patterns breaking across faces and clothes. Their cast shadows fall on the ground plane matching the scene's light direction and length — never floating, never disconnected.
+- PHYSICAL CONTACT WITH THE WORLD: feet planted with visible weight (cobbles compressing under toes, grass parting, sand dimpling, floorboards bending); hands PRESSED on props, fingers curved around railings, palms flat on bench slats; hair + fabric respond to scene wind and gravity; ${compName}'s body touches ${name}'s leg/hip with both bodies showing the gentle compression.
+- POSE & WEIGHT: hips shifted, knees bent, one shoulder higher than the other, head tipped — a living child mid-motion or mid-rest, never a stiff mannequin standing straight at camera. The pose tells the story before the face does. ${compName} matches with an animal-natural pose (paw lifted mid-step, tail counterbalancing, head tilted).
+- EXPRESSION SPECIFICITY: sell the scene's emotional beat with concrete face anatomy — surprise = eyes WIDE + brows LIFTED + mouth SOFT-OPEN; delighted laugh = eyes SQUINTED shut + cheeks RAISED + mouth WIDE open in laugh-shape; wonder = eyes WIDE + mouth SMALL open + breath held; quiet awe = eyes wide + still + small private smile pulling at the corners; tickled giggle = cheeks up + eyes crescent + shoulder raised in glee. Add a glint in the eyes where a detail catches their attention. ${compName} mirrors the feeling in the ${compSpecies}'s natural vocabulary.
+- ENVIRONMENTAL INTEGRATION: feet sink slightly into grass or sand, foliage and props cross in front of arm/leg silhouettes (not always behind), atmospheric haze softens distant edges, dust motes or pollen or glitter in the shafts of light. ${name} and ${compName} are IN the scene, with the scene, not in front of it.
+
 COMPOSITION:
 - ${textZone}
 - NO text, letters, numbers, speech bubbles, labels, captions, signatures, or watermarks.
@@ -401,6 +408,13 @@ AGE LOCK: ${name} is EXACTLY ${params.heroAge ?? 3} years old — same head-to-b
 CAST LOCK (important — this is where cover errors happen): The cover contains EXACTLY ONE ${name} AND EXACTLY ONE ${compName}. Never two humans. Never two ${compSpecies}s. If you ever find yourself about to paint a second child with similar hair or outfit, STOP — the second figure is ${compName} the ${compSpecies}, not another ${name}. No other people, no other animals, no additional creatures.
 
 SETTING LOCK: Environment and recurring props must match the setting reference(s).
+
+ILLUSTRATION CRAFT (make the cover a living scene, not a character pasted on a backdrop):
+- LIGHT INTEGRATION: ${name} and ${compName} are lit by the cover scene's light source. Warm rim-light and cool shadow fall across their faces matching the sun/moon direction. Their cast shadows connect to the ground plane — never floating.
+- PHYSICAL CONTACT: feet planted with visible weight, hands engaged with props or each other, hair and fabric moving with scene air. ${compName} leans against ${name} with gentle body compression shown in both figures.
+- POSE & WEIGHT: hips shifted, one shoulder higher, head tipped, inviting body language — a living welcoming stance, never a stiff mannequin. ${compName} poses animal-naturally beside them.
+- EXPRESSION: an inviting open emotion that makes a child want to open the book — warm wide smile with eyes crinkling, cheeks raised, a glint of adventure in the eyes. ${compName} matches with a species-natural open expression.
+- ENVIRONMENTAL INTEGRATION: foliage or scene elements cross in front of parts of the silhouettes, atmospheric haze softens the distance, light motes or petals drift in the air. The pair and the world share a single painted atmosphere.
 
 COMPOSITION:
 - ${name} and ${compName} both clearly visible, warmly lit, inviting pose.
