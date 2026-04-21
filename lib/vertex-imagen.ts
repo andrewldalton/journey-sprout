@@ -12,6 +12,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { GoogleAuth } from "google-auth-library";
+import { parseHeroFeatures } from "./gemini";
 
 // GA successor of imagen-3.0-capability-preview-0930; preview SKU was
 // deprecated and now 404s. Subject-customization payload shape is stable.
@@ -222,11 +223,10 @@ export async function generatePage(params: {
   companionSpecies?: string;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
-  void params.heroFeatures; // signature-only for router compatibility
-  void params.heroAge;
-  void params.heroName;
-  void params.companionName;
-  void params.companionSpecies;
+  const name = params.heroName ?? "the hero";
+  const compName = params.companionName ?? "the companion";
+  const compSpecies = params.companionSpecies ?? "animal";
+  const age = params.heroAge ?? 3;
   // NB: heroPhoto is intentionally unused here. Post-approval, the painted
   // character sheet IS the identity contract — it becomes the PERSON subject
   // ref (id=1). Passing the photo in as well gives Imagen two references to
@@ -235,15 +235,12 @@ export async function generatePage(params: {
 
   const refs: ReferenceImage[] = [];
 
-  // Identity anchor: APPROVED CHARACTER SHEET as the PERSON subject. The
-  // customer has signed off on this painted portrait — it is the canonical
-  // likeness. No second photo reference.
   refs.push({
     referenceType: "REFERENCE_TYPE_SUBJECT",
     referenceId: 1,
     referenceImage: refToBase64(params.heroSheet),
     subjectImageConfig: {
-      subjectDescription: "the hero child",
+      subjectDescription: `${name}, the hero child`,
       subjectType: "SUBJECT_TYPE_PERSON",
     },
   });
@@ -253,7 +250,7 @@ export async function generatePage(params: {
     referenceId: 2,
     referenceImage: refToBase64(params.companionSheet),
     subjectImageConfig: {
-      subjectDescription: "the companion animal",
+      subjectDescription: `${compName}, the ${compSpecies}`,
       subjectType: "SUBJECT_TYPE_ANIMAL",
     },
   });
@@ -279,27 +276,65 @@ export async function generatePage(params: {
       ? "Keep all characters, faces, hands, and key action in the UPPER ~75% of the frame. Reserve the BOTTOM ~22% as a calm, gently-washed area (porch boards / grass / ground wash). No faces or critical detail in the bottom band."
       : "Keep all characters, faces, hands, and key action in the LOWER ~75% of the frame. Reserve the TOP ~22% as a calm, gently-washed area (sky / open wall / soft distant background). No faces or critical detail in the top band.";
 
-  const outfitLine = params.canonicalOutfit
-    ? `\nOUTFIT (identical on every page — override whatever looks slightly different in the sheet): ${params.canonicalOutfit}.`
+  const parsedRaw = parseHeroFeatures(params.heroFeatures);
+  const parsed = parsedRaw && params.canonicalOutfit
+    ? { ...parsedRaw, outfit: params.canonicalOutfit }
+    : parsedRaw;
+  const featuresBlock = parsed
+    ? `
+${name.toUpperCase()}'S EXACT FEATURES (painted version MUST match these — weight them heavily):
+- FACE: ${parsed.face}
+- EYES: ${parsed.eyes}
+- HAIR (length + color + texture + EXACT HAIRSTYLE): ${parsed.hair}
+- ACCESSORIES (MUST be worn on EVERY page if listed — glasses, headbands, etc): ${parsed.accessories}
+- NOSE: ${parsed.nose}
+- MOUTH: ${parsed.mouth}
+- SKIN: ${parsed.skin}
+- BUILD/SIZE: ${parsed.build}
+- OUTFIT (MUST be identical every page — same top, same pants, same shoes): ${parsed.outfit}
+
+HAIRSTYLE LOCK: preserve the sheet's exact hairstyle — buns stay buns, ponytails stay ponytails, down stays down.
+ACCESSORIES LOCK: glasses, headbands, clips listed above MUST be worn on this page.
+`.trim()
     : "";
+  const featuresLine = featuresBlock ? `\n${featuresBlock}\n` : "";
+
+  const outfitOverride = params.canonicalOutfit
+    ? `\nOUTFIT OVERRIDE (critical — this is where Vertex most commonly fails): ${name}'s outfit is FIXED by the sheet and this spec: ${params.canonicalOutfit}. Do NOT substitute scene-appropriate clothing. NO astronaut suits for space scenes, NO bathing suits for beach or water scenes, NO jungle explorer vests, NO costumes of any kind. The outfit NEVER changes because of the scene's setting. If the brief describes a space scene, ${name} still wears the canonical outfit — not a spacesuit. If the brief describes a jungle scene, ${name} still wears the canonical outfit — not safari gear.`
+    : "";
+
   const prompt = `
-Render a single children's picture-book page illustration starring [1] and [2].
+Render a children's picture-book page illustration. The scene has EXACTLY TWO characters: [1] (${name}, a ${age}-year-old human child) and [2] (${compName}, a small ${compSpecies}). They are two completely different beings — one human, one ${compSpecies}. Painting two children would be wrong; [2] must look like a ${compSpecies}.
 
 SCENE BRIEF:
 ${params.brief}
 
-HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-[1] is the hero's APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on this page MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.${outfitLine}
+CHARACTER SHEETS:
+[1] is the approved painted character sheet for ${name} (the human child). [2] is the approved painted character sheet for ${compName} (the ${compSpecies}). Match both exactly in face, features, colors, proportions, and silhouette. [2] keeps the same body size relative to [1] on every page — the ${compSpecies} does NOT grow or shrink between pages.
 
-OTHER LOCKS:
-- [2] is the companion animal reference. Match species, colors, proportions, silhouette, and distinguishing marks exactly.
-- Setting/style references lock environment and painted style. Do NOT reinvent recurring landmarks or props. Camera angle, time of day, and weather may change per the brief, but setting geometry and identifying props are locked.
+${name.toUpperCase()} IDENTITY LOCK: [1] must be IDENTICAL to the painted hero sheet — same face, same hair (length, color, texture, hairline, exact hairstyle), same outfit (top, bottoms, shoes), same apparent age. If the sheet shows tight ringlet curls, render tight ringlet curls. If short hair, do NOT grow it out. Treat the sheet as a portrait contract. ${name}'s hair color, skin tone, and clothing colors are FIXED by the sheet — they do NOT shift with scene lighting (yellow stays yellow, blonde stays blonde under any lighting).
+${featuresLine}
+${compName.toUpperCase()} IDENTITY LOCK: [2] must be IDENTICAL to the painted companion sheet — same ${compSpecies} species, same colors, same proportions, same silhouette, same distinguishing marks. [2] is an ANIMAL, not a human. Render [2] exactly as painted in the companion sheet, at the same relative size to [1] every page.
+
+AGE LOCK: ${name} is EXACTLY ${age} years old — same head-to-body ratio, same face roundness, same limb length as the sheet on every page. Height relative to props and to [2] stays consistent with a ${age}-year-old across every page.
+${outfitOverride}
+
+CAST LOCK (important — this is where errors happen): The scene contains EXACTLY ONE [1] AND EXACTLY ONE [2]. Never two humans. Never two ${compSpecies}s. If you ever find yourself about to paint a second child with similar hair or outfit, STOP — the second figure is [2] the ${compSpecies}, not another [1]. No background adults, no other kids, no strangers, no extra animals — unless the scene brief above introduces them by name on this specific page.
+
+SETTING LOCK: Match the attached style references — architecture, recurring props, painted surfaces. Camera angle, time of day, and weather may change per the brief, but setting geometry and landmarks are locked.
+
+ILLUSTRATION CRAFT (make this a living scene, not a character pasted on a backdrop):
+- LIGHT INTEGRATION: [1] and [2] are lit by the SAME light source as the scene. Golden hour = warm rim-light on one side of their faces, cool shadow on the other. Twilight = cool cast on skin, warm pockets near lamps. Jungle shade = dappled leaf-shadow patterns breaking across faces and clothes. Their cast shadows fall on the ground plane matching the scene's light direction and length.
+- PHYSICAL CONTACT WITH THE WORLD: feet planted with visible weight (cobbles compressing under toes, grass parting, sand dimpling); hands PRESSED on props, fingers curved around railings, palms flat on bench slats; hair + fabric respond to scene wind and gravity; [2]'s body touches [1]'s leg/hip with both bodies showing the gentle compression.
+- POSE & WEIGHT: hips shifted, knees bent, one shoulder higher than the other, head tipped — a living child mid-motion or mid-rest, never a stiff mannequin. The pose tells the story before the face does. [2] matches with an animal-natural pose (paw lifted mid-step, tail counterbalancing, head tilted).
+- EXPRESSION SPECIFICITY: sell the scene's emotional beat with concrete face anatomy — surprise = eyes WIDE + brows LIFTED + mouth SOFT-OPEN; delighted laugh = eyes SQUINTED shut + cheeks RAISED + mouth WIDE open in laugh-shape; wonder = eyes WIDE + mouth SMALL open + breath held; quiet awe = eyes wide + still + small private smile; tickled giggle = cheeks up + eyes crescent + shoulder raised in glee. Add a glint in the eyes where a detail catches their attention. [2] mirrors the feeling in the ${compSpecies}'s natural vocabulary.
+- ENVIRONMENTAL INTEGRATION: feet sink slightly into grass or sand, foliage and props cross in front of arm/leg silhouettes, atmospheric haze softens distant edges, dust motes or pollen or glitter in the shafts of light. [1] and [2] are IN the scene, not pasted in front of it.
 
 COMPOSITION:
 - ${textZone}
-- Do NOT render any text, letters, numbers, speech bubbles, labels, captions, signatures, or watermarks.
-- No borders, no frames, no panels.
-- Full-bleed modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary picture-book energy. Bright and joyful, not muted or vintage. Soft edges, painterly, no harsh black outlines.
+- NO text, letters, numbers, speech bubbles, labels, captions, signatures, or watermarks.
+- No borders, frames, or panels.
+- Modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy. Bright and joyful, not muted or vintage. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
   return predict({
@@ -323,11 +358,12 @@ export async function generateCover(params: {
   heroAge?: number | null;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
-  void params.companionSpecies;
+  const name = params.heroName;
+  const compName = params.companionName;
+  const compSpecies = params.companionSpecies ?? "animal";
+  const age = params.heroAge ?? 3;
   // Sheet is the identity contract post-approval — photo ref dropped.
   void params.heroPhoto;
-  void params.heroFeatures; // signature-only for router compatibility
-  void params.heroAge;
 
   const refs: ReferenceImage[] = [];
 
@@ -336,7 +372,7 @@ export async function generateCover(params: {
     referenceId: 1,
     referenceImage: refToBase64(params.heroSheet),
     subjectImageConfig: {
-      subjectDescription: `${params.heroName}, the hero child`,
+      subjectDescription: `${name}, the hero child`,
       subjectType: "SUBJECT_TYPE_PERSON",
     },
   });
@@ -346,7 +382,7 @@ export async function generateCover(params: {
     referenceId: 2,
     referenceImage: refToBase64(params.companionSheet),
     subjectImageConfig: {
-      subjectDescription: `${params.companionName}, the animal companion`,
+      subjectDescription: `${compName}, the ${compSpecies}`,
       subjectType: "SUBJECT_TYPE_ANIMAL",
     },
   });
@@ -364,29 +400,64 @@ export async function generateCover(params: {
     });
   }
 
-  const fallbackBrief = `${params.heroName} and ${params.companionName} stand together at the heart of the story's anchor setting in a welcoming inviting pose, warm open expression on ${params.heroName}'s face, ${params.companionName} close beside as friend.`;
+  const fallbackBrief = `${name} and ${compName} stand together at the heart of the story's anchor setting in a welcoming inviting pose, warm open expression on ${name}'s face, ${compName} close beside as friend.`;
 
-  const outfitLine = params.canonicalOutfit
-    ? `\nOUTFIT (identical to every page): ${params.canonicalOutfit}.`
+  const parsedRaw = parseHeroFeatures(params.heroFeatures);
+  const parsed = parsedRaw && params.canonicalOutfit
+    ? { ...parsedRaw, outfit: params.canonicalOutfit }
+    : parsedRaw;
+  const featuresBlock = parsed
+    ? `
+${name.toUpperCase()}'S EXACT FEATURES (weight heavily):
+- FACE: ${parsed.face}
+- EYES: ${parsed.eyes}
+- HAIR (length + color + texture + EXACT HAIRSTYLE): ${parsed.hair}
+- ACCESSORIES (worn on cover if listed — glasses stay on): ${parsed.accessories}
+- NOSE: ${parsed.nose}
+- MOUTH: ${parsed.mouth}
+- SKIN: ${parsed.skin}
+- BUILD/SIZE: ${parsed.build}
+- OUTFIT (identical to every page): ${parsed.outfit}
+`.trim()
     : "";
+  const featuresLine = featuresBlock ? `\n${featuresBlock}\n` : "";
+
+  const outfitOverride = params.canonicalOutfit
+    ? `\nOUTFIT OVERRIDE (critical — this is where Vertex most commonly fails): ${name}'s outfit is FIXED by this spec: ${params.canonicalOutfit}. Do NOT substitute scene-appropriate clothing. NO astronaut suits, NO bathing suits, NO jungle explorer vests, NO costumes. The cover outfit is identical to every interior page — NEVER replaced by scene-themed attire.`
+    : "";
+
   const prompt = `
-Render a children's picture-book COVER illustration in modern vibrant watercolor style for the book titled "${params.storyTitle}".
+Render a children's picture-book COVER illustration for the book titled "${params.storyTitle}". The cover has EXACTLY TWO characters: [1] (${name}, a ${age}-year-old human child) and [2] (${compName}, a small ${compSpecies}). They are two completely different beings — one human, one ${compSpecies}. Painting two children would be wrong; [2] must look like a ${compSpecies}.
 
 COVER SCENE:
 ${params.coverBrief || fallbackBrief}
 
-HERO IDENTITY LOCK (THE SHEET IS THE CONTRACT):
-[1] is ${params.heroName}'s APPROVED CHARACTER SHEET — the painted canonical portrait of this exact child that the customer has signed off on. The child on the cover MUST BE IDENTICAL to the sheet: SAME face shape, eye shape, eye color, nose, mouth, cheek fullness, skin tone; SAME hair (exact length, color, texture, hairline); SAME outfit; SAME apparent age. Treat the sheet as a portrait contract. Do NOT reinterpret, modernize, simplify, or "improve" the child. Do NOT substitute a generic toddler face.${outfitLine}
+CHARACTER SHEETS:
+[1] is the approved painted character sheet for ${name} (the human child). [2] is the approved painted character sheet for ${compName} (the ${compSpecies}). Match both exactly in face, features, colors, proportions, and silhouette. [2] keeps the same body size relative to [1] as on every interior page — the ${compSpecies} does NOT grow or shrink for the cover.
 
-OTHER LOCKS:
-- Match the companion's colors, proportions, and silhouette exactly.
-- The environment and recurring props must match the setting reference(s).
+${name.toUpperCase()} IDENTITY LOCK: [1] must be IDENTICAL to the painted hero sheet — same face, same hair (length, color, texture, hairline, exact hairstyle), same outfit (top, bottoms, shoes), same apparent age. Treat the sheet as a portrait contract. ${name}'s hair color, skin tone, and clothing colors are FIXED by the sheet — they do NOT shift with cover lighting.
+${featuresLine}
+${compName.toUpperCase()} IDENTITY LOCK: [2] must be IDENTICAL to the painted companion sheet — same ${compSpecies} species, same colors, same proportions, same silhouette, same distinguishing marks. [2] is an ANIMAL, not a human. Render [2] exactly as painted in the companion sheet, at the same relative size to [1] as on every interior page.
+
+AGE LOCK: ${name} is EXACTLY ${age} years old — same head-to-body ratio, same face roundness, same limb length as the sheet. The cover must show the same apparent age as every interior page.
+${outfitOverride}
+
+CAST LOCK (important — this is where cover errors happen): The cover contains EXACTLY ONE [1] AND EXACTLY ONE [2]. Never two humans. Never two ${compSpecies}s. If you ever find yourself about to paint a second child with similar hair or outfit, STOP — the second figure is [2] the ${compSpecies}, not another [1]. No other people, no other animals, no additional creatures.
+
+SETTING LOCK: Environment and recurring props must match the setting reference(s).
+
+ILLUSTRATION CRAFT (make the cover a living scene, not a character pasted on a backdrop):
+- LIGHT INTEGRATION: [1] and [2] are lit by the cover scene's light source. Warm rim-light and cool shadow fall across their faces matching the sun/moon direction. Cast shadows connect to the ground plane.
+- PHYSICAL CONTACT: feet planted with visible weight, hands engaged with props or each other, hair and fabric moving with scene air. [2] leans against [1] with gentle body compression shown in both figures.
+- POSE & WEIGHT: hips shifted, one shoulder higher, head tipped, inviting body language — a living welcoming stance, never a stiff mannequin. [2] poses animal-naturally beside them.
+- EXPRESSION: an inviting open emotion that makes a child want to open the book — warm wide smile with eyes crinkling, cheeks raised, a glint of adventure in the eyes. [2] matches with a species-natural open expression.
+- ENVIRONMENTAL INTEGRATION: foliage or scene elements cross in front of parts of the silhouettes, atmospheric haze softens the distance, light motes or petals drift in the air. The pair and the world share a single painted atmosphere.
 
 COMPOSITION:
-- Hero and companion both clearly visible, warmly lit, inviting pose.
+- [1] and [2] both clearly visible, warmly lit, inviting pose.
 - Reserve the TOP ~38% as a calm, gently-washed area for title typography.
-- Do NOT render any text, letters, numbers, labels, captions, signatures, or watermarks.
-- No borders, no frames, no panels.
+- NO text, letters, numbers, labels, captions, signatures, or watermarks.
+- No borders, frames, or panels.
 - Modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy. Bright and joyful. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
