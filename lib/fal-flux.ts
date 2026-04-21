@@ -310,8 +310,10 @@ DISTINGUISHING-FEATURES LOCK: freckles, dimples, moles, birthmarks, ear shape, c
   const prompt = `
 Render a children's picture-book page illustration. The scene has EXACTLY TWO characters: ${name} (a ${params.heroAge ?? 3}-year-old human child) and ${compName} (a small ${compSpecies}). They are two completely different beings — one human, one ${compSpecies}. Painting two children would be wrong; ${compName} must look like a ${compSpecies}.
 
-${topFeatureLines}SCENE BRIEF:
+${topFeatureLines}SCENE BRIEF (READ CAREFULLY — the specifics below are the POINT of this page, not optional flavor):
 ${params.brief}
+
+SCENE MECHANIC LOCK (critical — this is where pages usually go wrong): the brief above describes story-specific elements that MUST appear in the render — magical mechanisms (shimmering bubble shields enclosing the characters, glowing pearls, protective bubbles around heads), specific animals introduced on THIS page by name, and specific visual beats (a striped fish zipping circles, an octopus blushing colors, a shadow sliding across sand, a pearl floating into a palm). These are NOT flavor — a generic pretty scene without them is WRONG. If the brief says ${name} is INSIDE a shimmering bubble shield, the shimmering bubble shield is painted around ${name}. If the brief says a specific animal is present on this page, that animal is painted — do not substitute a different animal from another page.
 
 CHARACTER SHEETS:
 The attached references are the approved painted character sheets — one showing ${name} (the human child) and one showing ${compName} (the ${compSpecies}). Match both exactly in face, features, colors, proportions, and silhouette. ${compName} keeps the same body size relative to ${name} on every page (same as the cover) — the ${compSpecies} does NOT grow or shrink between pages.
