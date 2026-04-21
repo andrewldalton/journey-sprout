@@ -56,6 +56,7 @@ async function maybeFaceSwap(params: {
   raw: Buffer;
   orderId: string;
   label: string;
+  pageNum?: number | null;
 }): Promise<Buffer> {
   if (!faceSwapEnabled()) return params.raw;
   const startedAt = Date.now();
@@ -67,6 +68,7 @@ async function maybeFaceSwap(params: {
     void logCostEvent({
       orderId: params.orderId,
       kind: "faceswap",
+      pageNum: params.pageNum ?? null,
       provider: "flux",
       model: faceSwapModel(),
       durationMs: Date.now() - startedAt,
@@ -78,6 +80,7 @@ async function maybeFaceSwap(params: {
     void logCostEvent({
       orderId: params.orderId,
       kind: "faceswap",
+      pageNum: params.pageNum ?? null,
       provider: "flux",
       model: faceSwapModel(),
       durationMs: Date.now() - startedAt,
@@ -221,7 +224,7 @@ export async function runPageStep(
         companionSpecies: companion.species,
         canonicalOutfit: outfit.description,
       },
-      { orderId: ctx.orderId }
+      { orderId: ctx.orderId, pageNum: page.num }
     );
     if (attempt === MAX_ATTEMPTS) break;
     try {
@@ -250,6 +253,7 @@ export async function runPageStep(
     raw,
     orderId: ctx.orderId,
     label: `page ${page.num}`,
+    pageNum: page.num,
   });
 
   const composed = await composePageBubble({

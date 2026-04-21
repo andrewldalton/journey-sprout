@@ -17,6 +17,11 @@ export type CostEvent = {
   id: number;
   orderId: string | null;
   kind: CostKind;
+  // Page number when kind === "page" or "faceswap" on a page. Null for
+  // sheet, cover, and cover-level faceswap. Lets us map a cost row back
+  // to the specific page that failed/fell-back so we can diagnose which
+  // scene triggered a provider's safety filter without grepping logs.
+  pageNum: number | null;
   provider: CostProvider;
   model: string;
   durationMs: number;
@@ -77,6 +82,7 @@ async function ensureSchema(sql: Sql): Promise<void> {
   await sql`ALTER TABLE cost_events ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'success'`;
   await sql`ALTER TABLE cost_events ADD COLUMN IF NOT EXISTS error_message TEXT`;
   await sql`ALTER TABLE cost_events ADD COLUMN IF NOT EXISTS fallback_from TEXT`;
+  await sql`ALTER TABLE cost_events ADD COLUMN IF NOT EXISTS page_num INTEGER`;
   await sql`CREATE INDEX IF NOT EXISTS cost_events_status_idx ON cost_events (status)`;
   schemaReady = true;
 }
@@ -92,6 +98,7 @@ async function ensureSchema(sql: Sql): Promise<void> {
 export async function logCostEvent(args: {
   orderId?: string | null;
   kind: CostKind;
+  pageNum?: number | null;
   provider: CostProvider;
   model: string;
   durationMs: number;
@@ -108,12 +115,13 @@ export async function logCostEvent(args: {
       args.errorMessage != null ? args.errorMessage.slice(0, 500) : null;
     await sql`
       INSERT INTO cost_events (
-        order_id, kind, provider, model, duration_ms, cost_usd,
+        order_id, kind, page_num, provider, model, duration_ms, cost_usd,
         status, error_message, fallback_from
       )
       VALUES (
         ${args.orderId ?? null},
         ${args.kind},
+        ${args.pageNum ?? null},
         ${args.provider},
         ${args.model},
         ${args.durationMs},

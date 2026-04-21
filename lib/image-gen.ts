@@ -62,6 +62,7 @@ const MODEL_ID: Record<Provider, Record<CostKind, string>> = {
 
 export type GenMeta = {
   orderId?: string | null;
+  pageNum?: number | null;
 };
 
 function pickFor(kind: CostKind): Provider {
@@ -109,6 +110,7 @@ async function runAndLog<T>(
     void logCostEvent({
       orderId: meta?.orderId ?? null,
       kind,
+      pageNum: meta?.pageNum ?? null,
       provider,
       model: MODEL_ID[provider][kind],
       durationMs,
@@ -121,6 +123,7 @@ async function runAndLog<T>(
     void logCostEvent({
       orderId: meta?.orderId ?? null,
       kind,
+      pageNum: meta?.pageNum ?? null,
       provider,
       model: MODEL_ID[provider][kind],
       durationMs,
