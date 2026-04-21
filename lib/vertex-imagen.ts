@@ -79,11 +79,11 @@ function refToBase64(r: ImgRef): { bytesBase64Encoded: string; mimeType: string 
   return { bytesBase64Encoded: m[2], mimeType: m[1] };
 }
 
-type SubjectType =
-  | "SUBJECT_TYPE_PERSON"
-  | "SUBJECT_TYPE_ANIMAL"
-  | "SUBJECT_TYPE_PRODUCT"
-  | "SUBJECT_TYPE_DEFAULT";
+// Vertex supports PERSON / ANIMAL / PRODUCT / DEFAULT. We only ever pass
+// PERSON (hero) and ANIMAL (companion). DEFAULT was rejected by the API
+// when we tried it for style refs. Narrowed here so nobody can reach for
+// the un-tested variants without thinking about it.
+type SubjectType = "SUBJECT_TYPE_PERSON" | "SUBJECT_TYPE_ANIMAL";
 
 type SubjectReferenceImage = {
   referenceType: "REFERENCE_TYPE_SUBJECT";
