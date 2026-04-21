@@ -104,6 +104,17 @@ type StyleReferenceImage = {
 
 type ReferenceImage = SubjectReferenceImage | StyleReferenceImage;
 
+// Picture-book toddler/child proportions per age. Mirrors the helper in
+// lib/fal-flux.ts and lib/gemini.ts so all three providers describe the
+// hero's body the same way.
+function proportionsForAge(age: number): string {
+  if (age <= 2) return "baby/toddler proportions — very large head (~3 heads tall), short chubby limbs, rounded belly, sturdy legs, pudgy cheeks";
+  if (age <= 4) return "toddler proportions — large head (~3.25 heads tall), short-to-medium limbs, softly rounded belly, round face";
+  if (age <= 6) return "preschooler proportions — head still large (~3.5-4 heads tall), longer limbs, leaner build, round friendly face";
+  if (age <= 9) return "young-child proportions — ~4-4.5 heads tall, balanced limbs, leaner body, slimmer face, more defined chin";
+  return "older-child proportions — ~4.5-5 heads tall, longer limbs, youthful but leaner face, less baby fat";
+}
+
 async function predict(params: {
   prompt: string;
   referenceImages: ReferenceImage[];
@@ -172,22 +183,26 @@ export async function generateCharacterSheet(params: {
   heroName?: string;
   canonicalOutfit?: string;
 }): Promise<Buffer> {
-  void params.heroAge;
-  void params.heroName;
+  const name = params.heroName ?? "the hero";
+  const age = params.heroAge ?? 3;
   const photo = refToBase64(params.photo);
   const outfitLine = params.canonicalOutfit
-    ? `Outfit: ignore whatever [1] is wearing in the photo. Paint [1] in this exact outfit: ${params.canonicalOutfit}.`
+    ? `Outfit: ignore whatever [1] is wearing in the reference photo. Paint ${name} in this exact outfit: ${params.canonicalOutfit}.`
     : `Outfit: comfortable everyday clothes in warm earth tones — soft short-sleeve tee, simple play pants, plain sneakers. Nothing costumey.`;
   const prompt = `
-Produce a CHARACTER REFERENCE SHEET for a children's picture book starring the child [1].
+Produce a CHARACTER REFERENCE SHEET for a children's picture book starring [1] (${name}, a ${age}-year-old child).
 
-CRITICAL IDENTITY: Preserve the exact facial likeness of [1] — face shape, eye color, eye spacing, nose, mouth, cheek shape, and hair color/texture must match the real child. Do NOT generic-ify the face.
+CRITICAL IDENTITY: Preserve ${name}'s exact facial likeness from [1] — face shape, eye color, eye spacing, nose, mouth, cheek fullness, chin, eyebrow color + shape, skin tone, and hair color + texture + length must match the real child in the reference. Do NOT generic-ify the face. Readers must instantly recognize ${name}.
 
-Style: modern vibrant watercolor illustration with rich saturated colors, confident playful shapes, soft paper grain, and contemporary picture-book energy (think Oliver Jeffers, Sam Usher, Christian Robinson at their most vivid — NOT muted, NOT vintage, NOT sepia). Bright, joyful, warm but punchy. Soft edges, painterly, no harsh black outlines. Classic picture-book toddler proportions (large head ~3 heads tall, short limbs, rounded belly, sturdy legs).
+AGE: ${name} is about ${age} years old. Render ${name} at ${proportionsForAge(age)}. Do NOT paint ${name} older or younger than their actual age.
+
+Style: modern vibrant watercolor illustration with rich saturated colors, confident playful shapes, soft paper grain, and contemporary picture-book energy (think Oliver Jeffers, Sam Usher, Christian Robinson at their most vivid — NOT muted, NOT vintage, NOT sepia). Bright, joyful, warm but punchy. Soft edges, painterly, no harsh black outlines.
 
 ${outfitLine}
 
 Composition: SINGLE neutral soft-cream background. Full-body T-pose-ish hero stance, centered, facing camera, calm friendly expression, eyes open, small smile. No props, no companion, no scenery. Full body visible head to toe with a little margin.
+
+This sheet is the identity anchor for every subsequent page and the cover — match the real child's face exactly so every painted illustration of ${name} is recognizable as the same specific child.
 
 No text, no borders, no frames, no watermarks.
 `.trim();
@@ -201,7 +216,7 @@ No text, no borders, no frames, no watermarks.
         referenceId: 1,
         referenceImage: photo,
         subjectImageConfig: {
-          subjectDescription: "the hero child",
+          subjectDescription: `${name}, the hero child`,
           subjectType: "SUBJECT_TYPE_PERSON",
         },
       },
