@@ -138,12 +138,14 @@ export async function runSheetStep(ctx: RenderContext): Promise<string> {
   );
 
   // Belt-and-suspenders identity lock: have Gemini Vision describe the
-  // sheet's distinctive features in plain text. Stored on the order and
-  // included in every downstream page/cover prompt so the model has both
-  // an image ref AND a text description to anchor to. Rare features (tight
-  // curls, specific outfit colors) survive mean-reversion better this way.
+  // sheet's distinctive features in plain text, cross-referenced against
+  // the original photo so fine details (freckles, eyelashes, gap-teeth,
+  // asymmetries) that the painted sheet softened still land in the
+  // downstream features block. Stored on the order and included in every
+  // downstream page/cover prompt so the model has both an image ref AND
+  // a detailed text description to anchor to.
   try {
-    const description = await describeHero(sheet);
+    const description = await describeHero(sheet, photoBytes);
     await updateOrder(ctx.orderId, { sheetDescription: description });
   } catch (err) {
     console.warn(`[sheet-describe] order ${ctx.orderId} describe failed:`, err);

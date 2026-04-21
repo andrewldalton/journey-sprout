@@ -132,35 +132,42 @@ export async function generateCharacterSheet(params: {
 }
 
 /**
- * Given the approved character sheet, ask Gemini to write a concrete,
- * sketch-artist-style description of the child's identifying features.
- * Used downstream in page/cover prompts to reinforce identity when the
- * sheet image alone gets diluted by other references.
- *
- * Returns ~2 short sentences of plain text. Token-cheap.
+ * Given the approved character sheet AND (optionally) the original photo,
+ * ask Gemini to write a concrete, sketch-artist-style description of the
+ * child's identifying features. Passing both lets the describer catch
+ * details that are present in the photo but may have been softened in
+ * the painted sheet (freckles, eyelashes, asymmetries, specific teeth).
+ * Used downstream in every page/cover prompt to reinforce identity when
+ * the sheet image alone gets diluted by other references.
  */
 const DESCRIBE_PROMPT = `
-You are a forensic sketch artist. Look at the attached CHARACTER REFERENCE SHEET of a painted child. Write a concrete description so a second illustrator could recreate this EXACT child — identity AND outfit — on any page of a book without seeing the sheet again.
+You are a forensic sketch artist. You have TWO images:
+- Image A = the PAINTED CHARACTER SHEET (the approved canonical portrait the book will use).
+- Image B (if present) = the ORIGINAL REFERENCE PHOTO of the real child.
+
+Cross-reference both. The sheet is the canonical look, but the photo may preserve tiny identity details (freckles, eyelashes, gap-teeth, ear shape, cowlicks, small asymmetries) that the sheet softened or lost. Capture every feature that makes this child specifically them so a second illustrator could recreate the EXACT child on every page without seeing either image again.
 
 Return a SINGLE JSON object, nothing else (no prose, no markdown fences, no commentary). Use this exact shape. Each value must be a concrete dense phrase, never empty.
 
 {
   "hair": "length + color + texture + hairline + HAIRSTYLE (down / up in a top-bun / low-bun / single-braid / french-braid / pigtails / ponytail / half-up / pulled-back — be specific about the style) — e.g. 'medium-brown wavy shoulder-length hair pulled up into a high top-bun with a loose strand framing the face'",
   "accessories": "any glasses (shape + color), headbands, hair clips, bows, earrings, necklaces visible — e.g. 'round tortoiseshell glasses with a mild magnification' or 'none'",
-  "eyes": "color + shape + spacing + brow color/shape — e.g. 'large round gray-blue eyes, normal spacing, thin medium-arched light-blonde eyebrows'",
-  "face": "face shape + cheek fullness + chin + notable features (dimples / freckles / birthmarks) — e.g. 'round toddler face with full pudgy cheeks, a soft rounded chin, tiny dimples'",
-  "nose": "nose shape — e.g. 'small button nose, slightly upturned'",
-  "mouth": "lip fullness + mouth width + any gap — e.g. 'medium-full rosy lips in a small closed smile'",
+  "eyes": "color + shape + spacing + brow color/shape + eyelash note — e.g. 'large round gray-blue eyes, normal spacing, thin medium-arched light-blonde eyebrows, long thick lower lashes'",
+  "face": "face shape + cheek fullness + chin — e.g. 'round toddler face with full pudgy cheeks and a soft rounded chin'",
+  "nose": "nose shape — e.g. 'small button nose, slightly upturned with a faint bridge'",
+  "mouth": "lip fullness + mouth width + any gap + visible teeth notes — e.g. 'medium-full rosy lips in a small closed smile with a tiny gap between the upper front teeth'",
   "skin": "specific skin tone — e.g. 'warm-fair with a peach undertone'",
-  "build": "apparent age + height ratio — e.g. 'about 3 years old, roughly 3 heads tall, rounded belly, sturdy legs'",
-  "outfit": "top + bottom + shoes + accessories in specific colors/styles — e.g. 'mustard yellow short-sleeve crew tee, olive green slim jogger pants cuffed at the ankle, brown leather lace-up sneakers with white soles, no accessories'"
+  "build": "apparent age + height ratio + notable build details — e.g. 'about 3 years old, roughly 3 heads tall, rounded belly, sturdy legs'",
+  "outfit": "top + bottom + shoes + accessories in specific colors/styles — e.g. 'mustard yellow short-sleeve crew tee, olive green slim jogger pants cuffed at the ankle, brown leather lace-up sneakers with white soles, no accessories'",
+  "distinguishing": "the small details that make this child instantly recognizable — ONLY include what is visibly present across the two images. Examples: freckles (location + density), dimples (which cheek), moles/birthmarks (location + size + color), ear shape (attached/detached lobes, pointy tips), cowlicks or hair-growth quirks, eye asymmetries, a favorite-expression tell. If the photo shows a feature the sheet softened, state it so downstream pages can restore it. Write 'none visible' only if genuinely nothing stands out."
 }
 
 Rules:
 - Return ONLY the JSON object. No markdown fences. No preamble.
 - Every value must be concrete + dense. No metaphor, no fluff, no "cute" or "adorable" filler.
 - Colors must be specific (mustard yellow, not just "yellow"; platinum-blonde, not just "blonde").
-- If you cannot see a feature clearly, make your best guess from the sheet — never leave a field blank.
+- If a feature is visible in the photo but softened in the sheet, capture it from the photo — the painted pages still need to show it.
+- If a feature is NOT visible in either image, leave it out of "distinguishing" (say "none visible"). Do NOT invent features the child does not have.
 `.trim();
 
 export type HeroFeatures = {
@@ -173,6 +180,7 @@ export type HeroFeatures = {
   skin: string;
   build: string;
   outfit: string;
+  distinguishing: string;
 };
 
 /**
@@ -191,7 +199,10 @@ export function heroFeaturesToString(f: HeroFeatures | null | undefined): string
     `Skin: ${f.skin}.`,
     `Build: ${f.build}.`,
     `Outfit: ${f.outfit}.`,
-  ].join(" ");
+    f.distinguishing && f.distinguishing.toLowerCase() !== "none visible"
+      ? `Distinguishing: ${f.distinguishing}.`
+      : "",
+  ].filter(Boolean).join(" ");
 }
 
 function capitalize(s: string): string {
@@ -298,6 +309,7 @@ export function parseHeroFeatures(raw: string | null | undefined): HeroFeatures 
         skin: o.skin ?? "",
         build: o.build ?? "",
         outfit: o.outfit ?? "",
+        distinguishing: o.distinguishing ?? "none visible",
       };
     }
   } catch {
@@ -307,11 +319,15 @@ export function parseHeroFeatures(raw: string | null | undefined): HeroFeatures 
   return null;
 }
 
-export async function describeHero(sheet: Buffer): Promise<string> {
-  const parts: unknown[] = [
-    partFromBuffer(sheet, "image/png"),
-    { text: DESCRIBE_PROMPT },
-  ];
+export async function describeHero(sheet: Buffer, photo?: Buffer): Promise<string> {
+  // Pass both the painted sheet AND the original photo when available —
+  // some fine identity details (freckles, eyelashes, gap teeth, small
+  // asymmetries) survive in the photo but get softened in the sheet.
+  // The describer cross-references both so the downstream features block
+  // carries every recognizable detail forward into every page prompt.
+  const parts: unknown[] = [partFromBuffer(sheet, "image/png")];
+  if (photo) parts.push(partFromBuffer(photo, "image/jpeg"));
+  parts.push({ text: DESCRIBE_PROMPT });
   const res = await ai().models.generateContent({
     model: "gemini-2.5-flash",
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -385,9 +401,11 @@ ${(() => {
 - SKIN: ${parsed.skin}
 - BUILD/SIZE: ${parsed.build}
 - OUTFIT (same every page — same top, same pants, same shoes): ${parsed.outfit}
+- DISTINGUISHING (tiny details that make the child recognizable — paint these every page): ${parsed.distinguishing}
 
 HAIRSTYLE LOCK: Preserve the exact hairstyle from the sheet. Do NOT let buns fall out or ponytails dissolve.
-ACCESSORIES LOCK: Glasses, headbands, clips listed above MUST be worn on this page.\n`;
+ACCESSORIES LOCK: Glasses, headbands, clips listed above MUST be worn on this page.
+DISTINGUISHING LOCK: freckles, dimples, moles, ear shape, cowlicks, gap teeth, eyelashes listed above are preserved on every page. If "none visible", do NOT invent them.\n`;
   }
   return heroFeatures ? `\nTHE CHILD'S EXACT FEATURES: ${heroFeatures}\n` : "";
 })()}
@@ -453,7 +471,8 @@ ${(() => {
 - MOUTH: ${parsed.mouth}
 - SKIN: ${parsed.skin}
 - BUILD/SIZE: ${parsed.build}
-- OUTFIT (same as every page): ${parsed.outfit}\n`;
+- OUTFIT (same as every page): ${parsed.outfit}
+- DISTINGUISHING (paint these — they make ${heroName} recognizable): ${parsed.distinguishing}\n`;
   }
   return heroFeatures ? `\n${heroName.toUpperCase()}'S EXACT FEATURES: ${heroFeatures}\n` : "";
 })()}

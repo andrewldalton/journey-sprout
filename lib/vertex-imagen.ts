@@ -307,9 +307,11 @@ ${name.toUpperCase()}'S EXACT FEATURES (painted version MUST match these — wei
 - SKIN: ${parsed.skin}
 - BUILD/SIZE: ${parsed.build}
 - OUTFIT (MUST be identical every page — same top, same pants, same shoes): ${parsed.outfit}
+- DISTINGUISHING (tiny details that make the child recognizable — paint these every page): ${parsed.distinguishing}
 
 HAIRSTYLE LOCK: preserve the sheet's exact hairstyle — buns stay buns, ponytails stay ponytails, down stays down.
 ACCESSORIES LOCK: glasses, headbands, clips listed above MUST be worn on this page.
+DISTINGUISHING LOCK: freckles, dimples, moles, ear shape, cowlicks, gap teeth listed above are preserved on every page. If "none visible", do NOT invent them.
 `.trim()
     : "";
   const featuresLine = featuresBlock ? `\n${featuresBlock}\n` : "";
@@ -433,6 +435,7 @@ ${name.toUpperCase()}'S EXACT FEATURES (weight heavily):
 - SKIN: ${parsed.skin}
 - BUILD/SIZE: ${parsed.build}
 - OUTFIT (identical to every page): ${parsed.outfit}
+- DISTINGUISHING (paint these — they make ${name} recognizable): ${parsed.distinguishing}
 `.trim()
     : "";
   const featuresLine = featuresBlock ? `\n${featuresBlock}\n` : "";

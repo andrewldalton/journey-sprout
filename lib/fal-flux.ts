@@ -278,10 +278,13 @@ THE CHILD'S EXACT FEATURES (painted version MUST match these — weight them hea
 - SKIN: ${parsed.skin}
 - BUILD/SIZE: ${parsed.build}
 - OUTFIT (MUST be identical every page — same top, same pants, same shoes): ${parsed.outfit}
+- DISTINGUISHING (the tiny details that make the child specifically them — paint these on every page): ${parsed.distinguishing}
 
 HAIRSTYLE LOCK: If the HAIR description above says the hair is up (bun / ponytail / braid / pigtails / half-up), the hair MUST stay in that exact style on every page — do NOT let it fall out, do NOT render it loose, do NOT substitute a different updo. If the HAIR is down, keep it down. The hairstyle is a fingerprint of this child; preserve it exactly.
 
 ACCESSORIES LOCK: If ACCESSORIES lists glasses, headbands, hair clips, bows, earrings, or anything else, every one of those accessories MUST be worn on this page in the same style and color. Glasses do NOT come off between pages.
+
+DISTINGUISHING-FEATURES LOCK: freckles, dimples, moles, birthmarks, ear shape, cowlicks, gap teeth, eyelash length, and any small asymmetries listed above are what make this child instantly recognizable. Paint them on every page — do NOT soften or omit them. If DISTINGUISHING says "none visible", do NOT invent features the child does not have.
 `.trim()
     : params.heroFeatures
       ? `THE CHILD'S EXACT FEATURES (match precisely): ${params.heroFeatures}`
@@ -385,6 +388,7 @@ export async function generateCover(params: {
 - SKIN: ${parsed.skin}
 - BUILD/SIZE: ${parsed.build}
 - OUTFIT (identical to every page): ${parsed.outfit}
+- DISTINGUISHING (paint these — they make ${name} recognizable): ${parsed.distinguishing}
 `;
     }
     return params.heroFeatures ? `\n${name.toUpperCase()}'S EXACT FEATURES: ${params.heroFeatures}\n` : "";
