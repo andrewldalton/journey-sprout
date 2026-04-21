@@ -346,6 +346,7 @@ export async function getOrderCostBreakdown(orderId: string): Promise<CostEvent[
     id: string;
     order_id: string | null;
     kind: CostKind;
+    page_num: number | null;
     provider: CostProvider;
     model: string;
     duration_ms: number;
@@ -355,7 +356,7 @@ export async function getOrderCostBreakdown(orderId: string): Promise<CostEvent[
     fallback_from: CostProvider | null;
     created_at: Date;
   }[]>`
-    SELECT id::text, order_id, kind, provider, model, duration_ms, cost_usd::text,
+    SELECT id::text, order_id, kind, page_num, provider, model, duration_ms, cost_usd::text,
            status, error_message, fallback_from, created_at
     FROM cost_events
     WHERE order_id = ${orderId}
@@ -365,6 +366,7 @@ export async function getOrderCostBreakdown(orderId: string): Promise<CostEvent[
     id: parseInt(r.id, 10),
     orderId: r.order_id,
     kind: r.kind,
+    pageNum: r.page_num,
     provider: r.provider,
     model: r.model,
     durationMs: r.duration_ms,
