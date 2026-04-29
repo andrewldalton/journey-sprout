@@ -18,6 +18,49 @@ function formatSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+// Vercel rejects request bodies > 4.5 MB before they ever hit our handler.
+// A raw 5–10 MB phone photo + base64 (~33% bloat) easily blows past that.
+// Resize to a longest-edge of 1600px and re-encode as JPEG @ 0.85 — that's
+// plenty of fidelity for the watercolor sheet step, and lands in the
+// 200–600 KB range for typical phone photos.
+async function resizeToJpegDataUrl(file: File, maxEdge = 1600, quality = 0.85): Promise<string> {
+  const objectUrl = URL.createObjectURL(file);
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = () => reject(new Error("decode_failed"));
+      i.src = objectUrl;
+    });
+    const longest = Math.max(img.naturalWidth, img.naturalHeight);
+    const scale = longest > maxEdge ? maxEdge / longest : 1;
+    const w = Math.round(img.naturalWidth * scale);
+    const h = Math.round(img.naturalHeight * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("canvas_unsupported");
+    ctx.drawImage(img, 0, 0, w, h);
+    return canvas.toDataURL("image/jpeg", quality);
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+}
+
+function readAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === "string" ? reader.result : null;
+      if (!result) reject(new Error("read_failed"));
+      else resolve(result);
+    };
+    reader.onerror = () => reject(new Error("read_failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
 export function StepUpload({ initialDataUrl, onNext, onBack }: Props) {
   const [dataUrl, setDataUrl] = useState<string | null>(initialDataUrl ?? null);
   const [fileMeta, setFileMeta] = useState<{ name: string; size: number } | null>(null);
@@ -26,12 +69,13 @@ export function StepUpload({ initialDataUrl, onNext, onBack }: Props) {
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  function ingestFile(file: File | undefined | null) {
+  async function ingestFile(file: File | undefined | null) {
     if (!file) return;
     setError(null);
     setPreviewFailed(false);
 
-    if (!file.type.startsWith("image/") && !/\.(heic|heif)$/i.test(file.name)) {
+    const isHeic = /\.(heic|heif)$/i.test(file.name) || /heic|heif/i.test(file.type);
+    if (!file.type.startsWith("image/") && !isHeic) {
       setError("That doesn't look like an image. Try a PNG, JPG, WEBP, or HEIC.");
       return;
     }
@@ -40,18 +84,25 @@ export function StepUpload({ initialDataUrl, onNext, onBack }: Props) {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = typeof reader.result === "string" ? reader.result : null;
-      if (!result) {
-        setError("We couldn't read that file. Mind trying another?");
-        return;
+    try {
+      // Try canvas resize first — works for JPEG/PNG/WEBP. Browsers don't
+      // decode HEIC, so fall back to raw read for those (and let the user
+      // re-export as JPEG if the upload still hits the size cap).
+      let result: string;
+      if (isHeic) {
+        result = await readAsDataUrl(file);
+      } else {
+        try {
+          result = await resizeToJpegDataUrl(file);
+        } catch {
+          result = await readAsDataUrl(file);
+        }
       }
       setDataUrl(result);
       setFileMeta({ name: file.name, size: file.size });
-    };
-    reader.onerror = () => setError("We couldn't read that file. Mind trying another?");
-    reader.readAsDataURL(file);
+    } catch {
+      setError("We couldn't read that file. Mind trying another?");
+    }
   }
 
   function handlePick() {
