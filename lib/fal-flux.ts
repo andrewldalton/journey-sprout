@@ -248,13 +248,13 @@ export async function generatePage(params: {
   // references to reconcile and causes drift. Sheet + companion + settings.
   void params.heroPhoto;
   // FLUX Kontext Multi hard-caps at 4 refs ("image_urls must be between 1
-  // and 4"). Hero identity is the priority, so the sheet gets TWO of the
-  // four slots (double-weighting it measurably tightens the identity lock).
-  // Companion takes one slot; the primary setting takes the last. Extra
-  // setting refs are dropped — the SETTING LOCK text + brief still guide the
-  // environment, but the child staying recognizable wins the slot budget.
+  // and 4"). ONE ref each: hero sheet, companion sheet, then settings.
+  // NB: do NOT double-weight the hero sheet here — passing it twice makes
+  // FLUX bleed the hero's outfit onto the companion, sometimes paint a second
+  // hero in place of the companion, and wash the scene to the sheet's blank
+  // backdrop (drops the real setting). Identity is anchored by the single
+  // sheet ref + heroFeatures text + canonical outfit + the face-swap pass.
   const refs: ImgRef[] = [
-    params.heroSheet,
     params.heroSheet,
     params.companionSheet,
     ...params.settingSheets,
@@ -375,9 +375,8 @@ export async function generateCover(params: {
   // FLUX Kontext Multi caps at 4 refs; sheet duplication used to push us
   // over on 2-setting stories. See generatePage for rationale.
   void params.heroPhoto;
-  // Hero sheet double-weighted (2 of 4 slots) — same rationale as generatePage.
+  // ONE ref each — do NOT double-weight the hero sheet (see generatePage).
   const refs: ImgRef[] = [
-    params.heroSheet,
     params.heroSheet,
     params.companionSheet,
     ...params.settingSheets,
