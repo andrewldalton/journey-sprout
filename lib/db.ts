@@ -79,6 +79,7 @@ export type OrderInsert = {
 export type OrderPatch = Partial<{
   status: OrderStatus;
   pagesDone: number;
+  pagesTotal: number;
   sheetUrl: string | null;
   pdfUrl: string | null;
   sheetStatus: SheetStatus;
@@ -151,7 +152,7 @@ async function ensureSchema(sql: Sql): Promise<void> {
       pdf_url TEXT,
       status TEXT NOT NULL DEFAULT 'pending',
       pages_done INTEGER NOT NULL DEFAULT 0,
-      pages_total INTEGER NOT NULL DEFAULT 11,
+      pages_total INTEGER NOT NULL DEFAULT 7,
       sheet_status TEXT NOT NULL DEFAULT 'pending',
       regen_count INTEGER NOT NULL DEFAULT 0,
       sheet_approved_at TIMESTAMPTZ,
@@ -253,6 +254,7 @@ export async function updateOrder(
   const updates: Record<string, OrderStatus | number | string | null> = {};
   if (patch.status !== undefined) updates.status = patch.status;
   if (patch.pagesDone !== undefined) updates.pages_done = patch.pagesDone;
+  if (patch.pagesTotal !== undefined) updates.pages_total = patch.pagesTotal;
   if (patch.sheetUrl !== undefined) updates.sheet_url = patch.sheetUrl;
   if (patch.pdfUrl !== undefined) updates.pdf_url = patch.pdfUrl;
   if (patch.sheetStatus !== undefined) updates.sheet_status = patch.sheetStatus;

@@ -124,6 +124,7 @@ async function runSingle(params: {
   prompt: string;
   imageRef: ImgRef;
   aspectRatio?: AspectRatio;
+  seed?: number;
 }): Promise<Buffer> {
   ensureConfigured();
   const imageUrl = await uploadRef(params.imageRef);
@@ -136,6 +137,7 @@ async function runSingle(params: {
         aspect_ratio: params.aspectRatio ?? "1:1",
         output_format: "png",
         safety_tolerance: "6",
+        ...(params.seed != null ? { seed: params.seed } : {}),
       },
       logs: false,
     })) as { data?: FalKontextResult } & FalKontextResult;
@@ -153,6 +155,7 @@ async function runMulti(params: {
   prompt: string;
   imageRefs: ImgRef[];
   aspectRatio?: AspectRatio;
+  seed?: number;
 }): Promise<Buffer> {
   ensureConfigured();
   const imageUrls = await Promise.all(params.imageRefs.map(uploadRef));
@@ -165,6 +168,7 @@ async function runMulti(params: {
         aspect_ratio: params.aspectRatio ?? "1:1",
         output_format: "png",
         safety_tolerance: "6",
+        ...(params.seed != null ? { seed: params.seed } : {}),
       },
       logs: false,
     })) as { data?: FalKontextResult } & FalKontextResult;
@@ -194,6 +198,7 @@ export async function generateCharacterSheet(params: {
   heroAge?: number | null;
   heroName?: string;
   canonicalOutfit?: string;
+  seed?: number;
 }): Promise<Buffer> {
   // Lean prompt on purpose: FLUX Kontext's single-ref endpoint matches the
   // photo much better when text is minimal. Every "LOCK" paragraph we added
@@ -217,7 +222,7 @@ Modern vibrant watercolor with digital polish — rich saturated colors, soft pa
 Single neutral soft-cream background. Full-body T-pose, centered, facing camera, calm friendly expression, small smile. No props, no companion, no scenery. No text, no borders.
 `.trim();
 
-  return runSingle({ prompt, imageRef: params.photo, aspectRatio: "3:4" });
+  return runSingle({ prompt, imageRef: params.photo, aspectRatio: "3:4", seed: params.seed });
 }
 
 export async function generatePage(params: {
@@ -233,6 +238,7 @@ export async function generatePage(params: {
   companionName?: string;
   companionSpecies?: string;
   canonicalOutfit?: string;
+  seed?: number;
 }): Promise<Buffer> {
   const name = params.heroName ?? "the hero";
   const compName = params.companionName ?? "the companion";
@@ -242,11 +248,13 @@ export async function generatePage(params: {
   // references to reconcile and causes drift. Sheet + companion + settings.
   void params.heroPhoto;
   // FLUX Kontext Multi hard-caps at 4 refs ("image_urls must be between 1
-  // and 4"). We used to double-weight the sheet by passing it twice, but
-  // that pushed us to 5 refs on stories with 2 settings and every call
-  // 422'd. Drop the duplicate; identity anchor is the single sheet ref +
-  // the heroFeatures text block + the canonical outfit string.
+  // and 4"). Hero identity is the priority, so the sheet gets TWO of the
+  // four slots (double-weighting it measurably tightens the identity lock).
+  // Companion takes one slot; the primary setting takes the last. Extra
+  // setting refs are dropped — the SETTING LOCK text + brief still guide the
+  // environment, but the child staying recognizable wins the slot budget.
   const refs: ImgRef[] = [
+    params.heroSheet,
     params.heroSheet,
     params.companionSheet,
     ...params.settingSheets,
@@ -342,7 +350,7 @@ COMPOSITION:
 - Modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy. Bright and joyful, not muted or vintage. Soft edges, painterly, no harsh black outlines.
 `.trim();
 
-  return runMulti({ prompt, imageRefs: refs, aspectRatio: "1:1" });
+  return runMulti({ prompt, imageRefs: refs, aspectRatio: "1:1", seed: params.seed });
 }
 
 export async function generateCover(params: {
@@ -358,6 +366,7 @@ export async function generateCover(params: {
   heroFeatures?: string;
   heroAge?: number | null;
   canonicalOutfit?: string;
+  seed?: number;
 }): Promise<Buffer> {
   const name = params.heroName;
   const compName = params.companionName;
@@ -366,7 +375,9 @@ export async function generateCover(params: {
   // FLUX Kontext Multi caps at 4 refs; sheet duplication used to push us
   // over on 2-setting stories. See generatePage for rationale.
   void params.heroPhoto;
+  // Hero sheet double-weighted (2 of 4 slots) — same rationale as generatePage.
   const refs: ImgRef[] = [
+    params.heroSheet,
     params.heroSheet,
     params.companionSheet,
     ...params.settingSheets,
@@ -430,5 +441,5 @@ COMPOSITION:
 - Modern vibrant watercolor — rich saturated colors, confident playful shapes, contemporary bestseller picture-book energy.
 `.trim();
 
-  return runMulti({ prompt, imageRefs: refs, aspectRatio: "1:1" });
+  return runMulti({ prompt, imageRefs: refs, aspectRatio: "1:1", seed: params.seed });
 }

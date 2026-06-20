@@ -126,8 +126,10 @@ export async function generateCharacterSheet(params: {
   heroAge?: number | null;
   heroName?: string;
   canonicalOutfit?: string;
+  seed?: number; // accepted for provider-interface parity; Gemini ignores it
 }): Promise<Buffer> {
   void params.heroName;
+  void params.seed;
   return generateImage([params.photo], buildSheetPrompt(params.heroAge, params.canonicalOutfit));
 }
 
@@ -353,11 +355,13 @@ export async function generatePage(params: {
   companionName?: string;
   companionSpecies?: string;
   canonicalOutfit?: string;
+  seed?: number; // provider-interface parity; Gemini ignores it
 }): Promise<Buffer> {
   const { heroSheet, companionSheet, settingSheets, brief, textPosition, heroFeatures, heroAge, canonicalOutfit } = params;
   void params.heroName;
   void params.companionName;
   void params.companionSpecies;
+  void params.seed;
   // NB: heroPhoto is intentionally unused here. Post-approval, the sheet IS
   // the identity contract — passing the photo again just gives Gemini two
   // references to reconcile and causes drift.
@@ -440,9 +444,11 @@ export async function generateCover(params: {
   heroFeatures?: string;
   heroAge?: number | null;
   canonicalOutfit?: string;
+  seed?: number; // provider-interface parity; Gemini ignores it
 }): Promise<Buffer> {
   const { heroSheet, companionSheet, settingSheets, coverBrief, storyTitle, heroName, companionName, heroFeatures, heroAge, canonicalOutfit } = params;
   void params.companionSpecies;
+  void params.seed;
   // Sheet is the identity contract post-approval — photo ref dropped.
   void params.heroPhoto;
 

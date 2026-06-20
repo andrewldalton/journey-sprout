@@ -138,12 +138,19 @@ export const renderBook = inngest.createFunction(
       }
     );
 
-    await step.run("mark-rendering", async () => {
-      await updateOrder(orderId, { status: "rendering_pages" });
-      await incrementPagesDone(orderId); // count the already-approved sheet
-    });
-
     const { manuscript } = await loadStoryForOrder(ctx);
+
+    await step.run("mark-rendering", async () => {
+      // Total render units = sheet (1) + interior pages + cover (1). Set it
+      // from the actual manuscript so progress is correct for any page count
+      // and resets cleanly on a re-render. pages_done starts at 1 (the
+      // already-approved sheet counts as done).
+      await updateOrder(orderId, {
+        status: "rendering_pages",
+        pagesTotal: manuscript.pages.length + 2,
+        pagesDone: 1,
+      });
+    });
 
     const pageUrls: { num: number; url: string }[] = [];
     for (const page of manuscript.pages) {

@@ -45,6 +45,22 @@ function companionFromSlug(slug: string) {
 }
 
 /**
+ * Deterministic 31-bit base seed derived from the order id (FNV-1a). Pinning
+ * the generation seed makes a book reproducible across re-renders and removes
+ * pure run-to-run randomness, which steadies identity/style. Callers offset
+ * this per page + per QA attempt so the retry loop still re-rolls a drifted
+ * page instead of producing the identical image again.
+ */
+function seedForOrder(orderId: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < orderId.length; i++) {
+    h ^= orderId.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return (h >>> 0) % 2147483647;
+}
+
+/**
  * Face-restoration pass wrapper used by both page and cover steps.
  * If FACE_SWAP_ENABLED is false (default), returns the raw render
  * unchanged. If enabled, attempts the swap and logs a cost event;
@@ -131,6 +147,7 @@ export async function runSheetStep(ctx: RenderContext): Promise<string> {
       heroAge: ctx.heroAge,
       heroName: ctx.heroName,
       canonicalOutfit: outfit.description,
+      seed: seedForOrder(ctx.orderId),
     },
     { orderId: ctx.orderId }
   );
@@ -223,6 +240,7 @@ export async function runPageStep(
         companionName: companion.name,
         companionSpecies: companion.species,
         canonicalOutfit: outfit.description,
+        seed: (seedForOrder(ctx.orderId) + page.num * 1000 + attempt) % 2147483647,
       },
       { orderId: ctx.orderId, pageNum: page.num }
     );
@@ -315,6 +333,7 @@ export async function runCoverStep(
         heroFeatures: heroFeatures ?? undefined,
         heroAge: ctx.heroAge,
         canonicalOutfit: outfit.description,
+        seed: (seedForOrder(ctx.orderId) + 900000 + attempt) % 2147483647,
       },
       { orderId: ctx.orderId }
     );
